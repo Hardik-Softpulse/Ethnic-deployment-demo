@@ -124,7 +124,7 @@ export function Section({
     <Component {...props} className={styles}>
       {heading && (
         <Heading size="lead" className={padding === 'y' ? paddings['x'] : ''}>
-          {heading}
+          {"heading"}
         </Heading>
       )}
       {children}
