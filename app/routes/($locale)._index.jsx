@@ -89,9 +89,9 @@ export default function Homepage() {
 
   return (
     <>
-      {primaryHero && (
-        <Hero {...primaryHero} height="full" top loading="eager" />
-      )}
+      
+        <Hero />
+      
 
       {featuredProducts && (
         <Suspense>
