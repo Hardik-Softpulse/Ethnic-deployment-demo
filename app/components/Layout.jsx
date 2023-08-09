@@ -155,7 +155,7 @@ function DesktopHeader({isHome, menu, title}) {
               </ul>
             </div>
             <div className="st-col st-nav-logo flx-auto">
-              <a href="#">
+              <a href="/">
                 <img src={logo} />
               </a>
             </div>
