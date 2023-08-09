@@ -8,6 +8,7 @@ import {MEDIA_FRAGMENT, PRODUCT_CARD_FRAGMENT} from '~/data/fragments';
 import {getHeroPlaceholder} from '~/lib/placeholders';
 import {seoPayload} from '~/lib/seo.server';
 import {routeHeaders} from '~/data/cache';
+import { ShopCollection } from '~/components/ShopCollection';
 
 export const headers = routeHeaders;
 
@@ -92,6 +93,18 @@ export default function Homepage() {
       
         <Hero />
       
+        {featuredCollections && (
+        <Suspense>
+          <Await resolve={featuredCollections}>
+            {({collections}) => {
+              if (!collections?.nodes) return <></>;
+              return (
+                <ShopCollection collections={collections} title="Collections" />
+              );
+            }}
+          </Await>
+        </Suspense>
+      )}
 
       {featuredProducts && (
         <Suspense>
