@@ -11,6 +11,7 @@ import {routeHeaders} from '~/data/cache';
 import {ShopCollection} from '~/components/ShopCollection';
 import {Blogs} from '~/components/Blogs';
 import {Banner} from '~/components/Banner';
+import {BrandSection} from '~/components/BrandSection';
 
 export const headers = routeHeaders;
 
@@ -109,6 +110,7 @@ export default function Homepage() {
 
       <Banner />
       <Blogs />
+      <BrandSection />
 
       {featuredProducts && (
         <Suspense>
