@@ -13,6 +13,8 @@ import {Blogs} from '~/components/Blogs';
 import {Banner} from '~/components/Banner';
 import {BrandSection} from '~/components/BrandSection';
 import {SaleOn} from '~/components/SaleOn';
+import {NewArrival} from '~/components/NewArrival';
+import {BestSeller} from '~/components/BestSeller';
 
 export const headers = routeHeaders;
 
@@ -109,7 +111,9 @@ export default function Homepage() {
         </Suspense>
       )}
 
+      <BestSeller />
       <Banner />
+      <NewArrival />
       <SaleOn />
       <Blogs />
       <BrandSection />
