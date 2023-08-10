@@ -20,11 +20,11 @@ export function ShopCollection({collections, title = 'Collections', ...props}) {
           {collectionsWithImage.map((collection) => {
             return (
               <div className="collection-item col" key={collection.id}>
-                <a href="javascript:void(0)" className="collection-img">
+                <a href={`/collections/${collection.handle}`} className="collection-img">
                   <img src={collection.image.url} />
                 </a>
                 <h4></h4>
-                <a href="#" className="btn btn-sm">
+                <a href={`/collections/${collection.handle}`} className="btn btn-sm">
                   {collection.title}
                 </a>
               </div>
