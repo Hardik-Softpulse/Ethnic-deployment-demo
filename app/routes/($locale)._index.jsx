@@ -9,7 +9,8 @@ import {getHeroPlaceholder} from '~/lib/placeholders';
 import {seoPayload} from '~/lib/seo.server';
 import {routeHeaders} from '~/data/cache';
 import {ShopCollection} from '~/components/ShopCollection';
-import { Blogs } from '~/components/Blogs';
+import {Blogs} from '~/components/Blogs';
+import {Banner} from '~/components/Banner';
 
 export const headers = routeHeaders;
 
@@ -106,6 +107,7 @@ export default function Homepage() {
         </Suspense>
       )}
 
+      <Banner />
       <Blogs />
 
       {featuredProducts && (
