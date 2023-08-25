@@ -1,13 +1,10 @@
 import {CartForm} from '@shopify/hydrogen';
 
-import {Button} from '~/components';
-
 export function AddToCartButton({
-  children,
   lines,
   className = '',
   variant = 'primary',
-  width = 'full',
+ 
   disabled,
   analytics,
   ...props
@@ -27,17 +24,15 @@ export function AddToCartButton({
             name="analytics"
             value={JSON.stringify(analytics)}
           />
-          <Button
-            as="button"
+          <button
             type="submit"
-            width={width}
             variant={variant}
-            className={className}
+            className="btn btn-full add-cart-btn lp-0"
             disabled={disabled ?? fetcher.state !== 'idle'}
             {...props}
           >
-            {children}
-          </Button>
+            Add to cart
+          </button>
         </>
       )}
     </CartForm>

@@ -1,56 +1,12 @@
 import {useMemo, useState} from 'react';
-import {Menu, Disclosure} from '@headlessui/react';
 import {
   Link,
   useLocation,
   useSearchParams,
   useNavigate,
 } from '@remix-run/react';
-import {useDebounce} from 'react-use';
 
-import {Heading, IconFilters, IconCaret, IconXMark, Text} from '~/components';
-
-export function SortFilter({
-  filters,
-  appliedFilters = [],
-  children,
-  collections = [],
-}) {
-  const [isOpen, setIsOpen] = useState(false);
-  return (
-    <>
-      <div className="flex items-center justify-between w-full">
-        <button
-          onClick={() => setIsOpen(!isOpen)}
-          className={
-            'relative flex items-center justify-center w-8 h-8 focus:ring-primary/5'
-          }
-        >
-          <IconFilters />
-        </button>
-        <SortMenu />
-      </div>
-      <div className="flex flex-col flex-wrap md:flex-row">
-        <div
-          className={`transition-all duration-200 ${
-            isOpen
-              ? 'opacity-100 min-w-full md:min-w-[240px] md:w-[240px] md:pr-8 max-h-full'
-              : 'opacity-0 md:min-w-[0px] md:w-[0px] pr-0 max-h-0 md:max-h-full'
-          }`}
-        >
-          <FiltersDrawer
-            collections={collections}
-            filters={filters}
-            appliedFilters={appliedFilters}
-          />
-        </div>
-        <div className="flex-1">{children}</div>
-      </div>
-    </>
-  );
-}
-
-export function FiltersDrawer({filters = [], appliedFilters = []}) {
+export function SortFilter({filters, appliedFilters = []}) {
   const [params] = useSearchParams();
   const location = useLocation();
 
@@ -84,47 +40,37 @@ export function FiltersDrawer({filters = [], appliedFilters = []}) {
   };
 
   return (
-    <>
-      <nav className="py-8">
-        {appliedFilters.length > 0 ? (
-          <div className="pb-8">
-            <AppliedFilters filters={appliedFilters} />
-          </div>
-        ) : null}
-
-        <Heading as="h4" size="lead" className="pb-4">
-          Filter By
-        </Heading>
-        <div className="divide-y">
-          {filters.map(
-            (filter) =>
-              filter.values.length > 1 && (
-                <Disclosure as="div" key={filter.id} className="w-full">
-                  {({open}) => (
-                    <>
-                      <Disclosure.Button className="flex justify-between w-full py-4">
-                        <Text size="lead">{filter.label}</Text>
-                        <IconCaret direction={open ? 'up' : 'down'} />
-                      </Disclosure.Button>
-                      <Disclosure.Panel key={filter.id}>
-                        <ul key={filter.id} className="py-2">
-                          {filter.values?.map((option) => {
-                            return (
-                              <li key={option.id} className="pb-4">
-                                {filterMarkup(filter, option)}
-                              </li>
-                            );
-                          })}
-                        </ul>
-                      </Disclosure.Panel>
-                    </>
-                  )}
-                </Disclosure>
-              ),
-          )}
-        </div>
-      </nav>
-    </>
+    <div className="cllctn-sidebar">
+      {appliedFilters.length > 0 ? (
+        <AppliedFilters filters={appliedFilters} />
+      ) : null}
+      <h3 className="text-up lp-05">Filter</h3>
+      {filters.map(
+        (filter) =>
+          filter.values.length > 1 && (
+            <div className="filter-option" key={filter.id}>
+              <h6 className="filter-title">{filter.label}</h6>
+              <div className="filter-list clearfix">
+                {filter.values?.map((option) => {
+                  return (
+                    <div className="filter-item" key={option.id}>
+                      <input
+                        type="checkbox"
+                        name="size"
+                        id={option.id}
+                        checked=""
+                      />
+                      <label htmlFor="size-1" className="filter-act">
+                        {filterMarkup(filter, option)}
+                      </label>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          ),
+      )}
+    </div>
   );
 }
 
@@ -133,25 +79,17 @@ function AppliedFilters({filters = []}) {
   const location = useLocation();
   return (
     <>
-      <Heading as="h4" size="lead" className="pb-4">
-        Applied filters
-      </Heading>
-      <div className="flex flex-wrap gap-2">
-        {filters.map((filter) => {
-          return (
-            <Link
-              to={getAppliedFilterLink(filter, params, location)}
-              className="flex px-2 border rounded-full gap"
-              key={`${filter.label}-${filter.urlParam}`}
-            >
-              <span className="flex-grow">{filter.label}</span>
-              <span>
-                <IconXMark />
-              </span>
-            </Link>
-          );
-        })}
-      </div>
+      {filters.map((filter) => {
+        return (
+          <Link
+            to={getAppliedFilterLink(filter, params, location)}
+            className="reset-act"
+            key={`${filter.label}-${filter.urlParam}`}
+          >
+            reset
+          </Link>
+        );
+      })}
     </>
   );
 }
@@ -171,11 +109,6 @@ function getAppliedFilterLink(filter, params, location) {
     paramsClone.delete(filter.urlParam.key);
   }
   return `${location.pathname}?${paramsClone.toString()}`;
-}
-
-function getSortLink(sort, params, location) {
-  params.set('sort', sort);
-  return `${location.pathname}?${params.toString()}`;
 }
 
 function getFilterLink(filter, rawInput, params, location) {
@@ -280,61 +213,4 @@ function filterInputToParams(type, rawInput, params) {
   }
 
   return params;
-}
-
-export default function SortMenu() {
-  const items = [
-    {label: 'Featured', key: 'featured'},
-    {
-      label: 'Price: Low - High',
-      key: 'price-low-high',
-    },
-    {
-      label: 'Price: High - Low',
-      key: 'price-high-low',
-    },
-    {
-      label: 'Best Selling',
-      key: 'best-selling',
-    },
-    {
-      label: 'Newest',
-      key: 'newest',
-    },
-  ];
-  const [params] = useSearchParams();
-  const location = useLocation();
-  const activeItem = items.find((item) => item.key === params.get('sort'));
-
-  return (
-    <Menu as="div" className="relative z-40">
-      <Menu.Button className="flex items-center">
-        <span className="px-2">
-          <span className="px-2 font-medium">Sort by:</span>
-          <span>{(activeItem || items[0]).label}</span>
-        </span>
-        <IconCaret />
-      </Menu.Button>
-
-      <Menu.Items
-        as="nav"
-        className="absolute right-0 flex flex-col p-4 text-right rounded-sm bg-contrast"
-      >
-        {items.map((item) => (
-          <Menu.Item key={item.label}>
-            {() => (
-              <Link
-                className={`block text-sm pb-2 px-3 ${
-                  activeItem?.key === item.key ? 'font-bold' : 'font-normal'
-                }`}
-                to={getSortLink(item.key, params, location)}
-              >
-                {item.label}
-              </Link>
-            )}
-          </Menu.Item>
-        ))}
-      </Menu.Items>
-    </Menu>
-  );
 }

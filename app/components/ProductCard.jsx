@@ -1,8 +1,9 @@
-import clsx from 'clsx';
+// import clsx from 'clsx';
 import {flattenConnection, Image, Money, useMoney} from '@shopify/hydrogen';
-import {Text, Link, AddToCartButton, Button} from '~/components';
+import {AddToCartButton} from '~/components';
 import {isDiscounted, isNewArrival} from '~/lib/utils';
 import {getProductPlaceholder} from '~/lib/placeholders';
+import {Link} from './Link';
 
 export function ProductCard({
   product,
@@ -41,81 +42,41 @@ export function ProductCard({
   };
 
   return (
-    <div className="flex flex-col gap-2">
+    <>
       <Link
+        className="product-img"
         onClick={onClick}
         to={`/products/${product.handle}`}
         prefetch="intent"
       >
-        <div className={clsx('grid gap-4', className)}>
-          <div className="card-image aspect-[4/5] bg-primary/5">
-            {image && (
-              <Image
-                className="object-cover w-full fadeIn"
-                sizes="(min-width: 64em) 25vw, (min-width: 48em) 30vw, 45vw"
-                aspectRatio="4/5"
-                data={image}
-                alt={image.altText || `Picture of ${product.title}`}
-                loading={loading}
-              />
-            )}
-            <Text
-              as="label"
-              size="fine"
-              className="absolute top-0 right-0 m-4 text-right text-notice"
-            >
-              {cardLabel}
-            </Text>
+        <Image
+          className="object-cover w-full fadeIn"
+          sizes="(min-width: 64em) 25vw, (min-width: 48em) 30vw, 45vw"
+          aspectRatio="4/5"
+          src={image?.url}
+          alt={ `Picture of ${product.title}`}
+          loading={loading}
+        />
+
+        {product.variants[0]?.onSale && (
+          <div className="product-tag sale-tag">
+            Sale {item.salePercentage}%
           </div>
-          <div className="grid gap-1">
-            <Text
-              className="w-full overflow-hidden whitespace-nowrap text-ellipsis "
-              as="h3"
-            >
-              {product.title}
-            </Text>
-            <div className="flex gap-4">
-              <Text className="flex gap-4">
-                <Money withoutTrailingZeros data={price} />
-                {isDiscounted(price, compareAtPrice) && (
-                  <CompareAtPrice
-                    className={'opacity-50'}
-                    data={compareAtPrice}
-                  />
-                )}
-              </Text>
-            </div>
-          </div>
-        </div>
+        )}
       </Link>
-      {quickAdd && firstVariant.availableForSale && (
-        <AddToCartButton
-          lines={[
-            {
-              quantity: 1,
-              merchandiseId: firstVariant.id,
-            },
-          ]}
-          variant="secondary"
-          className="mt-2"
-          analytics={{
-            products: [productAnalytics],
-            totalValue: parseFloat(productAnalytics.price),
-          }}
+      <h5>
+        <Link
+          onClick={onClick}
+          to={`/products/${product.handle}`}
+          prefetch="intent"
         >
-          <Text as="span" className="flex items-center justify-center gap-2">
-            Add to Cart
-          </Text>
-        </AddToCartButton>
-      )}
-      {quickAdd && !firstVariant.availableForSale && (
-        <Button variant="secondary" className="mt-2" disabled>
-          <Text as="span" className="flex items-center justify-center gap-2">
-            Sold out
-          </Text>
-        </Button>
-      )}
-    </div>
+          {product.title}
+        </Link>
+      </h5>
+      <div className="product-price">
+        <span className="s-price">${price.amount}</span>
+      </div>
+    </>
   );
 }
 
@@ -123,7 +84,7 @@ function CompareAtPrice({data, className}) {
   const {currencyNarrowSymbol, withoutTrailingZerosAndCurrency} =
     useMoney(data);
 
-  const styles = clsx('strike', className);
+  const styles = ('strike', className);
 
   return (
     <span className={styles}>
