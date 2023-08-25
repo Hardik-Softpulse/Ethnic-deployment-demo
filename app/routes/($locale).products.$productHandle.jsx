@@ -1,34 +1,21 @@
-import {useRef, Suspense} from 'react';
-import {Disclosure, Listbox} from '@headlessui/react';
 import {defer, redirect} from '@shopify/remix-oxygen';
-import {useLoaderData, Await} from '@remix-run/react';
+import {Await, Link, useLoaderData} from '@remix-run/react';
 import {
   AnalyticsPageType,
   Money,
-  ShopPayButton,
   VariantSelector,
   getSelectedProductOptions,
 } from '@shopify/hydrogen';
 import invariant from 'tiny-invariant';
-import clsx from 'clsx';
-import {
-  Heading,
-  IconCaret,
-  IconCheck,
-  IconClose,
-  ProductGallery,
-  ProductSwimlane,
-  Section,
-  Skeleton,
-  Text,
-  Link,
-  AddToCartButton,
-  Button,
-} from '~/components';
-import {getExcerpt} from '~/lib/utils';
 import {seoPayload} from '~/lib/seo.server';
 import {routeHeaders} from '~/data/cache';
 import {MEDIA_FRAGMENT, PRODUCT_CARD_FRAGMENT} from '~/data/fragments';
+import {Suspense, useRef, useState} from 'react';
+import {AddToCartButton, ProductGallery} from '~/components';
+import {getExcerpt} from '~/lib/utils';
+
+import {Disclosure} from '@headlessui/react';
+import clsx from 'clsx';
 
 export const headers = routeHeaders;
 
@@ -119,92 +106,234 @@ export default function Product() {
   const {shippingPolicy, refundPolicy} = shop;
 
   return (
-    <>
-      <Section className="px-0 md:px-8 lg:px-12">
-        <div className="grid items-start md:gap-6 lg:gap-20 md:grid-cols-2 lg:grid-cols-3">
-          <ProductGallery
-            media={media.nodes}
-            className="w-full lg:col-span-2"
-          />
-          <div className="sticky md:-mb-nav md:top-nav md:-translate-y-nav md:h-screen md:pt-nav hiddenScroll md:overflow-y-scroll">
-            <section className="flex flex-col w-full max-w-xl gap-8 p-6 md:mx-auto md:max-w-sm md:px-0">
-              <div className="grid gap-2">
-                <Heading as="h1" className="whitespace-normal">
-                  {title}
-                </Heading>
-                {vendor && (
-                  <Text className={'opacity-50 font-medium'}>{vendor}</Text>
-                )}
+    <div className="product-page clearfix">
+      <div className="breadcrumb m-0">
+        <div className="container">
+          <span>
+            <a href="javascript:void(0)">Home</a>
+          </span>
+          <span>products</span>
+        </div>
+      </div>
+      <div className="product-info-sct">
+        <div className="container dfx">
+          <div className="product-images flx-auto">
+            <div className="product-i1slider swiper-container">
+              <ProductGallery media={media.nodes} />
+            </div>
+            <div className="thumb-i1slider swiper-container">
+              <div className="swiper-wrapper">
+                {media.nodes.map((img) => (
+                  <div
+                    className="swiper-slide thumb-i1slide"
+                    key={img.image.id}
+                  >
+                    <img src={img.image.url} alt={img.image.alt} />
+                  </div>
+                ))}
               </div>
-              <Suspense fallback={<ProductForm variants={[]} />}>
-                <Await
-                  errorElement="There was a problem loading related products"
-                  resolve={variants}
-                >
-                  {(resp) => (
-                    <ProductForm
-                      variants={resp.product?.variants.nodes || []}
-                    />
-                  )}
-                </Await>
-              </Suspense>
-              <div className="grid gap-4 py-4">
-                {descriptionHtml && (
-                  <ProductDetail
-                    title="Product Details"
-                    content={descriptionHtml}
-                  />
-                )}
-                {shippingPolicy?.body && (
-                  <ProductDetail
-                    title="Shipping"
-                    content={getExcerpt(shippingPolicy.body)}
-                    learnMore={`/policies/${shippingPolicy.handle}`}
-                  />
-                )}
-                {refundPolicy?.body && (
-                  <ProductDetail
-                    title="Returns"
-                    content={getExcerpt(refundPolicy.body)}
-                    learnMore={`/policies/${refundPolicy.handle}`}
-                  />
-                )}
-              </div>
-            </section>
+            </div>
+          </div>
+          <Suspense fallback={<ProductForm variants={[]} />}>
+            <Await
+              errorElement="There was a problem loading related products"
+              resolve={variants}
+            >
+              {(resp) => (
+                <ProductForm variants={resp.product?.variants.nodes || []} />
+              )}
+            </Await>
+          </Suspense>
+        </div>
+      </div>
+      <div className="product-srvc-sct">
+        <div className="container">
+          <div className="row">
+            <div className="srvc-item">
+              <h5>Expected Delivery Time</h5>
+              <p>
+                7 days; Actual time may vary depending on other items in your
+                order
+              </p>
+            </div>
+            <div className="srvc-item">
+              <h5>Cash/Card on delivery available</h5>
+              <p>Available for orders between Rs. 699- Rs. 20,000</p>
+            </div>
+            <div className="srvc-item">
+              <h5>Easy 15 days returns and 15 days exchanges</h5>
+              <p>Choose to return within 15 days or exchange within 15 days.</p>
+            </div>
           </div>
         </div>
-      </Section>
-      <Suspense fallback={<Skeleton className="h-32" />}>
-        <Await
-          errorElement="There was a problem loading related products"
-          resolve={recommended}
-        >
-          {(products) => (
-            <ProductSwimlane title="Related Products" products={products} />
-          )}
-        </Await>
-      </Suspense>
-    </>
+      </div>
+      <div className="product-feature-sct">
+        <div className="container">
+          <div className="col-block">
+            <div className="col-item">
+              <img src="product-i1.jpg" />
+            </div>
+            <div className="col-item">
+              <h2>Shopify theme NMD_R1 Shoes</h2>
+              <p>
+                Lorem Ipsum is simply dummy text of the printing and typesetting
+                industry. Lorem Ipsum has been the industry's standard dummy
+                text ever since the 1500s.
+              </p>
+              <p>
+                When an unknown printer took a galley of type and scrambled it
+                to make a type specimen book. It has survived not only five
+                centuries, but also the leap into electronic typesetting,
+                remaining essentially unchanged.
+              </p>
+            </div>
+          </div>
+          <div className="col-block">
+            <div className="col-item">
+              <img src="img/product-i1.jpg" />
+            </div>
+            <div className="col-item">
+              <h2>Shopify theme NMD_R1 Shoes</h2>
+              <p>
+                Lorem Ipsum is simply dummy text of the printing and typesetting
+                industry. Lorem Ipsum has been the industry's standard dummy
+                text ever since the 1500s.
+              </p>
+              <p>
+                When an unknown printer took a galley of type and scrambled it
+                to make a type specimen book. It has survived not only five
+                centuries, but also the leap into electronic typesetting,
+                remaining essentially unchanged.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div className="feature-products related-products">
+        <div className="container">
+          <div className="sctn-title text-center">
+            <h2 className="h1 text-up">Related products</h2>
+          </div>
+          <div className="row">
+            <div className="product-item">
+              <a href="javascript:void(0)" className="product-img">
+                <img src="img/product-1.jpg" />
+                <div className="product-tag sale-tag">Sale 25%</div>
+              </a>
+              <h5>
+                <a href="javascript:void(0)">Shopify theme NMD_R1 Shoes</a>
+              </h5>
+              <div className="product-price">
+                <span className="s-price">$120</span>
+                <span className="o-price">$140</span>
+              </div>
+            </div>
+            <div className="product-item">
+              <a href="javascript:void(0)" className="product-img">
+                <img src="img/product-2.jpg" />
+                <div className="product-tag">Best Seller</div>
+              </a>
+              <h5>
+                <a href="javascript:void(0)">Shopify theme NMD_R1 Shoes</a>
+              </h5>
+              <div className="product-price">
+                <span className="s-price">$120</span>
+              </div>
+            </div>
+            <div className="product-item">
+              <a href="javascript:void(0)" className="product-img">
+                <img src="img/product-3.jpg" />
+                <div className="product-tag new-tag">New Arrival</div>
+              </a>
+              <h5>
+                <a href="javascript:void(0)">Shopify theme NMD_R1 Shoes</a>
+              </h5>
+              <div className="product-price">
+                <span className="s-price">$120</span>
+              </div>
+            </div>
+            <div className="product-item">
+              <a href="javascript:void(0)" className="product-img">
+                <img src="img/product-4.jpg" />
+              </a>
+              <h5>
+                <a href="javascript:void(0)">Shopify theme NMD_R1 Shoes</a>
+              </h5>
+              <div className="product-price">
+                <span className="s-price">$120</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div className="feature-products recently-viewed">
+        <div className="container">
+          <div className="sctn-title text-center">
+            <h2 className="h1 text-up">Recently viewed products </h2>
+          </div>
+          <div className="row">
+            <div className="product-item">
+              <a href="javascript:void(0)" className="product-img">
+                <img src="img/product-5.jpg" />
+                <div className="product-tag sale-tag">Sale 25%</div>
+              </a>
+              <h5>
+                <a href="javascript:void(0)">Shopify theme NMD_R1 Shoes</a>
+              </h5>
+              <div className="product-price">
+                <span className="s-price">$120</span>
+                <span className="o-price">$140</span>
+              </div>
+            </div>
+            <div className="product-item">
+              <a href="javascript:void(0)" className="product-img">
+                <img src="img/product-6.jpg" />
+                <div className="product-tag">Best Seller</div>
+              </a>
+              <h5>
+                <a href="javascript:void(0)">Shopify theme NMD_R1 Shoes</a>
+              </h5>
+              <div className="product-price">
+                <span className="s-price">$120</span>
+              </div>
+            </div>
+            <div className="product-item">
+              <a href="javascript:void(0)" className="product-img">
+                <img src="img/product-7.jpg" />
+                <div className="product-tag new-tag">New Arrival</div>
+              </a>
+              <h5>
+                <a href="javascript:void(0)">Shopify theme NMD_R1 Shoes</a>
+              </h5>
+              <div className="product-price">
+                <span className="s-price">$120</span>
+              </div>
+            </div>
+            <div className="product-item">
+              <a href="javascript:void(0)" className="product-img">
+                <img src="img/product-8.jpg" />
+              </a>
+              <h5>
+                <a href="javascript:void(0)">Shopify theme NMD_R1 Shoes</a>
+              </h5>
+              <div className="product-price">
+                <span className="s-price">$120</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 }
 
 export function ProductForm({variants}) {
-  const {product, analytics, storeDomain} = useLoaderData();
+  const {product, shop, analytics} = useLoaderData();
+  const {descriptionHtml} = product;
+  const {shippingPolicy, refundPolicy} = shop;
 
-  const closeRef = useRef(null);
-
-  /**
-   * Likewise, we're defaulting to the first variant for purposes
-   * of add to cart if there is none returned from the loader.
-   * A developer can opt out of this, too.
-   */
   const selectedVariant = product.selectedVariant;
   const isOutOfStock = !selectedVariant?.availableForSale;
-
-  const isOnSale =
-    selectedVariant?.price?.amount &&
-    selectedVariant?.compareAtPrice?.amount &&
-    selectedVariant?.price?.amount < selectedVariant?.compareAtPrice?.amount;
 
   const productAnalytics = {
     ...analytics.products[0],
@@ -212,8 +341,72 @@ export function ProductForm({variants}) {
   };
 
   return (
-    <div className="grid gap-10">
-      <div className="grid gap-4">
+    <div className="product-dscrptn flx-cover">
+      <h4>{product.title}</h4>
+      <div className="dscrptn-xs lp-05">{product.description}</div>
+      <div className="product-review dfx lp-05">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="16"
+          height="16"
+          viewBox="0 0 16 16"
+        >
+          <path
+            d="M969,293l2.445,5.308L977,299.11l-4.043,4.088L973.944,309,969,306.222,964.056,309l0.987-5.806L961,299.11l5.554-.807Z"
+            transform="translate(-961 -293)"
+          />
+        </svg>
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="16"
+          height="16"
+          viewBox="0 0 16 16"
+        >
+          <path
+            d="M969,293l2.445,5.308L977,299.11l-4.043,4.088L973.944,309,969,306.222,964.056,309l0.987-5.806L961,299.11l5.554-.807Z"
+            transform="translate(-961 -293)"
+          />
+        </svg>
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="16"
+          height="16"
+          viewBox="0 0 16 16"
+        >
+          <path
+            d="M969,293l2.445,5.308L977,299.11l-4.043,4.088L973.944,309,969,306.222,964.056,309l0.987-5.806L961,299.11l5.554-.807Z"
+            transform="translate(-961 -293)"
+          />
+        </svg>
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="16"
+          height="16"
+          viewBox="0 0 16 16"
+        >
+          <path
+            d="M969,293l2.445,5.308L977,299.11l-4.043,4.088L973.944,309,969,306.222,964.056,309l0.987-5.806L961,299.11l5.554-.807Z"
+            transform="translate(-961 -293)"
+          />
+        </svg>
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="16"
+          height="16"
+          viewBox="0 0 16 16"
+        >
+          <path
+            d="M969,293l2.445,5.308L977,299.11l-4.043,4.088L973.944,309,969,306.222,964.056,309l0.987-5.806L961,299.11l5.554-.807Z"
+            transform="translate(-961 -293)"
+          />
+        </svg>
+        <span>5 Reviews</span>
+      </div>
+      <div className="product-i1price">
+        <span className="s-price">${selectedVariant.price.amount}</span>
+        <span className="o-price">$140</span>
+      </div>
+      <form>
         <VariantSelector
           handle={product.handle}
           options={product.options}
@@ -221,188 +414,139 @@ export function ProductForm({variants}) {
         >
           {({option}) => {
             return (
-              <div
-                key={option.name}
-                className="flex flex-col flex-wrap mb-4 gap-y-2 last:mb-0"
-              >
-                <Heading as="legend" size="lead" className="min-w-[4rem]">
-                  {option.name}
-                </Heading>
-                <div className="flex flex-wrap items-baseline gap-4">
-                  {option.values.length > 7 ? (
-                    <div className="relative w-full">
-                      <Listbox>
-                        {({open}) => (
-                          <>
-                            <Listbox.Button
-                              ref={closeRef}
-                              className={clsx(
-                                'flex items-center justify-between w-full py-3 px-4 border border-primary',
-                                open
-                                  ? 'rounded-b md:rounded-t md:rounded-b-none'
-                                  : 'rounded',
-                              )}
-                            >
-                              <span>{option.value}</span>
-                              <IconCaret direction={open ? 'up' : 'down'} />
-                            </Listbox.Button>
-                            <Listbox.Options
-                              className={clsx(
-                                'border-primary bg-contrast absolute bottom-12 z-30 grid h-48 w-full overflow-y-scroll rounded-t border px-2 py-2 transition-[max-height] duration-150 sm:bottom-auto md:rounded-b md:rounded-t-none md:border-t-0 md:border-b',
-                                open ? 'max-h-48' : 'max-h-0',
-                              )}
-                            >
-                              {option.values
-                                .filter((value) => value.isAvailable)
-                                .map(({value, to, isActive}) => (
-                                  <Listbox.Option
-                                    key={`option-${option.name}-${value}`}
-                                    value={value}
-                                  >
-                                    {({active}) => (
-                                      <Link
-                                        to={to}
-                                        className={clsx(
-                                          'text-primary w-full p-2 transition rounded flex justify-start items-center text-left cursor-pointer',
-                                          active && 'bg-primary/10',
-                                        )}
-                                        onClick={() => {
-                                          if (!closeRef?.current) return;
-                                          closeRef.current.click();
-                                        }}
-                                      >
-                                        {value}
-                                        {isActive && (
-                                          <span className="ml-2">
-                                            <IconCheck />
-                                          </span>
-                                        )}
-                                      </Link>
-                                    )}
-                                  </Listbox.Option>
-                                ))}
-                            </Listbox.Options>
-                          </>
-                        )}
-                      </Listbox>
-                    </div>
-                  ) : (
-                    option.values.map(({value, isAvailable, isActive, to}) => (
-                      <Link
-                        key={option.name + value}
-                        to={to}
-                        preventScrollReset
-                        prefetch="intent"
-                        replace
-                        className={clsx(
-                          'leading-none py-1 border-b-[1.5px] cursor-pointer transition-all duration-200',
-                          isActive ? 'border-primary/50' : 'border-primary/0',
-                          isAvailable ? 'opacity-100' : 'opacity-50',
-                        )}
-                      >
-                        {value}
-                      </Link>
-                    ))
-                  )}
+              <div className="swatch clearfix" data-option-index="1">
+                <div className="swatch-title">
+                  <strong>{option.name}</strong>
                 </div>
+                {option.values.length > 7 ? (
+                  <div
+                    key={index}
+                    data-value={value}
+                    className="swatch-element available"
+                    title={value}
+                  >
+                    <input
+                      type="radio"
+                      name={`option-${index}`}
+                      value={value}
+                      id={`swatch-${index}-${valueIndex}`}
+                    />
+                    <label htmlFor={`swatch-${index}-${valueIndex}`}>
+                      {value}
+                    </label>
+                  </div>
+                ) : (
+                  option.values.map(({value, index, to}) => (
+                    <Link
+                      key={option.name + value}
+                      to={to}
+                      preventScrollReset
+                      prefetch="intent"
+                      replace
+                    >
+                      <div
+                        key={index}
+                        data-value={value}
+                        className="swatch-element available"
+                        title={value}
+                      >
+                        <input type="radio" value={value} />
+                        <label>{value}</label>
+                      </div>
+                    </Link>
+                  ))
+                )}
               </div>
             );
           }}
         </VariantSelector>
-        {selectedVariant && (
-          <div className="grid items-stretch gap-4">
-            {isOutOfStock ? (
-              <Button variant="secondary" disabled>
-                <Text>Sold out</Text>
-              </Button>
-            ) : (
-              <AddToCartButton
-                lines={[
-                  {
-                    merchandiseId: selectedVariant.id,
-                    quantity: 1,
-                  },
-                ]}
-                variant="primary"
-                data-test="add-to-cart"
-                analytics={{
-                  products: [productAnalytics],
-                  totalValue: parseFloat(productAnalytics.price),
-                }}
-              >
-                <Text
-                  as="span"
-                  className="flex items-center justify-center gap-2"
-                >
-                  <span>Add to Cart</span> <span>·</span>{' '}
-                  <Money
-                    withoutTrailingZeros
-                    data={selectedVariant?.price}
-                    as="span"
-                  />
-                  {isOnSale && (
-                    <Money
-                      withoutTrailingZeros
-                      data={selectedVariant?.compareAtPrice}
-                      as="span"
-                      className="opacity-50 strike"
-                    />
-                  )}
-                </Text>
-              </AddToCartButton>
-            )}
-            {!isOutOfStock && (
-              <ShopPayButton
-                width="100%"
-                variantIds={[selectedVariant?.id]}
-                storeDomain={storeDomain}
-              />
-            )}
-          </div>
-        )}
-      </div>
+
+        <div className="size-chart-link clearfix">
+          <a href="javascript:void(0)" className="f-left">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 31 10"
+              width="31"
+              height="10"
+            >
+              <path d="M28.3 0L28.3 4.29L26.96 4.29L26.96 0L24.26 0L24.26 2.86L22.91 2.86L22.91 0L20.22 0L20.22 2.86L18.87 2.86L18.87 0L16.17 0L16.17 4.29L14.83 4.29L14.83 0L12.13 0L12.13 2.86L10.78 2.86L10.78 0L8.09 0L8.09 2.86L6.74 2.86L6.74 0L4.04 0L4.04 4.29L2.7 4.29L2.7 0L0 0L0 10L31 10L31 0L28.3 0Z" />
+            </svg>{' '}
+            Size chart
+          </a>
+        </div>
+        <AddToCartButton
+          lines={[
+            {
+              merchandiseId: selectedVariant.id,
+              quantity: 1,
+            },
+          ]}
+          variant="primary"
+          data-test="add-to-cart"
+          analytics={{
+            products: [productAnalytics],
+            totalValue: parseFloat(productAnalytics.price),
+          }}
+        />
+
+        <div className="shipping-text lp-05 text-center">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 18"
+            width="24"
+            height="18"
+          >
+            <path
+              fillRule="evenodd"
+              d="M5 8L5 9L13 9L13 2L3 2L3 1C3 0.45 3.45 0 4 0C6.58 0 11.42 0 14 0C14.55 0 15 0.45 15 1L15 3L19.67 3C20.78 3 21.27 3.58 21.6 4.11C22.2 5.05 23.14 6.54 23.71 7.48C23.9 7.8 24 8.15 24 8.52C24 9.71 24 11.5 24 13C24 14.09 23.26 15 22 15L21 15C21 16.66 19.66 18 18 18C16.34 18 15 16.66 15 15L11 15C11 16.66 9.66 18 8 18C6.34 18 5 16.66 5 15L4 15C3.45 15 3 14.55 3 14L3 8L1 8L1 6L8 6L8 8L5 8ZM6.8 15C6.8 15.66 7.34 16.2 8 16.2C8.66 16.2 9.2 15.66 9.2 15C9.2 14.34 8.66 13.8 8 13.8C7.34 13.8 6.8 14.34 6.8 15ZM16.8 15C16.8 15.66 17.34 16.2 18 16.2C18.66 16.2 19.2 15.66 19.2 15C19.2 14.34 18.66 13.8 18 13.8C17.34 13.8 16.8 14.34 16.8 15ZM15 11L5 11L5 13L5.76 13C6.31 12.39 7.11 12 8 12C8.89 12 9.69 12.39 10.24 13L15.76 13C16.31 12.39 17.11 12 18 12C18.89 12 19.69 12.39 20.24 13L22 13L22 8.43C22 8.43 20.84 6.44 20.29 5.5C20.11 5.19 19.78 5 19.43 5L15 5L15 11ZM18.7 6C19.06 6 19.4 6.19 19.57 6.5C20.06 7.36 21 9 21 9L16 9L16 6C16 6 17.83 6 18.7 6ZM0 3L8 3L8 5L0 5L0 3Z"
+            />
+          </svg>
+          Free shipping on order above $20
+        </div>
+        <div className="product-collapse-tabs">
+          {descriptionHtml && (
+            <ProductDetail title="Product Details" content={descriptionHtml} />
+          )}
+          {shippingPolicy?.body && (
+            <ProductDetail
+              title="Shipping"
+              content={getExcerpt(shippingPolicy.body)}
+              learnMore={`/policies/${shippingPolicy.handle}`}
+            />
+          )}
+          {refundPolicy?.body && (
+            <ProductDetail
+              title="Returns"
+              content={getExcerpt(refundPolicy.body)}
+              learnMore={`/policies/${refundPolicy.handle}`}
+            />
+          )}
+        </div>
+      </form>
     </div>
   );
 }
 
 function ProductDetail({title, content, learnMore}) {
-  return (
-    <Disclosure key={title} as="div" className="grid w-full gap-2">
-      {({open}) => (
-        <>
-          <Disclosure.Button className="text-left">
-            <div className="flex justify-between">
-              <Text size="lead" as="h4">
-                {title}
-              </Text>
-              <IconClose
-                className={clsx(
-                  'transition-transform transform-gpu duration-200',
-                  !open && 'rotate-[45deg]',
-                )}
-              />
-            </div>
-          </Disclosure.Button>
+  const [isOpen, setIsOpen] = useState(false);
 
-          <Disclosure.Panel className={'pb-4 pt-2 grid gap-2'}>
-            <div
-              className="prose dark:prose-invert"
-              dangerouslySetInnerHTML={{__html: content}}
-            />
-            {learnMore && (
-              <div className="">
-                <Link
-                  className="pb-px border-b border-primary/30 text-primary/50"
-                  to={learnMore}
-                >
-                  Learn more
-                </Link>
-              </div>
-            )}
-          </Disclosure.Panel>
-        </>
+  const toggleDropdown = () => {
+    setIsOpen(!isOpen);
+  };
+  return (
+    <div className="cllps-group">
+      <div
+        className={`cllps-title lp-05 ${isOpen ? 'active' : ''}`}
+        onClick={toggleDropdown}
+      >
+        <strong>{title}</strong> <span></span>
+      </div>
+      {isOpen && (
+        <div className="cllps-content" style={{ display: 'block' }}>
+          <p dangerouslySetInnerHTML={{ __html: content }}></p>
+        </div>
       )}
-    </Disclosure>
+    </div>
   );
 }
 
