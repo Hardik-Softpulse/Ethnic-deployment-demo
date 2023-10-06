@@ -349,7 +349,6 @@ export function ProductForm({variants}) {
             withoutTrailingZeros
             data={selectedVariant.compareAtPrice}
           />
-          {console.log('compareAtPrice', selectedVariant.compareAtPrice)}
         </span>
       </div>
       <form>
