@@ -1,6 +1,4 @@
-import {Button} from './Button';
 import {FeaturedSection} from './FeaturedSection';
-import {PageHeader, Text} from './Text';
 
 export function GenericError({error}) {
   const heading = `Something’s wrong here.`;
@@ -14,11 +12,10 @@ export function GenericError({error}) {
   }
 
   return (
-    <>
-      <PageHeader heading={heading}>
-        <Text width="narrow" as="p">
-          {description}
-        </Text>
+    <div className="all-contain-page genericError">
+      <div>
+        <h3>{heading}</h3>
+        <p>{description}</p>
         {error?.stack && (
           <pre
             style={{
@@ -33,12 +30,12 @@ export function GenericError({error}) {
             }}
           />
         )}
-        <Button width="auto" variant="secondary" to={'/'}>
+        <button width="auto" variant="secondary" to={'/'}>
           Take me to the home page
-        </Button>
-      </PageHeader>
+        </button>
+      </div>
       <FeaturedSection />
-    </>
+    </div>
   );
 }
 
@@ -48,7 +45,7 @@ function addLinksToStackTrace(stackTrace) {
     (all, m1) =>
       all.replace(
         m1,
-        `<a href="vscode://file${m1}" class="hover:underline">${m1}</a>`,
+        `<a href="vscode://file${m1}" className="hover:underline">${m1}</a>`,
       ),
   );
 }

@@ -1,39 +1,34 @@
-import {IconClose, Link} from '~/components';
+import {Link} from '~/components';
 
-export function Modal({children, cancelLink}) {
+export function Modal({children, cancelLink, isAddressFormPopupVisible}) {
   return (
     <div
-      className="relative z-50"
-      aria-labelledby="modal-title"
-      role="dialog"
-      aria-modal="true"
-      id="modal-bg"
+      className={`address-form-popup ${
+        isAddressFormPopupVisible ? 'opened' : ''
+      }`}
     >
-      <div className="fixed inset-0 transition-opacity bg-opacity-75 bg-primary/40"></div>
-      <div className="fixed inset-0 z-50 overflow-y-auto">
-        <div className="flex items-center justify-center min-h-full p-4 text-center sm:p-0">
-          <div
-            className="relative flex-1 px-4 pt-5 pb-4 overflow-hidden text-left transition-all transform rounded shadow-xl bg-contrast sm:my-12 sm:flex-none sm:w-full sm:max-w-sm sm:p-6"
-            role="button"
-            onClick={(e) => {
-              e.stopPropagation();
-            }}
-            onKeyPress={(e) => {
-              e.stopPropagation();
-            }}
-            tabIndex={0}
+      <div
+        className="address-formpop-box"
+        role="button"
+        onClick={(e) => {
+          e.stopPropagation();
+        }}
+        onKeyPress={(e) => {
+          e.stopPropagation();
+        }}
+        tabIndex={0}
+      >
+        <Link to={cancelLink} className="address-pop-close address-pop-clink">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 20 20"
+            width="20"
+            height="20"
           >
-            <div className="absolute top-0 right-0 hidden pt-4 pr-4 sm:block">
-              <Link
-                to={cancelLink}
-                className="p-4 -m-4 transition text-primary hover:text-primary/50"
-              >
-                <IconClose aria-label="Close panel" />
-              </Link>
-            </div>
-            {children}
-          </div>
-        </div>
+            <path d="M19.99 17.55L12.33 9.97L19.91 2.33L17.55 -0.01L9.98 7.64L2.33 0.06L-0.01 2.41L7.64 9.99L0.06 17.65L2.41 19.99L10 12.33L17.65 19.91L19.99 17.55Z" />
+          </svg>
+        </Link>
+        {children}
       </div>
     </div>
   );

@@ -1,81 +1,93 @@
 import {Form} from '@remix-run/react';
-import {Button, Link, Text} from '~/components';
+import {Link} from './Link';
 
-export function AccountAddressBook({customer, addresses}) {
+export function AccountAddressBook({
+  activeTab,
+  customer,
+  addresses,
+  toggleFormVisibility,
+}) {
   return (
-    <>
-      <div className="grid w-full gap-4 p-4 py-6 md:gap-8 md:p-8 lg:p-12">
-        <h3 className="font-bold text-lead">Address Book</h3>
-        <div>
-          {!addresses?.length && (
-            <Text className="mb-1" width="narrow" as="p" size="copy">
-              You haven&apos;t saved any addresses yet.
-            </Text>
+    <div
+      className="cust-side-content"
+      id="cst-address"
+      style={{display: activeTab === 'cst-address' ? 'block' : 'none'}}
+    >
+      <h2>Your Addresses</h2>
+      <Link
+        to="address/add"
+        className="btn add-address-btn address-pop-link lp-05 "
+        data-id="add-address-form"
+        onClick={toggleFormVisibility}
+      >
+        Add New Address
+      </Link>
+
+      {Boolean(addresses?.length) && (
+        <div className="row m-15">
+          {customer.defaultAddress && (
+            <Address
+              address={customer.defaultAddress}
+              defaultAddress
+              toggleFormVisibility={toggleFormVisibility}
+            />
           )}
-          <div className="w-48">
-            <Button
-              to="address/add"
-              className="mt-2 text-sm w-full mb-6"
-              variant="secondary"
-            >
-              Add an Address
-            </Button>
-          </div>
-          {Boolean(addresses?.length) && (
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-              {customer.defaultAddress && (
-                <Address address={customer.defaultAddress} defaultAddress />
-              )}
-              {addresses
-                .filter((address) => address.id !== customer.defaultAddress?.id)
-                .map((address) => (
-                  <Address key={address.id} address={address} />
-                ))}
-            </div>
-          )}
+          {addresses
+            .filter((address) => address.id !== customer.defaultAddress?.id)
+            .map((address) => (
+              <Address
+                key={address.id}
+                address={address}
+                toggleFormVisibility={toggleFormVisibility}
+              />
+            ))}
         </div>
-      </div>
-    </>
+      )}
+    </div>
   );
 }
 
-function Address({address, defaultAddress}) {
+function Address({address, defaultAddress, toggleFormVisibility}) {
   return (
-    <div className="lg:p-8 p-6 border border-gray-200 rounded flex flex-col">
-      {defaultAddress && (
-        <div className="mb-3 flex flex-row">
-          <span className="px-3 py-1 text-xs font-medium rounded-full bg-primary/20 text-primary/50">
-            Default
-          </span>
-        </div>
-      )}
-      <ul className="flex-1 flex-row">
+    <div className="address-book" key={address.id}>
+      <h5>
         {(address.firstName || address.lastName) && (
-          <li>
+          <span>
             {'' +
               (address.firstName && address.firstName + ' ') +
               address?.lastName}
-          </li>
+          </span>
         )}
-        {address.formatted &&
-          address.formatted.map((line) => <li key={line}>{line}</li>)}
-      </ul>
-
-      <div className="flex flex-row font-medium mt-6 items-baseline">
+        {defaultAddress && <span>(Default)</span>}
+      </h5>
+      <div className="divider"></div>
+      <p>
+        {address.company}
+        <br /> {address.address1}, {address.address2}
+        <br /> {address.city}
+        <br /> {address.province}
+        <br /> {address.zip}
+        <br /> {address.country}
+        <br /> {address.phone}
+      </p>
+      <p className="action-link">
         <Link
           to={`/account/address/${encodeURIComponent(address.id)}`}
-          className="text-left underline text-sm"
+          className="address-pop-link "
+          data-id={`edit_address_${address.id}`}
           prefetch="intent"
+          onClick={toggleFormVisibility}
         >
-          Edit
+          <button>Edit</button>
         </Link>
+
         <Form action="address/delete" method="delete">
           <input type="hidden" name="addressId" value={address.id} />
           <button className="text-left text-primary/50 ml-6 text-sm">
             Remove
           </button>
         </Form>
-      </div>
+      </p>
     </div>
   );
 }

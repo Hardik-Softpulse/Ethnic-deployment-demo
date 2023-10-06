@@ -2,9 +2,7 @@ import {useEffect} from 'react';
 import {useFetcher} from '@remix-run/react';
 
 import {usePrefixPathWithLocale} from '~/lib/utils';
-
-import {FeaturedCollections} from './FeaturedCollections';
-import {ProductSwimlane} from './ProductSwimlane';
+import {FeaturedCollections ,BestSeller  } from '~/components'
 
 export function FeaturedSection() {
   const {load, data} = useFetcher();
@@ -18,15 +16,17 @@ export function FeaturedSection() {
 
   const {featuredCollections, featuredProducts} = data;
 
+
+
   return (
     <>
       {featuredCollections.nodes.length < 2 && (
-        <FeaturedCollections
+        <BestSeller 
           title="Popular Collections"
           collections={featuredCollections}
         />
       )}
-      <ProductSwimlane products={featuredProducts} />
+      <FeaturedCollections products={featuredProducts} />
     </>
   );
 }

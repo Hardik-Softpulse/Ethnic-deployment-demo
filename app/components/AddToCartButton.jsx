@@ -4,7 +4,6 @@ export function AddToCartButton({
   lines,
   className = '',
   variant = 'primary',
- 
   disabled,
   analytics,
   ...props

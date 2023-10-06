@@ -2,7 +2,7 @@ import {json} from '@shopify/remix-oxygen';
 import {useLoaderData} from '@remix-run/react';
 import {Image, Pagination, getPaginationVariables} from '@shopify/hydrogen';
 
-import {Grid, Heading, PageHeader, Section, Link, Button} from '~/components';
+import {Link} from '~/components';
 import {getImageLoadingPriority} from '~/lib/const';
 import {seoPayload} from '~/lib/seo.server';
 import {routeHeaders} from '~/data/cache';
@@ -30,62 +30,76 @@ export const loader = async ({request, context: {storefront}}) => {
 };
 
 export default function Collections() {
-  const {collections} = useLoaderData();
+  const {collections, seo} = useLoaderData();
+
+  console.log('collections', collections)
 
   return (
-    <>
-      <PageHeader heading="Collections" />
-      <Section>
-        <Pagination connection={collections}>
-          {({nodes, isLoading, PreviousLink, NextLink}) => (
-            <>
-              <div className="flex items-center justify-center mb-6">
-                <Button as={PreviousLink} variant="secondary" width="full">
-                  {isLoading ? 'Loading...' : 'Previous collections'}
-                </Button>
-              </div>
-              <Grid
-                items={nodes.length === 3 ? 3 : 2}
-                data-test="collection-grid"
-              >
-                {nodes.map((collection, i) => (
-                  <CollectionCard
-                    collection={collection}
-                    key={collection.id}
-                    loading={getImageLoadingPriority(i, 2)}
-                  />
-                ))}
-              </Grid>
-              <div className="flex items-center justify-center mt-6">
-                <Button as={NextLink} variant="secondary" width="full">
-                  {isLoading ? 'Loading...' : 'Next collections'}
-                </Button>
-              </div>
-            </>
-          )}
-        </Pagination>
-      </Section>
-    </>
+    <div className="all-collection">
+      <div className="cllctn-page-in pb-60">
+        <div className="container">
+          <h2 className="page-title text-up text-center">{seo.title}</h2>
+          <Pagination connection={collections}>
+            {({nodes, isLoading, PreviousLink, NextLink, pageInfo}) => (
+              <>
+                <div className="row m-15 ">
+                  {nodes.map((collection, i) => (
+                    <CollectionCard
+                      collection={collection}
+                      key={collection.id}
+                      loading={getImageLoadingPriority(i, 2)}
+                    />
+                  ))}
+                </div>
+
+                <div className="pagination dfx flxcntr flxwrp">
+                  <span className="pager-prev">
+                    <PreviousLink>
+                     <button>previous</button>
+                    </PreviousLink>
+                  </span>
+
+                  {/* {Array.from({length: nodes.length}, (_, index) => (
+                        <span key={index}>
+                          <a href={`?page=${index + 1}`}>{index + 1}</a>
+                        </span>
+                      ))} */}
+
+                  <span className="pager-next">
+                    <NextLink>
+                      <button className="btn">Load More</button>
+                    </NextLink>
+                  </span>
+                </div>
+              </>
+            )}
+          </Pagination>
+        </div>
+      </div>
+    </div>
   );
 }
 
 function CollectionCard({collection, loading}) {
   return (
-    <Link to={`/collections/${collection.handle}`} className="grid gap-4">
-      <div className="card-image bg-primary/5 aspect-[3/2]">
+    <div className="collection-item col all-collection-item">
+      <Link
+        className="collection-img"
+        to={`/collections/${collection.handle}`}
+        prefetch="intent"
+      >
         {collection?.image && (
           <Image
+            className="object-cover w-full fadeIn"
             data={collection.image}
             aspectRatio="6/4"
             sizes="(max-width: 32em) 100vw, 45vw"
             loading={loading}
           />
         )}
-      </div>
-      <Heading as="h3" size="copy">
-        {collection.title}
-      </Heading>
-    </Link>
+      </Link>
+      <h5>{collection.title}</h5>
+    </div>
   );
 }
 

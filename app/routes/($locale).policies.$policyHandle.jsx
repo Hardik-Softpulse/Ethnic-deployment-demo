@@ -1,8 +1,6 @@
 import {json} from '@shopify/remix-oxygen';
-import {useLoaderData} from '@remix-run/react';
+import {Link, useLoaderData} from '@remix-run/react';
 import invariant from 'tiny-invariant';
-
-import {PageHeader, Section, Button} from '~/components';
 import {routeHeaders} from '~/data/cache';
 import {seoPayload} from '~/lib/seo.server';
 
@@ -42,32 +40,15 @@ export default function Policies() {
   const {policy} = useLoaderData();
 
   return (
-    <>
-      <Section
-        padding="all"
-        display="flex"
-        className="flex-col items-baseline w-full gap-8 md:flex-row"
-      >
-        <PageHeader
-          heading={policy.title}
-          className="grid items-start flex-grow gap-4 md:sticky top-36 md:w-5/12"
-        >
-          <Button
-            className="justify-self-start"
-            variant="inline"
-            to={'/policies'}
-          >
-            &larr; Back to Policies
-          </Button>
-        </PageHeader>
-        <div className="flex-grow w-full md:w-7/12">
-          <div
-            dangerouslySetInnerHTML={{__html: policy.body}}
-            className="prose dark:prose-invert"
-          />
-        </div>
-      </Section>
-    </>
+    <div>
+      <h3>{policy.title}</h3>
+      <Link className="justify-self-start" variant="inline" href={'/cart'}>
+        <button>Back to Cart</button>
+      </Link>
+      <div>
+        <div dangerouslySetInnerHTML={{__html: policy.body}} />
+      </div>
+    </div>
   );
 }
 

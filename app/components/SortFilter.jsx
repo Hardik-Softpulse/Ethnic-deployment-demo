@@ -9,6 +9,9 @@ import {
 export function SortFilter({filters, appliedFilters = []}) {
   const [params] = useSearchParams();
   const location = useLocation();
+  const navigate = useNavigate();
+
+  console.log('filters', filters);
 
   const filterMarkup = (filter, option) => {
     switch (filter.type) {
@@ -41,31 +44,39 @@ export function SortFilter({filters, appliedFilters = []}) {
 
   return (
     <div className="cllctn-sidebar">
-      {appliedFilters.length > 0 ? (
-        <AppliedFilters filters={appliedFilters} />
-      ) : null}
       <h3 className="text-up lp-05">Filter</h3>
+      <div className='appliedfilter'>
+        {appliedFilters.length > 0 ? (
+          <AppliedFilters filters={appliedFilters} />
+        ) : null}
+      </div>
       {filters.map(
         (filter) =>
-          filter.values.length > 1 && (
+          filter.values.length > 0 && (
             <div className="filter-option" key={filter.id}>
               <h6 className="filter-title">{filter.label}</h6>
               <div className="filter-list clearfix">
-                {filter.values?.map((option) => {
-                  return (
-                    <div className="filter-item" key={option.id}>
-                      <input
-                        type="checkbox"
-                        name="size"
-                        id={option.id}
-                        checked=""
-                      />
-                      <label htmlFor="size-1" className="filter-act">
-                        {filterMarkup(filter, option)}
-                      </label>
-                    </div>
-                  );
-                })}
+                <form>
+                  {filter.values?.map((option) => {
+                    const to = getFilterLink(
+                      filter,
+                      option.input,
+                      params,
+                      location,
+                    );
+                    return (
+                      <div className="filter-item" key={option.id}>
+                        <input
+                          type="radio"
+                          name={filter.id}
+                          id={option.id}
+                          onChange={() => navigate(to)}
+                        />
+                        <label htmlFor={option.id}>{option.label}</label>
+                      </div>
+                    );
+                  })}
+                </form>
               </div>
             </div>
           ),
@@ -86,7 +97,7 @@ function AppliedFilters({filters = []}) {
             className="reset-act"
             key={`${filter.label}-${filter.urlParam}`}
           >
-            reset
+            reset {filter.label}
           </Link>
         );
       })}

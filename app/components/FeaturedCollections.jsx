@@ -1,39 +1,83 @@
-import {Image} from '@shopify/hydrogen';
-import {Heading, Section, Grid, Link} from '~/components';
+import {useEffect} from 'react';
+// import Swiper from 'swiper';
+// import 'swiper/swiper-bundle.min.css';
+import {SectionProductCard} from '~/components';
 
-export function FeaturedCollections({
-  collections,
-  title = 'Collections',
-  ...props
-}) {
-  const haveCollections = collections?.nodes?.length > 0;
-  if (!haveCollections) return null;
-
-  const collectionsWithImage = collections.nodes.filter((item) => item.image);
+export function FeaturedCollections({title = 'SHOP NEW ARRIVALS', products, count = 4}) {
+  // useEffect(() => {
+  //   Swiper.use([Navigation]);
+  //   var productSlider = new Swiper('.product-slider', {
+  //     slidesPerView: 'auto',
+  //     navigation: {
+  //       nextEl: '.swiper-button-next',
+  //       prevEl: '.swiper-button-prev',
+  //     },
+  //   });
+  // }, [products]);
 
   return (
-    <Section {...props} heading={title}>
-      <Grid items={collectionsWithImage.length}>
-        {collectionsWithImage.map((collection) => {
-          return (
-            <Link key={collection.id} to={`/collections/${collection.handle}`}>
-              <div className="grid gap-4">
-                <div className="card-image bg-primary/5 aspect-[3/2]">
-                  {collection?.image && (
-                    <Image
-                      alt={`Image of ${collection.title}`}
-                      data={collection.image}
-                      sizes="(max-width: 32em) 100vw, 33vw"
-                      aspectRatio="3/2"
-                    />
-                  )}
-                </div>
-                <Heading size="copy">{collection.title}</Heading>
-              </div>
-            </Link>
-          );
-        })}
-      </Grid>
-    </Section>
+    <div className="collection-products">
+      <div className="container">
+        <div className="sctn-title text-center">
+          <h2 className="text-up">{title}</h2>
+          <p> Lorem Ipsum is simply dummy text typesetting industry.</p>
+        </div>
+        <div className="product-slider swiper-container">
+          <div className="swiper-wrapper">
+            {products.nodes.map((product) => (
+              <SectionProductCard
+                product={product}
+                key={product.id}
+                count={4}
+              />
+            ))}
+          </div>
+          <div className="swiper-button-prev">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="20"
+              height="16"
+              viewBox="0 0 18 15"
+              className="stroke-icon"
+            >
+              <path
+                d="M18 7.52344L1.6542 7.52344"
+                stroke="#000"
+                strokeWidth="2"
+                fill="none"
+              ></path>
+              <path
+                d="M7.97656 14L1.49988 7.52345L7.97656 1.04691"
+                stroke="#000"
+                strokeWidth="2"
+                fill="none"
+              ></path>
+            </svg>
+          </div>
+          <div className="swiper-button-next">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="20"
+              height="16"
+              viewBox="0 0 18 15"
+              className="stroke-icon"
+            >
+              <path
+                d="M0 7.47656L16.3458 7.47656"
+                stroke="#000"
+                strokeWidth="2"
+                fill="none"
+              ></path>
+              <path
+                d="M10.0234 1L16.5001 7.47655L10.0234 13.9531"
+                stroke="#000"
+                strokeWidth="2"
+                fill="none"
+              ></path>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 }

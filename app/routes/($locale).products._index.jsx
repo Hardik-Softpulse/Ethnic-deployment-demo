@@ -2,8 +2,7 @@ import {json} from '@shopify/remix-oxygen';
 import {useLoaderData} from '@remix-run/react';
 import invariant from 'tiny-invariant';
 import {Pagination, getPaginationVariables} from '@shopify/hydrogen';
-
-import {PageHeader, Section, ProductCard, Grid} from '~/components';
+import {ProductCard, SortFilter} from '~/components';
 import {PRODUCT_CARD_FRAGMENT} from '~/data/fragments';
 import {getImageLoadingPriority} from '~/lib/const';
 import {seoPayload} from '~/lib/seo.server';
@@ -51,41 +50,48 @@ export async function loader({request, context: {storefront}}) {
 }
 
 export default function AllProducts() {
-  const {products} = useLoaderData();
+  const {products, seo} = useLoaderData();
+
+  console.log('products', products);
 
   return (
-    <>
-      <PageHeader heading="All Products" variant="allCollections" />
-      <Section>
-        <Pagination connection={products}>
-          {({nodes, isLoading, NextLink, PreviousLink}) => {
-            const itemsMarkup = nodes.map((product, i) => (
-              <ProductCard
-                key={product.id}
-                product={product}
-                loading={getImageLoadingPriority(i)}
-              />
-            ));
-
-            return (
+    <div className="all-collection">
+      <div className="cllctn-page-in pb-60">
+        <div className="container">
+          <h2 className="page-title text-up text-center">{seo.title}</h2>
+          <SortFilter />
+          <Pagination connection={products}>
+            {({nodes, isLoading, PreviousLink, NextLink, pageInfo}) => (
               <>
-                <div className="flex items-center justify-center mt-6">
-                  <PreviousLink className="inline-block rounded font-medium text-center py-3 px-6 border border-primary/10 bg-contrast text-primary w-full">
-                    {isLoading ? 'Loading...' : 'Previous'}
-                  </PreviousLink>
+                <div className="row m-15 ">
+                  {nodes.map((product, i) => (
+                    <ProductCard
+                      className="all-collection-item"
+                      key={product.id}
+                      loading={getImageLoadingPriority(i)}
+                      product={product}
+                    />
+                  ))}
                 </div>
-                <Grid data-test="product-grid">{itemsMarkup}</Grid>
-                <div className="flex items-center justify-center mt-6">
-                  <NextLink className="inline-block rounded font-medium text-center py-3 px-6 border border-primary/10 bg-contrast text-primary w-full">
-                    {isLoading ? 'Loading...' : 'Next'}
-                  </NextLink>
+
+                <div className="pagination dfx flxcntr flxwrp">
+                  <span className="pager-prev">
+                    <PreviousLink>
+                      <button>previous</button>
+                    </PreviousLink>
+                  </span>
+                  <span className="pager-next">
+                    <NextLink>
+                      <button className="btn">Load More</button>
+                    </NextLink>
+                  </span>
                 </div>
               </>
-            );
-          }}
-        </Pagination>
-      </Section>
-    </>
+            )}
+          </Pagination>
+        </div>
+      </div>
+    </div>
   );
 }
 

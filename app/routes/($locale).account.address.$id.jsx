@@ -5,11 +5,11 @@ import {
   useOutletContext,
   useParams,
   useNavigation,
+  Link,
 } from '@remix-run/react';
 import {flattenConnection} from '@shopify/hydrogen';
 import invariant from 'tiny-invariant';
 
-import {Button, Text} from '~/components';
 import {assertApiErrors, getInputStyleClasses} from '~/lib/utils';
 
 const badRequest = (data) => json(data, {status: 400});
@@ -127,38 +127,37 @@ export default function EditAddress() {
   const {customer} = useOutletContext();
   const addresses = flattenConnection(customer.addresses);
   const defaultAddress = customer.defaultAddress;
-  /**
-   * When a refresh happens (or a user visits this link directly), the URL
-   * is actually stale because it contains a special token. This means the data
-   * loaded by the parent and passed to the outlet contains a newer, fresher token,
-   * and we don't find a match. We update the `find` logic to just perform a match
-   * on the first (permanent) part of the ID.
-   */
+
   const normalizedAddress = decodeURIComponent(addressId ?? '').split('?')[0];
   const address = addresses.find((address) =>
     address.id.startsWith(normalizedAddress),
   );
 
+  console.log('state', state);
+  console.log('addresses', addresses);
+  console.log('customer', customer);
+
   return (
     <>
-      <Text className="mt-4 mb-6" as="h3" size="lead">
-        {isNewAddress ? 'Add address' : 'Edit address'}
-      </Text>
-      <div className="max-w-lg">
-        <Form method="post">
-          <input
-            type="hidden"
-            name="addressId"
-            value={address?.id ?? addressId}
-          />
+      <h2>{isNewAddress ? 'Add new address' : 'Edit address'}</h2>
+
+      <Form method="post">
+        <input
+          type="hidden"
+          name="addressId"
+          value={address?.id ?? addressId}
+        />
+        <div className="row m-15">
           {actionData?.formError && (
             <div className="flex items-center justify-center mb-6 bg-red-100 rounded">
               <p className="m-4 text-sm text-red-900">{actionData.formError}</p>
             </div>
           )}
-          <div className="mt-3">
+          <div className="input-field col-50">
+            <label for="address_first_name_new">
+              <strong>First Name</strong>
+            </label>
             <input
-              className={getInputStyleClasses()}
               id="firstName"
               name="firstName"
               required
@@ -166,12 +165,16 @@ export default function EditAddress() {
               autoComplete="given-name"
               placeholder="First name"
               aria-label="First name"
+              className={`txtfname address_form ${getInputStyleClasses()}`}
               defaultValue={address?.firstName ?? ''}
             />
+            <div className="form-error err-txtfname"></div>
           </div>
-          <div className="mt-3">
+          <div className="input-field col-50">
+            <label for="address_last_name_new">
+              <strong>Last Name</strong>
+            </label>
             <input
-              className={getInputStyleClasses()}
               id="lastName"
               name="lastName"
               required
@@ -179,49 +182,68 @@ export default function EditAddress() {
               autoComplete="family-name"
               placeholder="Last name"
               aria-label="Last name"
+              className={`txtlname address_form ${getInputStyleClasses()}`}
+              autoCapitalize="words"
               defaultValue={address?.lastName ?? ''}
             />
+            <div className="form-error err-txtlname"></div>
           </div>
-          <div className="mt-3">
+          <div className="input-field col-50">
+            <label for="address_company_new">
+              <strong>Company</strong>
+            </label>
             <input
-              className={getInputStyleClasses()}
+              className={`txtcompany address_form ${getInputStyleClasses()}`}
+              autoCapitalize="words"
+              defaultValue={address?.company ?? ''}
               id="company"
               name="company"
               type="text"
               autoComplete="organization"
               placeholder="Company"
               aria-label="Company"
-              defaultValue={address?.company ?? ''}
             />
+            <div className="form-error err-txtcompany"></div>
           </div>
-          <div className="mt-3">
+          <div className="input-field col-50">
+            <label for="address_address1_new">
+              <strong>Address 1</strong>
+            </label>
             <input
-              className={getInputStyleClasses()}
+              type="text"
               id="address1"
               name="address1"
-              type="text"
-              autoComplete="address-line1"
-              placeholder="Address line 1*"
-              required
               aria-label="Address line 1"
+              className={`txtadd address_form ${getInputStyleClasses()}`}
+              autoComplete="address-line1"
+              autoCapitalize="words"
+              placeholder="Address line 1"
               defaultValue={address?.address1 ?? ''}
             />
+            <div className="form-error err-txtadd"></div>
           </div>
-          <div className="mt-3">
+          <div className="input-field col-50">
+            <label for="address_address2_new">
+              <strong>Address 2</strong>
+            </label>
             <input
-              className={getInputStyleClasses()}
+              type="text"
               id="address2"
               name="address2"
-              type="text"
+              className={`txtadd2 address_form ${getInputStyleClasses()}`}
               autoComplete="address-line2"
               placeholder="Address line 2"
               aria-label="Address line 2"
+              autoCapitalize="words"
               defaultValue={address?.address2 ?? ''}
             />
+            <div className="form-error err-txtadd2"></div>
           </div>
-          <div className="mt-3">
+          <div className="input-field col-50">
+            <label for="address_city_new">
+              <strong>City</strong>
+            </label>
             <input
-              className={getInputStyleClasses()}
               id="city"
               name="city"
               type="text"
@@ -229,38 +251,17 @@ export default function EditAddress() {
               autoComplete="address-level2"
               placeholder="City"
               aria-label="City"
+              className={`txtcity address_form ${getInputStyleClasses()}`}
+              autoCapitalize="words"
               defaultValue={address?.city ?? ''}
             />
+            <div className="form-error err-txtcity"></div>
           </div>
-          <div className="mt-3">
-            <input
-              className={getInputStyleClasses()}
-              id="province"
-              name="province"
-              type="text"
-              autoComplete="address-level1"
-              placeholder="State / Province"
-              required
-              aria-label="State"
-              defaultValue={address?.province ?? ''}
-            />
-          </div>
-          <div className="mt-3">
-            <input
-              className={getInputStyleClasses()}
-              id="zip"
-              name="zip"
-              type="text"
-              autoComplete="postal-code"
-              placeholder="Zip / Postal Code"
-              required
-              aria-label="Zip"
-              defaultValue={address?.zip ?? ''}
-            />
-          </div>
-          <div className="mt-3">
-            <input
-              className={getInputStyleClasses()}
+          <div className="input-field col-50">
+            <label for="address_country_new">
+              <strong>Country</strong>
+            </label>
+            <select
               id="country"
               name="country"
               type="text"
@@ -268,57 +269,118 @@ export default function EditAddress() {
               placeholder="Country"
               required
               aria-label="Country"
+              className={`selcountry ${getInputStyleClasses()}`}
+              data-default=""
               defaultValue={address?.country ?? ''}
-            />
+            >
+              <option value="---" data-provinces="[]">
+                ---
+              </option>
+              <option value="Afghanistan" data-provinces="[]">
+                Afghanistan
+              </option>
+              <option value="Aland Islands" data-provinces="[]">
+                Åland Islands
+              </option>
+              <option value="Albania" data-provinces="[]">
+                Albania
+              </option>
+              <option value="Algeria" data-provinces="[]">
+                Algeria
+              </option>
+              <option value="Andorra" data-provinces="[]">
+                Andorra
+              </option>
+              <option value="Angola" data-provinces="[]">
+                Angola
+              </option>
+              <option value="Anguilla" data-provinces="[]">
+                Anguilla
+              </option>
+            </select>
+            <div className="form-error err-selcountry"></div>
           </div>
-          <div className="mt-3">
+          <div
+            id="address_province_container_new"
+            className="input-field col-50"
+          >
+            <label for="address_province_new">
+              <strong>Province</strong>
+            </label>
+            <select
+              id="province"
+              name="province"
+              type="text"
+              autoComplete="address-level1"
+              placeholder="State / Province"
+              required
+              aria-label="State"
+              className={`address_form ${getInputStyleClasses()}`}
+              data-default=""
+              defaultValue={address?.province ?? ''}
+            >
+              <option value="---" data-provinces="[]">
+                ---
+              </option>
+            </select>
+          </div>
+          <div className="input-field col-50">
+            <label for="address_zip_new">
+              <strong>Postal/Zip Code</strong>
+            </label>
             <input
-              className={getInputStyleClasses()}
+              id="zip"
+              name="zip"
+              type="text"
+              autoComplete="postal-code"
+              placeholder="Zip / Postal Code"
+              required
+              aria-label="Zip"
+              className={`zipcode address_form ${getInputStyleClasses()}`}
+              autoCapitalize="characters"
+              defaultValue={address?.zip ?? ''}
+            />
+            <div className="form-error err-zipcode"></div>
+          </div>
+          <div className="input-field col-50">
+            <label for="address_phone_new">
+              <strong>Phone</strong>
+            </label>
+            <input
               id="phone"
               name="phone"
               type="tel"
               autoComplete="tel"
               placeholder="Phone"
               aria-label="Phone"
+              className={`txtphone address_form ${getInputStyleClasses()}`}
               defaultValue={address?.phone ?? ''}
             />
+            <div className="form-error err-txtphone"></div>
           </div>
-          <div className="mt-4">
-            <input
-              type="checkbox"
-              name="defaultAddress"
-              id="defaultAddress"
-              defaultChecked={defaultAddress?.id === address?.id}
-              className="border-gray-500 rounded-sm cursor-pointer border-1"
-            />
-            <label
-              className="inline-block ml-2 text-sm cursor-pointer"
-              htmlFor="defaultAddress"
-            >
-              Set as default address
-            </label>
-          </div>
-          <div className="mt-8">
-            <Button
-              className="w-full rounded focus:shadow-outline"
-              type="submit"
-              variant="primary"
-              disabled={state !== 'idle'}
-            >
-              {state !== 'idle' ? 'Saving' : 'Save'}
-            </Button>
-          </div>
-          <div>
-            <Button
-              to=".."
-              className="w-full mt-2 rounded focus:shadow-outline"
-              variant="secondary"
-            >
-              Cancel
-            </Button>
-          </div>
-        </Form>
-      </div>
+        </div>
+        <div className="input-chckbox clearfix">
+          <input
+            type="checkbox"
+            id="address_default_address_new"
+            name="address[default]"
+            value="1"
+            defaultChecked={defaultAddress?.id === address?.id}
+          />
+          <label for="address_default_address_new" className="inline">
+            Set as default address?
+          </label>
+        </div>
+
+        <input
+          type="submit"
+          className={`btn address_btn lp-05 ${
+            state !== 'idle' ? 'disabled' : ''
+          }`}
+          value={state !== 'idle' ? 'Saving' : 'Save'}
+          disabled={state !== 'idle'}
+        />
+      </Form>
     </>
   );
 }

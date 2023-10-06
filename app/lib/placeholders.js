@@ -113,12 +113,12 @@ const PLACEHOLDERS = {
     {
       title: 'Description',
       content:
-        'We threw snow tires on our core classics... Good for all year round! Named after my favorite football match of the year. Just like any of our joints, dress them up or down...',
+        'We threw snow tires on our core classNameics... Good for all year round! Named after my favorite football match of the year. Just like any of our joints, dress them up or down...',
     },
     {
       title: 'Size and Fit',
       content:
-        'We threw snow tires on our core classics... Good for all year round! Named after my favorite football match of the year. Just like any of our joints, dress them up or down...',
+        'We threw snow tires on our core classNameics... Good for all year round! Named after my favorite football match of the year. Just like any of our joints, dress them up or down...',
     },
     {
       title: 'Delivery and Returns',

@@ -8,7 +8,7 @@ import {Link} from './Link';
 export function ProductCard({
   product,
   label,
-  className,
+  className = 'all-collection-item',
   loading,
   onClick,
   quickAdd,
@@ -31,32 +31,15 @@ export function ProductCard({
     cardLabel = 'New';
   }
 
-  const productAnalytics = {
-    productGid: product.id,
-    variantGid: firstVariant.id,
-    name: product.title,
-    variantName: firstVariant.title,
-    brand: product.vendor,
-    price: firstVariant.price.amount,
-    quantity: 1,
-  };
-
   return (
-    <>
+    <div className={`product-item ${className}`}>
       <Link
         className="product-img"
         onClick={onClick}
         to={`/products/${product.handle}`}
         prefetch="intent"
       >
-        <Image
-          className="object-cover w-full fadeIn"
-          sizes="(min-width: 64em) 25vw, (min-width: 48em) 30vw, 45vw"
-          aspectRatio="4/5"
-          src={image?.url}
-          alt={ `Picture of ${product.title}`}
-          loading={loading}
-        />
+        <Image src={image?.url} alt={image?.altText} loading={loading} />
 
         {product.variants[0]?.onSale && (
           <div className="product-tag sale-tag">
@@ -64,19 +47,27 @@ export function ProductCard({
           </div>
         )}
       </Link>
+
       <h5>
         <Link
           onClick={onClick}
           to={`/products/${product.handle}`}
           prefetch="intent"
+          className="product-title"
         >
           {product.title}
         </Link>
       </h5>
       <div className="product-price">
-        <span className="s-price">${price.amount}</span>
+        <span className="s-price">
+          <Money withoutTrailingZeros data={price} />
+          {isDiscounted(price, compareAtPrice) && (
+            <CompareAtPrice className={'opacity-50'} data={compareAtPrice} />
+          )}
+        </span>
+        <span className="o-price">$140</span>
       </div>
-    </>
+    </div>
   );
 }
 

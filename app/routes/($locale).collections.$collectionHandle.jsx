@@ -7,12 +7,12 @@ import {
   getPaginationVariables,
 } from '@shopify/hydrogen';
 import invariant from 'tiny-invariant';
-import {SortFilter, ProductCard, Link} from '~/components';
+import {SortFilter, ProductCard} from '~/components';
 import {PRODUCT_CARD_FRAGMENT} from '~/data/fragments';
 import {routeHeaders} from '~/data/cache';
 import {seoPayload} from '~/lib/seo.server';
 import {getImageLoadingPriority} from '~/lib/const';
-// import {feature} from '../img/feature-banner.jpg';
+import colPageImg from '../img/colPageImg.jpg';
 
 export const headers = routeHeaders;
 
@@ -112,13 +112,15 @@ export async function loader({params, request, context}) {
 
 export default function Collection() {
   const {collection, collections, appliedFilters} = useLoaderData();
-  console.log('collection', collection);
+
+  console.log('collection', collection)
+
   return (
     <div className="collection-page">
       <div className="breadcrumb">
         <div className="container">
           <span>
-            <a href="javascript:void(0)">Home</a>
+            <a href="/">Home</a>
           </span>
           <span>products</span>
         </div>
@@ -133,65 +135,36 @@ export default function Collection() {
               appliedFilters={appliedFilters}
               collections={collections}
             />
+
             <Pagination connection={collection.products}>
               {({nodes, isLoading, PreviousLink, NextLink, pageInfo}) => (
                 <div className="cllctn-list">
                   <div className="row m-15">
                     {nodes.map((product, i) => (
-                      <div className="product-item">
-                        <ProductCard
-                          key={product.id}
-                          loading={getImageLoadingPriority(i)}
-                          product={product}
-                        />
-                      </div>
+                      <ProductCard
+                        key={product.id}
+                        loading={getImageLoadingPriority(i)}
+                        product={product}
+                      />
                     ))}
                   </div>
-                  {nodes.length !== 0 ? (
-                    <div className="pagination dfx flxcntr flxwrp">
-                      {PreviousLink && (
-                        <span className="pager-prev">
-                          <Link to={PreviousLink}>
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              width="10.031"
-                              height="18.03"
-                              viewBox="0 0 10.031 18.03"
-                            >
-                              <path
-                                d="M893.239,2744.63l8.189,8.1a0.92,0.92,0,0,0,1.3,0,0.9,0.9,0,0,0,0-1.28l-7.54-7.46,7.539-7.46a0.907,0.907,0,0,0,0-1.29,0.92,0.92,0,0,0-1.3,0l-8.189,8.1A0.915,0.915,0,0,0,893.239,2744.63Z"
-                                transform="translate(-892.969 -2734.97)"
-                              />
-                            </svg>
-                          </Link>
-                        </span>
-                      )}
-                      {Array.from({length: nodes.length}, (_, index) => (
+                  <div className="pagination dfx flxcntr flxwrp">
+                    <span className="pager-prev">
+                      <PreviousLink>
+                       <button className='btn'>Previous</button>
+                      </PreviousLink>
+                    </span>
+
+                    {/* {Array.from({length: nodes.length}, (_, index) => (
                         <span key={index}>
                           <a href={`?page=${index + 1}`}>{index + 1}</a>
                         </span>
-                      ))}
-                      {NextLink && (
-                        <span className="pager-next">
-                          <Link to={NextLink}>
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              width="10.03"
-                              height="18"
-                              viewBox="0 0 10.03 18"
-                            >
-                              <path
-                                d="M1073.73,2743.36l-8.16-8.09a0.917,0.917,0,0,0-1.3,0,0.894,0.894,0,0,0,0,1.28l7.52,7.45-7.52,7.45a0.894,0.894,0,0,0,0,1.28,0.917,0.917,0,0,0,1.3,0l8.16-8.09A0.894,0.894,0,0,0,1073.73,2743.36Z"
-                                transform="translate(-1064 -2735)"
-                              />
-                            </svg>
-                          </Link>
-                        </span>
-                      )}
-                    </div>
-                  ) : (
-                    <></>
-                  )}
+                      ))} */}
+
+                    <span className="pager-next">
+                      <NextLink><button className='btn'>Load More</button></NextLink>
+                    </span>
+                  </div>
                 </div>
               )}
             </Pagination>
@@ -200,7 +173,7 @@ export default function Collection() {
       </div>
 
       <div className="image-i1-text im1t-xs dfx flxancntr p-60">
-        {/* <img src={feature} /> */}
+        <img src={colPageImg} />
         <div className="container">
           <h2 className="text-white text-up">Shop our Women collection</h2>
           <p className="text-white">
@@ -208,7 +181,7 @@ export default function Collection() {
             industry. Lorem Ipsum has been the industry's standard dummy text
             ever since the 1500s
           </p>
-          <a href="javascript:void(0)" className="btn btn-white">
+          <a href="/collections" className="btn btn-white">
             Shop now
           </a>
         </div>
@@ -272,7 +245,7 @@ const COLLECTION_QUERY = `#graphql
         pageInfo {
           hasPreviousPage
           hasNextPage
-          hasNextPage
+          startCursor
           endCursor
         }
       }

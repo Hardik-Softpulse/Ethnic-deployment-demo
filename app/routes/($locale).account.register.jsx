@@ -81,104 +81,157 @@ export const meta = () => {
   return [{title: 'Register'}];
 };
 
-export default function Register() {
+export default function Ragister() {
   const actionData = useActionData();
   const [nativeEmailError, setNativeEmailError] = useState(null);
   const [nativePasswordError, setNativePasswordError] = useState(null);
 
+  console.log('actionData', actionData)
+
   return (
-    <div className="flex justify-center my-24 px-4">
-      <div className="max-w-md w-full">
-        <h1 className="text-4xl">Create an Account.</h1>
-        {/* TODO: Add onSubmit to validate _before_ submission with native? */}
-        <Form
-          method="post"
-          noValidate
-          className="pt-6 pb-8 mt-4 mb-4 space-y-3"
-        >
-          {actionData?.formError && (
-            <div className="flex items-center justify-center mb-6 bg-zinc-500">
-              <p className="m-4 text-s text-contrast">{actionData.formError}</p>
+    <div className="cust-sign-page clearfix">
+      <div className="breadcrumb">
+        <div className="container">
+          <span>
+            <a href="#">Home</a>
+          </span>
+          <span>register</span>
+        </div>
+      </div>
+      <div className="container">
+        <h2 className="page-title text-up text-center">Register</h2>
+        <div className="cust-sign-form">
+          <Form method="post" noValidate>
+            {actionData?.formError && (
+              <div className="flex items-center justify-center mb-6 bg-zinc-500">
+                <p className="m-4 text-s text-contrast">
+                  {actionData.formError}
+                </p>
+              </div>
+            )}
+            <div className="mb-30">
+              Get access to your Orders, Wishlist and Recommendations
             </div>
-          )}
-          <div>
-            <input
-              className={`mb-1 ${getInputStyleClasses(nativeEmailError)}`}
-              id="email"
-              name="email"
-              type="email"
-              autoComplete="email"
-              required
-              placeholder="Email address"
-              aria-label="Email address"
-              // eslint-disable-next-line jsx-a11y/no-autofocus
-              autoFocus
-              onBlur={(event) => {
-                setNativeEmailError(
-                  event.currentTarget.value.length &&
-                    !event.currentTarget.validity.valid
-                    ? 'Invalid email address'
-                    : null,
-                );
-              }}
-            />
-            {nativeEmailError && (
-              <p className="text-red-500 text-xs">{nativeEmailError} &nbsp;</p>
-            )}
-          </div>
-          <div>
-            <input
-              className={`mb-1 ${getInputStyleClasses(nativePasswordError)}`}
-              id="password"
-              name="password"
-              type="password"
-              autoComplete="current-password"
-              placeholder="Password"
-              aria-label="Password"
-              minLength={8}
-              required
-              // eslint-disable-next-line jsx-a11y/no-autofocus
-              autoFocus
-              onBlur={(event) => {
-                if (
-                  event.currentTarget.validity.valid ||
-                  !event.currentTarget.value.length
-                ) {
-                  setNativePasswordError(null);
-                } else {
-                  setNativePasswordError(
-                    event.currentTarget.validity.valueMissing
-                      ? 'Please enter a password'
-                      : 'Passwords must be at least 8 characters',
+            <div className="input-field">
+              <label>
+                <strong>First Name</strong>
+              </label>
+              <input
+                id="firstName"
+                name="firstName"
+                type="text"
+                autoComplete="email"
+                placeholder="Enter your First name"
+                required
+                className={`mb-1 ${getInputStyleClasses(nativeEmailError)}`}
+              />
+              {nativeEmailError && (
+                <p className="text-red-500 text-xs">
+                  {nativeEmailError} &nbsp;
+                </p>
+              )}
+            </div>
+            <div className="input-field">
+              <label>
+                <strong>Last Name</strong>
+              </label>
+              <input
+                type="text"
+                input
+                id="lastName"
+                name="lastName"
+                placeholder="Enter your last name"
+                required
+                className={`mb-1 ${getInputStyleClasses(nativeEmailError)}`}
+              />
+              {nativeEmailError && (
+                <p className="text-red-500 text-xs">
+                  {nativeEmailError} &nbsp;
+                </p>
+              )}
+            </div>
+            <div className="input-field">
+              <label>
+                <strong>Email Id</strong>
+              </label>
+              <input
+                type="email"
+                name=""
+                placeholder="Enter your email address..."
+                className={`mb-1 ${getInputStyleClasses(nativeEmailError)}`}
+                autoComplete="email"
+                required
+                autoFocus
+                onBlur={(event) => {
+                  setNativeEmailError(
+                    event.currentTarget.value.length &&
+                      !event.currentTarget.validity.valid
+                      ? 'Invalid email address'
+                      : null,
                   );
-                }
-              }}
-            />
-            {nativePasswordError && (
-              <p className="text-red-500 text-xs">
-                {' '}
-                {nativePasswordError} &nbsp;
-              </p>
-            )}
-          </div>
-          <div className="flex items-center justify-between">
+                }}
+              />
+              {nativeEmailError && (
+                <p className="text-red-500 text-xs">
+                  {nativeEmailError} &nbsp;
+                </p>
+              )}
+            </div>
+            <div className="input-field">
+              <label>
+                <strong>Password</strong>
+              </label>
+              <input
+                type="password"
+                name=""
+                placeholder="Enter your password"
+                className={`mb-1 ${getInputStyleClasses(
+                  nativePasswordError,
+                )}`}
+                minLength={8}
+                required
+                // eslint-disable-next-line jsx-a11y/no-autofocus
+                autoFocus
+                onBlur={(event) => {
+                  if (
+                    event.currentTarget.validity.valid ||
+                    !event.currentTarget.value.length
+                  ) {
+                    setNativePasswordError(null);
+                  } else {
+                    setNativePasswordError(
+                      event.currentTarget.validity.valueMissing
+                        ? 'Please enter a password'
+                        : 'Passwords must be at least 8 characters',
+                    );
+                  }
+                }}
+              />
+              {nativePasswordError && (
+                <p className="text-red-500 text-xs">
+                  {' '}
+                  {nativePasswordError} &nbsp;
+                </p>
+              )}
+            </div>
+
             <button
-              className="bg-primary text-contrast rounded py-2 px-4 focus:shadow-outline block w-full"
-              type="submit"
+              className="btn btn-full btn-lg"
+              value="Register"
               disabled={!!(nativePasswordError || nativeEmailError)}
             >
-              Create Account
+              Register
             </button>
-          </div>
-          <div className="flex items-center mt-8 border-t border-gray-300">
-            <p className="align-baseline text-sm mt-6">
-              Already have an account? &nbsp;
-              <Link className="inline underline" to="/account/login">
-                Sign in
-              </Link>
+            <p>
+              Already Have an account ? <Link to="/account/login">Sign in</Link>
+              .
             </p>
-          </div>
-        </Form>
+            <p className="policy-text">
+              By logging in, you agree to Our's <a href="#">Privacy Policy</a>{' '}
+              and <a href="#">Terms of Use</a>
+            </p>
+          </Form>
+        </div>
       </div>
     </div>
   );

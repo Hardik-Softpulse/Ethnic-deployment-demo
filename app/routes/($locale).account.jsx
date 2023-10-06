@@ -1,31 +1,25 @@
 import {
-  Await,
   Form,
+  Link,
   Outlet,
+  useActionData,
   useLoaderData,
   useMatches,
   useOutlet,
 } from '@remix-run/react';
-import {Suspense} from 'react';
 import {json, defer, redirect} from '@shopify/remix-oxygen';
-import {flattenConnection} from '@shopify/hydrogen';
-import {
-  Button,
-  OrderCard,
-  PageHeader,
-  Text,
-  AccountDetails,
-  AccountAddressBook,
-  Modal,
-  ProductSwimlane,
-} from '~/components';
-import {FeaturedCollections} from '~/components/FeaturedCollections';
 import {usePrefixPathWithLocale} from '~/lib/utils';
 import {CACHE_NONE, routeHeaders} from '~/data/cache';
-import {ORDER_CARD_FRAGMENT} from '~/components/OrderCard';
-
-import {getFeaturedData} from './($locale).featured-products';
 import {doLogout} from './($locale).account.logout';
+import {useState} from 'react';
+import {flattenConnection} from '@shopify/hydrogen';
+import {
+  AccountAddressBook,
+  Modal,
+  OrderCard,
+  AccountDetails,
+} from '~/components';
+import Recover from './($locale).account.recover';
 
 export const headers = routeHeaders;
 
@@ -58,7 +52,6 @@ export async function loader({request, context, params}) {
       isAuthenticated,
       customer,
       heading,
-      featuredData: getFeaturedData(context.storefront),
     },
     {
       headers: {
@@ -72,6 +65,14 @@ export default function Authenticated() {
   const data = useLoaderData();
   const outlet = useOutlet();
   const matches = useMatches();
+  const [isAddressFormPopupVisible, setAddressFormPopupVisible] =
+    useState(true);
+
+  const toggleFormVisibility = () => {
+    setAddressFormPopupVisible((prevFlag) => {
+      return !prevFlag;
+    });
+  };
 
   // routes that export handle { renderInModal: true }
   const renderOutletInModal = matches.some((match) => {
@@ -88,10 +89,13 @@ export default function Authenticated() {
     if (renderOutletInModal) {
       return (
         <>
-          <Modal cancelLink="/account">
+          <Modal
+            cancelLink="/account"
+            isAddressFormPopupVisible={isAddressFormPopupVisible}
+          >
             <Outlet context={{customer: data.customer}} />
           </Modal>
-          <Account {...data} />
+          <Account {...data} toggleFormVisibility={toggleFormVisibility} />
         </>
       );
     } else {
@@ -102,50 +106,152 @@ export default function Authenticated() {
   return <Account {...data} />;
 }
 
-function Account({customer, heading, featuredData}) {
+function Account({customer, toggleFormVisibility}) {
+  const [activeTab, setActiveTab] = useState('cst-dashboard');
   const orders = flattenConnection(customer.orders);
   const addresses = flattenConnection(customer.addresses);
 
+  const [isChangePasswordPopupOpen, setChangePasswordPopupOpen] =
+    useState(false);
+
+  const handleTabClick = (tabId) => {
+    setActiveTab(tabId);
+    if (tabId === 'cst-dashboard') {
+      setChangePasswordPopupOpen(!isChangePasswordPopupOpen);
+    }
+  };
+
   return (
-    <>
-      <PageHeader heading={heading}>
-        <Form method="post" action={usePrefixPathWithLocale('/account/logout')}>
-          <button type="submit" className="text-primary/50">
-            Sign out
-          </button>
-        </Form>
-      </PageHeader>
-      {orders && <AccountOrderHistory orders={orders} />}
-      <AccountDetails customer={customer} />
-      <AccountAddressBook addresses={addresses} customer={customer} />
-      {!orders.length && (
-        <Suspense>
-          <Await
-            resolve={featuredData}
-            errorElement="There was a problem loading featured products."
+    <div className="cust-account-page clearfix">
+      <div className="breadcrumb">
+        <div className="container">
+          <span>
+            <a href="/">Home</a>
+          </span>
+          <span>My Account</span>
+        </div>
+      </div>
+      <div className="container">
+        <h2 className="page-title">My Account</h2>
+        <div className="row flxnwrp flxanst">
+          <div className="cust-side-links">
+            <Link
+              to="/account"
+              className={`cst-ac-link ${
+                activeTab === 'cst-dashboard' ? 'active' : ''
+              }`}
+              onClick={() => handleTabClick('cst-dashboard')}
+            >
+              Account Dashboard
+            </Link>
+            <Link
+              to=""
+              className={`cst-ac-link ${
+                activeTab === 'cst-information' ? 'active' : ''
+              }`}
+              onClick={() => handleTabClick('cst-information')}
+            >
+              Account Information
+            </Link>
+            <Link
+              to="#"
+              className={`cst-ac-link ${
+                activeTab === 'cst-address' ? 'active' : ''
+              }`}
+              onClick={() => handleTabClick('cst-address')}
+            >
+              Address Book
+            </Link>
+            <Link
+              to="#"
+              className={`cst-ac-link ${
+                activeTab === 'cst-order' ? 'active' : ''
+              }`}
+              onClick={() => handleTabClick('cst-order')}
+            >
+              My Orders
+            </Link>
+
+            <Form
+              method="post"
+              action={usePrefixPathWithLocale('/account/logout')}
+            >
+              <Link type="submit" className="signout">
+                Sign out
+              </Link>
+            </Form>
+          </div>
+          <div
+            className="cust-side-content show"
+            id="cst-dashboard"
+            style={{display: activeTab === 'cst-dashboard' ? 'block' : 'none'}}
           >
-            {(data) => (
-              <>
-                <FeaturedCollections
-                  title="Popular Collections"
-                  collections={data.featuredCollections}
-                />
-                <ProductSwimlane products={data.featuredProducts} />
-              </>
+            <h2>Contact Information</h2>
+            <p>
+              {customer.firstName + ' ' + customer.lastName}
+              <br />
+              {customer.email}
+            </p>
+            <button
+              className="btn change-psw-link lp-05"
+              onClick={() =>
+                setChangePasswordPopupOpen(!isChangePasswordPopupOpen)
+              }
+              style={{display: isChangePasswordPopupOpen ? 'none' : ''}}
+            >
+              Change Password
+            </button>
+            {activeTab === 'cst-dashboard' && isChangePasswordPopupOpen && (
+              <Recover isChangePasswordPopupOpen={isChangePasswordPopupOpen} />
             )}
-          </Await>
-        </Suspense>
-      )}
-    </>
+          </div>
+          <AccountDetails activeTab={activeTab} customer={customer} />
+          <AccountAddressBook
+            activeTab={activeTab}
+            addresses={addresses}
+            customer={customer}
+            toggleFormVisibility={toggleFormVisibility}
+          />
+          <AccountOrderHistory orders={orders} activeTab={activeTab} />
+        </div>
+      </div>
+    </div>
   );
 }
 
-function AccountOrderHistory({orders}) {
+function AccountOrderHistory({orders, activeTab}) {
+  'first', orders;
   return (
-    <div className="mt-6">
-      <div className="grid w-full gap-4 p-4 py-6 md:gap-8 md:p-8 lg:p-12">
-        <h2 className="font-bold text-lead">Order History</h2>
-        {orders?.length ? <Orders orders={orders} /> : <EmptyOrders />}
+    <div
+      className="cust-side-content"
+      id="cst-order"
+      style={{display: activeTab === 'cst-order' ? 'block' : 'none'}}
+    >
+      <h2>Order History</h2>
+      <div className="order-table">
+        <table>
+          <thead>
+            <tr>
+              <th>Order id</th>
+              <th>Order Number</th>
+              <th>Date</th>
+              <th>Payment Status</th>
+              <th>Fulfillment Status</th>
+              <th>Total</th>
+            </tr>
+          </thead>
+          <tbody>
+            {orders.map((order) => (
+              <>
+                {orders?.length ? (
+                  <OrderCard order={order} key={order.id} />
+                ) : (
+                  <EmptyOrders />
+                )}
+              </>
+            ))}
+          </tbody>
+        </table>
       </div>
     </div>
   );
@@ -154,31 +260,50 @@ function AccountOrderHistory({orders}) {
 function EmptyOrders() {
   return (
     <div>
-      <Text className="mb-1" size="fine" width="narrow" as="p">
+      <h3 className="mb-1" size="fine" width="narrow" as="p">
         You haven&apos;t placed any orders yet.
-      </Text>
+      </h3>
       <div className="w-48">
-        <Button
+        <button
           className="w-full mt-2 text-sm"
           variant="secondary"
           to={usePrefixPathWithLocale('/')}
         >
           Start Shopping
-        </Button>
+        </button>
       </div>
     </div>
   );
 }
 
-function Orders({orders}) {
-  return (
-    <ul className="grid grid-flow-row grid-cols-1 gap-2 gap-y-6 md:gap-4 lg:gap-6 false sm:grid-cols-3">
-      {orders.map((order) => (
-        <OrderCard order={order} key={order.id} />
-      ))}
-    </ul>
-  );
-}
+const ORDER_CARD_FRAGMENT = `#graphql
+  fragment OrderCard on Order {
+    id
+    orderNumber
+    processedAt
+    financialStatus
+    fulfillmentStatus
+    currentTotalPrice {
+      amount
+      currencyCode
+    }
+    lineItems(first: 2) {
+      edges {
+        node {
+          variant {
+            image {
+              url
+              altText
+              height
+              width
+            }
+          }
+          title
+        }
+      }
+    }
+  }
+`;
 
 const CUSTOMER_QUERY = `#graphql
   query CustomerDetails(

@@ -26,10 +26,12 @@ export async function action({request, context}) {
       break;
     case CartForm.ACTIONS.LinesUpdate:
       result = await cart.updateLines(inputs.lines);
+      'result', result;
       break;
     case CartForm.ACTIONS.LinesRemove:
       result = await cart.removeLines(inputs.lineIds);
       break;
+
     case CartForm.ACTIONS.DiscountCodesUpdate:
       const formDiscountCode = inputs.discountCode;
 
@@ -54,8 +56,9 @@ export async function action({request, context}) {
   /**
    * The Cart ID may change after each mutation. We need to update it each time in the session.
    */
-  const cartId = result.cart.id;
-  const headers = cart.setCartId(result.cart.id);
+  const cartId = result?.cart?.id;
+
+  const headers = cart.setCartId(result?.cart?.id);
 
   const redirectTo = formData.get('redirectTo') ?? null;
   if (typeof redirectTo === 'string' && isLocalPath(redirectTo)) {
@@ -84,6 +87,7 @@ export async function loader({context}) {
 export default function CartRoute() {
   const [root] = useMatches();
   // @todo: finish on a separate PR
+
   return (
     <div className="grid w-full gap-8 p-6 py-8 md:p-8 lg:p-12 justify-items-start">
       <Await resolve={root.data?.cart}>

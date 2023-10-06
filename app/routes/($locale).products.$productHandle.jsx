@@ -10,12 +10,16 @@ import invariant from 'tiny-invariant';
 import {seoPayload} from '~/lib/seo.server';
 import {routeHeaders} from '~/data/cache';
 import {MEDIA_FRAGMENT, PRODUCT_CARD_FRAGMENT} from '~/data/fragments';
-import {Suspense, useRef, useState} from 'react';
-import {AddToCartButton, ProductGallery} from '~/components';
+import {Suspense, useEffect, useState} from 'react';
+import {
+  AddToCartButton,
+  FeaturedCollections,
+  ProductGallery,
+  NewArrival,
+} from '~/components';
 import {getExcerpt} from '~/lib/utils';
-
-import {Disclosure} from '@headlessui/react';
-import clsx from 'clsx';
+import Swiper from 'swiper';
+import Productsec from '../img/Productsec.jpg';
 
 export const headers = routeHeaders;
 
@@ -34,11 +38,6 @@ export async function loader({params, request, context}) {
     },
   });
 
-  // In order to show which variants are available in the UI, we need to query
-  // all of them. But there might be a *lot*, so instead separate the variants
-  // into it's own separate query that is deferred. So there's a brief moment
-  // where variant options might show as available when they're not, but after
-  // this deferred query resolves, the UI will update.
   const variants = context.storefront.query(VARIANTS_QUERY, {
     variables: {
       handle: productHandle,
@@ -105,12 +104,31 @@ export default function Product() {
   const {media, title, vendor, descriptionHtml} = product;
   const {shippingPolicy, refundPolicy} = shop;
 
+  useEffect(() => {
+    const thumbSlider = new Swiper('.thumb-i1slider', {
+      slidesPerView: 'auto',
+    });
+
+    const productSlider = new Swiper('.product-i1slider', {
+      thumbs: {
+        swiper: thumbSlider,
+      },
+    });
+
+    const thumbSlides = document.querySelectorAll('.thumb-i1slide');
+    thumbSlides.forEach((thumbSlide, index) => {
+      thumbSlide.addEventListener('click', () => {
+        productSlider.slideTo(index);
+      });
+    });
+  }, []);
+
   return (
     <div className="product-page clearfix">
       <div className="breadcrumb m-0">
         <div className="container">
           <span>
-            <a href="javascript:void(0)">Home</a>
+            <a href="#">Home</a>
           </span>
           <span>products</span>
         </div>
@@ -124,10 +142,7 @@ export default function Product() {
             <div className="thumb-i1slider swiper-container">
               <div className="swiper-wrapper">
                 {media.nodes.map((img) => (
-                  <div
-                    className="swiper-slide thumb-i1slide"
-                    key={img.image.id}
-                  >
+                  <div className="swiper-slide thumb-i1slide" key={img.id}>
                     <img src={img.image.url} alt={img.image.alt} />
                   </div>
                 ))}
@@ -167,28 +182,26 @@ export default function Product() {
           </div>
         </div>
       </div>
-      <div className="product-feature-sct">
+      <div className="product-feature-sct product-sec">
         <div className="container">
           <div className="col-block">
             <div className="col-item">
-              <img src="product-i1.jpg" />
+              <img src={Productsec} />
             </div>
             <div className="col-item">
-              <h2>Shopify theme NMD_R1 Shoes</h2>
+              <h2>WE CREATE FASHION</h2>
+              <div className="divider"></div>
               <p>
-                Lorem Ipsum is simply dummy text of the printing and typesetting
-                industry. Lorem Ipsum has been the industry's standard dummy
-                text ever since the 1500s.
-              </p>
-              <p>
-                When an unknown printer took a galley of type and scrambled it
-                to make a type specimen book. It has survived not only five
-                centuries, but also the leap into electronic typesetting,
-                remaining essentially unchanged.
+                Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean
+                cot uodo ligul get dolor. Aenean massa. Cum sociis Theme
+                natoquepe natibus et magnis dis parturient montes, nascetur
+                ridiculus mus. Eti am rhoncus. Maecenas tempus, tellus eget
+                condimentum rhoncus, sem quam semper libero, sit amet adipiscing
+                sem neque sed ipsum.
               </p>
             </div>
           </div>
-          <div className="col-block">
+          {/* <div className="col-block">
             <div className="col-item">
               <img src="img/product-i1.jpg" />
             </div>
@@ -206,123 +219,34 @@ export default function Product() {
                 remaining essentially unchanged.
               </p>
             </div>
-          </div>
+          </div> */}
         </div>
       </div>
-      <div className="feature-products related-products">
-        <div className="container">
-          <div className="sctn-title text-center">
-            <h2 className="h1 text-up">Related products</h2>
-          </div>
-          <div className="row">
-            <div className="product-item">
-              <a href="javascript:void(0)" className="product-img">
-                <img src="img/product-1.jpg" />
-                <div className="product-tag sale-tag">Sale 25%</div>
-              </a>
-              <h5>
-                <a href="javascript:void(0)">Shopify theme NMD_R1 Shoes</a>
-              </h5>
-              <div className="product-price">
-                <span className="s-price">$120</span>
-                <span className="o-price">$140</span>
-              </div>
-            </div>
-            <div className="product-item">
-              <a href="javascript:void(0)" className="product-img">
-                <img src="img/product-2.jpg" />
-                <div className="product-tag">Best Seller</div>
-              </a>
-              <h5>
-                <a href="javascript:void(0)">Shopify theme NMD_R1 Shoes</a>
-              </h5>
-              <div className="product-price">
-                <span className="s-price">$120</span>
-              </div>
-            </div>
-            <div className="product-item">
-              <a href="javascript:void(0)" className="product-img">
-                <img src="img/product-3.jpg" />
-                <div className="product-tag new-tag">New Arrival</div>
-              </a>
-              <h5>
-                <a href="javascript:void(0)">Shopify theme NMD_R1 Shoes</a>
-              </h5>
-              <div className="product-price">
-                <span className="s-price">$120</span>
-              </div>
-            </div>
-            <div className="product-item">
-              <a href="javascript:void(0)" className="product-img">
-                <img src="img/product-4.jpg" />
-              </a>
-              <h5>
-                <a href="javascript:void(0)">Shopify theme NMD_R1 Shoes</a>
-              </h5>
-              <div className="product-price">
-                <span className="s-price">$120</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div className="feature-products recently-viewed">
-        <div className="container">
-          <div className="sctn-title text-center">
-            <h2 className="h1 text-up">Recently viewed products </h2>
-          </div>
-          <div className="row">
-            <div className="product-item">
-              <a href="javascript:void(0)" className="product-img">
-                <img src="img/product-5.jpg" />
-                <div className="product-tag sale-tag">Sale 25%</div>
-              </a>
-              <h5>
-                <a href="javascript:void(0)">Shopify theme NMD_R1 Shoes</a>
-              </h5>
-              <div className="product-price">
-                <span className="s-price">$120</span>
-                <span className="o-price">$140</span>
-              </div>
-            </div>
-            <div className="product-item">
-              <a href="javascript:void(0)" className="product-img">
-                <img src="img/product-6.jpg" />
-                <div className="product-tag">Best Seller</div>
-              </a>
-              <h5>
-                <a href="javascript:void(0)">Shopify theme NMD_R1 Shoes</a>
-              </h5>
-              <div className="product-price">
-                <span className="s-price">$120</span>
-              </div>
-            </div>
-            <div className="product-item">
-              <a href="javascript:void(0)" className="product-img">
-                <img src="img/product-7.jpg" />
-                <div className="product-tag new-tag">New Arrival</div>
-              </a>
-              <h5>
-                <a href="javascript:void(0)">Shopify theme NMD_R1 Shoes</a>
-              </h5>
-              <div className="product-price">
-                <span className="s-price">$120</span>
-              </div>
-            </div>
-            <div className="product-item">
-              <a href="javascript:void(0)" className="product-img">
-                <img src="img/product-8.jpg" />
-              </a>
-              <h5>
-                <a href="javascript:void(0)">Shopify theme NMD_R1 Shoes</a>
-              </h5>
-              <div className="product-price">
-                <span className="s-price">$120</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+
+      <Suspense>
+        <Await
+          errorElement="There was a problem loading related products"
+          resolve={recommended}
+        >
+          {(products) => (
+            <FeaturedCollections title="Related Products" products={products} />
+          )}
+        </Await>
+      </Suspense>
+
+      <Suspense>
+        <Await
+          errorElement="There was a problem loading related products"
+          resolve={recommended}
+        >
+          {(product) => (
+            <NewArrival
+              title="Recently viewed products"
+              product={product.nodes}
+            />
+          )}
+        </Await>
+      </Suspense>
     </div>
   );
 }
@@ -338,6 +262,15 @@ export function ProductForm({variants}) {
   const productAnalytics = {
     ...analytics.products[0],
     quantity: 1,
+  };
+
+  const isOptionSelected = (optionName, optionValue) => {
+    return (
+      selectedVariant &&
+      selectedVariant.selectedOptions.some((option) => {
+        return option.name === optionName && option.value === optionValue;
+      })
+    );
   };
 
   return (
@@ -403,7 +336,13 @@ export function ProductForm({variants}) {
         <span>5 Reviews</span>
       </div>
       <div className="product-i1price">
-        <span className="s-price">${selectedVariant.price.amount}</span>
+        <span className="s-price">
+          <Money
+            measurement
+            withoutTrailingZeros
+            data={selectedVariant.price}
+          />
+        </span>
         <span className="o-price">$140</span>
       </div>
       <form>
@@ -422,18 +361,19 @@ export function ProductForm({variants}) {
                   <div
                     key={index}
                     data-value={value}
-                    className="swatch-element available"
+                    className={`swatch-element ${
+                      isOptionSelected(option.name, value) ? 'available' : ''
+                    }`}
                     title={value}
                   >
                     <input
-                      type="radio"
+                      type="checked"
                       name={`option-${index}`}
                       value={value}
-                      id={`swatch-${index}-${valueIndex}`}
+                      id="swatch-1-size"
+                      checked={selectedVariant?.[option.name] === value}
                     />
-                    <label htmlFor={`swatch-${index}-${valueIndex}`}>
-                      {value}
-                    </label>
+                    <label htmlFor="swatch-1-size">{value}</label>
                   </div>
                 ) : (
                   option.values.map(({value, index, to}) => (
@@ -462,7 +402,7 @@ export function ProductForm({variants}) {
         </VariantSelector>
 
         <div className="size-chart-link clearfix">
-          <a href="javascript:void(0)" className="f-left">
+          <a href="#" className="f-left">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 31 10"
@@ -474,20 +414,34 @@ export function ProductForm({variants}) {
             Size chart
           </a>
         </div>
-        <AddToCartButton
-          lines={[
-            {
-              merchandiseId: selectedVariant.id,
-              quantity: 1,
-            },
-          ]}
-          variant="primary"
-          data-test="add-to-cart"
-          analytics={{
-            products: [productAnalytics],
-            totalValue: parseFloat(productAnalytics.price),
-          }}
-        />
+        {selectedVariant && (
+          <>
+            {isOutOfStock ? (
+              <button
+                variant="secondary"
+                disabled
+                className="btn btn-full add-cart-btn lp-0"
+              >
+                <span>Sold out</span>
+              </button>
+            ) : (
+              <AddToCartButton
+                lines={[
+                  {
+                    merchandiseId: selectedVariant.id,
+                    quantity: 1,
+                  },
+                ]}
+                variant="primary"
+                data-test="add-to-cart"
+                analytics={{
+                  products: [productAnalytics],
+                  totalValue: parseFloat(productAnalytics.price),
+                }}
+              />
+            )}
+          </>
+        )}
 
         <div className="shipping-text lp-05 text-center">
           <svg
@@ -542,8 +496,8 @@ function ProductDetail({title, content, learnMore}) {
         <strong>{title}</strong> <span></span>
       </div>
       {isOpen && (
-        <div className="cllps-content" style={{ display: 'block' }}>
-          <p dangerouslySetInnerHTML={{ __html: content }}></p>
+        <div className="cllps-content" style={{display: 'block'}}>
+          <p dangerouslySetInnerHTML={{__html: content}}></p>
         </div>
       )}
     </div>

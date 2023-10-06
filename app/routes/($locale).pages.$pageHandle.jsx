@@ -1,15 +1,15 @@
 import {json} from '@shopify/remix-oxygen';
 import {useLoaderData} from '@remix-run/react';
 import invariant from 'tiny-invariant';
-
-import {PageHeader} from '~/components';
 import {routeHeaders} from '~/data/cache';
 import {seoPayload} from '~/lib/seo.server';
+import Index from './($locale).api.contact-form';
 
 export const headers = routeHeaders;
 
 export async function loader({request, params, context}) {
   invariant(params.pageHandle, 'Missing page handle');
+
 
   const {page} = await context.storefront.query(PAGE_QUERY, {
     variables: {
@@ -28,17 +28,22 @@ export async function loader({request, params, context}) {
 }
 
 export default function Page() {
-  const {page} = useLoaderData();
+  const {page, seo} = useLoaderData();
+
+  if (page.id === 'gid://shopify/Page/30708353') {
+    return page.body && <Index />;
+  }
 
   return (
-    <>
-      <PageHeader heading={page.title}>
-        <div
+    <div className="all-contain-page">
+      <div className="container">
+        <h2 className="page-title text-up text-center">{seo.title}</h2>
+        <p
           dangerouslySetInnerHTML={{__html: page.body}}
-          className="prose dark:prose-invert"
+          className="text-contain"
         />
-      </PageHeader>
-    </>
+      </div>
+    </div>
   );
 }
 

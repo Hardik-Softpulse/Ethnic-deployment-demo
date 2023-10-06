@@ -1,116 +1,35 @@
-import React from 'react';
-import product1 from '../img/product-1.jpg';
-import product2 from '../img/product-2.jpg';
-import product3 from '../img/product-3.jpg';
-import product4 from '../img/product-4.jpg';
-import product5 from '../img/product-5.jpg';
-import product6 from '../img/product-6.jpg';
-import product7 from '../img/product-7.jpg';
-import product8 from '../img/product-8.jpg';
+import React, {useEffect} from 'react';
+// import Swiper, {Navigation} from 'swiper';
+// import 'swiper/swiper-bundle.min.css';
+import {SectionProductCard} from '~/components';
 
-export function NewArrival() {
+
+
+export function NewArrival({product, title}) {
+  // useEffect(() => {
+  //   Swiper.use([Navigation]);
+  //   var productSlider = new Swiper('.product-slider', {
+  //     slidesPerView: 'auto',
+  //     navigation: {
+  //       nextEl: '.swiper-button-next',
+  //       prevEl: '.swiper-button-prev',
+  //     },
+  //   });
+  // }, [product]);
+
   return (
     <div className="collection-products">
       <div className="container">
         <div className="sctn-title text-center">
-          <h2 className="h1 text-up">Shop New Arrivals</h2>
+          <h2 className="h2 text-up">{title}</h2>
         </div>
         <div className="product-slider swiper-container">
           <div className="swiper-wrapper">
-            <div className="swiper-slide product-item">
-              <a href="#" className="product-img">
-                <img src={product5} alt="" />
-              </a>
-              <h5>
-                <a href="#">Shopify theme NMD_R1 Shoes</a>
-              </h5>
-              <div className="product-price">
-                <span className="s-price">$120</span>
-              </div>
-            </div>
-            <div className="swiper-slide product-item">
-              <a href="#" className="product-img">
-                <img src={product6} alt="" />
-              </a>
-              <h5>
-                <a href="#">Shopify theme NMD_R1 Shoes</a>
-              </h5>
-              <div className="product-price">
-                <span className="s-price">$120</span>
-              </div>
-            </div>
-            <div className="swiper-slide product-item">
-              <a href="#" className="product-img">
-                <img src={product7} alt="" />
-              </a>
-              <h5>
-                <a href="#">Shopify theme NMD_R1 Shoes</a>
-              </h5>
-              <div className="product-price">
-                <span className="s-price">$120</span>
-              </div>
-            </div>
-            <div className="swiper-slide product-item">
-              <a href="#" className="product-img">
-                <img src={product8} alt="" />
-              </a>
-              <h5>
-                <a href="#">Shopify theme NMD_R1 Shoes</a>
-              </h5>
-              <div className="product-price">
-                <span className="s-price">$120</span>
-              </div>
-            </div>
-            <div className="swiper-slide product-item">
-              <a href="#" className="product-img">
-                <img src={product1} alt="" />
-                <div className="product-tag sale-tag">Sale 25%</div>
-              </a>
-              <h5>
-                <a href="#">Shopify theme NMD_R1 Shoes</a>
-              </h5>
-              <div className="product-price">
-                <span className="s-price">$120</span>
-                <span className="o-price">$140</span>
-              </div>
-            </div>
-            <div className="swiper-slide product-item">
-              <a href="#" className="product-img">
-                <img src={product2} alt="" />
-                <div className="product-tag">Best Seller</div>
-              </a>
-              <h5>
-                <a href="#">Shopify theme NMD_R1 Shoes</a>
-              </h5>
-              <div className="product-price">
-                <span className="s-price">$120</span>
-              </div>
-            </div>
-            <div className="swiper-slide product-item">
-              <a href="#" className="product-img">
-                <img src={product3} alt="" />
-                <div className="product-tag new-tag">New Arrival</div>
-              </a>
-              <h5>
-                <a href="#">Shopify theme NMD_R1 Shoes</a>
-              </h5>
-              <div className="product-price">
-                <span className="s-price">$120</span>
-              </div>
-            </div>
-            <div className="swiper-slide product-item">
-              <a href="#" className="product-img">
-                <img src={product4} alt="" />
-              </a>
-              <h5>
-                <a href="#">Shopify theme NMD_R1 Shoes</a>
-              </h5>
-              <div className="product-price">
-                <span className="s-price">$120</span>
-              </div>
-            </div>
+            {product?.map((products) => (
+              <SectionProductCard product={products} key={products.id} />
+            ))}
           </div>
-          <div className="swiper-button-prev">
+          <div className="swiper-button-prev ">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="20"

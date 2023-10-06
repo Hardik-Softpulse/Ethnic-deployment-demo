@@ -2,20 +2,10 @@ import {defer} from '@shopify/remix-oxygen';
 import {Await, Form, useLoaderData} from '@remix-run/react';
 import {Suspense} from 'react';
 import {Pagination, getPaginationVariables} from '@shopify/hydrogen';
-
-import {
-  FeaturedCollections,
-  Grid,
-  Heading,
-  Input,
-  PageHeader,
-  ProductCard,
-  ProductSwimlane,
-  Section,
-  Text,
-} from '~/components';
+import {ProductCard} from '~/components';
+import {PAGINATION_SIZE} from '~/lib/const';
 import {PRODUCT_CARD_FRAGMENT} from '~/data/fragments';
-import {getImageLoadingPriority, PAGINATION_SIZE} from '~/lib/const';
+import {getImageLoadingPriority} from '~/lib/const';
 import {seoPayload} from '~/lib/seo.server';
 
 import {getFeaturedData} from './($locale).featured-products';
@@ -65,104 +55,63 @@ export async function loader({request, context: {storefront}}) {
 }
 
 export default function Search() {
-  const {searchTerm, products, noResultRecommendations} = useLoaderData();
+  const {searchTerm, products, noResultRecommendations, seo} = useLoaderData();
   const noResults = products?.nodes?.length === 0;
 
   return (
-    <>
-      <PageHeader>
-        <Heading as="h1" size="copy">
-          Search
-        </Heading>
-        <Form method="get" className="relative flex w-full text-heading">
-          <Input
-            defaultValue={searchTerm}
-            name="q"
-            placeholder="Search…"
-            type="search"
-            variant="search"
+    <div className="all-collection">
+      <div className="container">
+        <h2 className="page-title text-up text-center">{seo.title}</h2>
+        {!searchTerm || noResults ? (
+          <NoResults
+            noResults={noResults}
+            recommendations={noResultRecommendations}
           />
-          <button className="absolute right-0 py-2" type="submit">
-            Go
-          </button>
-        </Form>
-      </PageHeader>
-      {!searchTerm || noResults ? (
-        <NoResults
-          noResults={noResults}
-          recommendations={noResultRecommendations}
-        />
-      ) : (
-        <Section>
+        ) : (
           <Pagination connection={products}>
-            {({nodes, isLoading, NextLink, PreviousLink}) => {
-              const itemsMarkup = nodes.map((product, i) => (
-                <ProductCard
-                  key={product.id}
-                  product={product}
-                  loading={getImageLoadingPriority(i)}
-                />
-              ));
+            {({nodes, isLoading, PreviousLink, NextLink, pageInfo}) => (
+              <>
+                <div className="row m-15 ">
+                  {nodes.map((product, i) => (
+                    <ProductCard
+                      className="all-collection-item"
+                      key={product.id}
+                      loading={getImageLoadingPriority(i)}
+                      product={product}
+                    />
+                  ))}
+                </div>
 
-              return (
-                <>
-                  <div className="flex items-center justify-center mt-6">
-                    <PreviousLink className="inline-block rounded font-medium text-center py-3 px-6 border border-primary/10 bg-contrast text-primary w-full">
-                      {isLoading ? 'Loading...' : 'Previous'}
+                <div className="pagination dfx flxcntr flxwrp">
+                  <span className="pager-prev">
+                    <PreviousLink>
+                      <button>previous</button>
                     </PreviousLink>
-                  </div>
-                  <Grid data-test="product-grid">{itemsMarkup}</Grid>
-                  <div className="flex items-center justify-center mt-6">
-                    <NextLink className="inline-block rounded font-medium text-center py-3 px-6 border border-primary/10 bg-contrast text-primary w-full">
-                      {isLoading ? 'Loading...' : 'Next'}
+                  </span>
+
+                  {/* {Array.from({length: nodes.length}, (_, index) => (
+                        <span key={index}>
+                          <a href={`?page=${index + 1}`}>{index + 1}</a>
+                        </span>
+                      ))} */}
+
+                  <span className="pager-next">
+                    <NextLink>
+                      <button className="btn">Load More</button>
                     </NextLink>
-                  </div>
-                </>
-              );
-            }}
+                  </span>
+                </div>
+              </>
+            )}
           </Pagination>
-        </Section>
-      )}
-    </>
+        )}
+      </div>
+    </div>
   );
 }
 
 function NoResults({noResults, recommendations}) {
-  return (
-    <>
-      {noResults && (
-        <Section padding="x">
-          <Text className="opacity-50">
-            No results, try a different search.
-          </Text>
-        </Section>
-      )}
-      <Suspense>
-        <Await
-          errorElement="There was a problem loading related products"
-          resolve={recommendations}
-        >
-          {(result) => {
-            if (!result) return null;
-            const {featuredCollections, featuredProducts} = result;
-
-            return (
-              <>
-                <FeaturedCollections
-                  title="Trending Collections"
-                  collections={featuredCollections}
-                />
-                <ProductSwimlane
-                  title="Trending Products"
-                  products={featuredProducts}
-                />
-              </>
-            );
-          }}
-        </Await>
-      </Suspense>
-    </>
-  );
+  return <></>;
 }
 
 export function getNoResultRecommendations(storefront) {

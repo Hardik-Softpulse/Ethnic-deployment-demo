@@ -1,8 +1,7 @@
 import {json} from '@shopify/remix-oxygen';
 import {useLoaderData} from '@remix-run/react';
 import invariant from 'tiny-invariant';
-
-import {PageHeader, Section, Heading, Link} from '~/components';
+import {Link} from '~/components';
 import {routeHeaders} from '~/data/cache';
 import {seoPayload} from '~/lib/seo.server';
 
@@ -31,18 +30,15 @@ export default function Policies() {
 
   return (
     <>
-      <PageHeader heading="Policies" />
-      <Section padding="x" className="mb-24">
-        {policies.map((policy) => {
-          return (
-            policy && (
-              <Heading className="font-normal text-heading" key={policy.id}>
-                <Link to={`/policies/${policy.handle}`}>{policy.title}</Link>
-              </Heading>
-            )
-          );
-        })}
-      </Section>
+      {policies?.map((policy) => {
+        return (
+          policy && (
+            <h3 className="font-normal text-heading" key={policy.id}>
+              <Link to={`/policies/${policy.handle}`}>{policy.title}</Link>
+            </h3>
+          )
+        );
+      })}
     </>
   );
 }
