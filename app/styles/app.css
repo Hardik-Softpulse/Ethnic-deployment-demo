@@ -1486,13 +1486,14 @@ p.footer-item-des {
 
 .swatch .swatch-title a {
   line-height: 1;
-  margin-bottom: 11px;
+  margin: 15px 0;
   gap: 10px;
 
 }
 
 .swatch-element {
   float: left;
+  margin-top: 10px;
 }
 
 .swatch-element label {
@@ -1514,7 +1515,7 @@ p.footer-item-des {
   display: none;
 }
 
-.swatch-element input:checked+label {
+.available input:checked+label {
   background-color: #f7f8f9;
   border-color: #c9c9c9;
 }
@@ -2811,7 +2812,7 @@ table td a {
 
   .product-slider .swiper-button-next,
   .product-slider .swiper-button-prev {
-    margin: 16.6666667% 0 0;
+    margin:192.666667% 0 0;
   }
 
   .image-i1-text {
@@ -3851,11 +3852,6 @@ a.btn.btn-col:hover {
   margin-bottom: 40px;
 }
 
-.swatch-element label:hover {
-  background: #000;
-  color: #ffff;
-  border-radius: 5px;
-}
 
 .cart-dtl {
   display: flex;
@@ -3925,10 +3921,6 @@ a.btn.btn-col:hover {
   padding: 5px;
 }
 
-.custom-dot-list-style .react-multi-carousel-dot--active button {
-  background: rgb(0, 0, 0);
-}
-
 ul.react-multi-carousel-dot-list.custom-dot-list-style {
   margin: 10px;
   position: absolute;
@@ -3945,4 +3937,20 @@ ul.react-multi-carousel-dot-list.custom-dot-list-style {
 .genericError {
   text-align: center;
   padding: 32px;
+}
+
+.appliedfilter {
+  margin-bottom: 60px !important;
+}
+
+button.soldOut:hover,
+button.soldOut:disabled:hover {
+  background-color: #000000;
+  color: #fff;
+}
+
+.swatch-element.available {
+  background: #e5e5e5d6;
+  border-radius: 30px;
+  border: 1px solid #27272747;
 }

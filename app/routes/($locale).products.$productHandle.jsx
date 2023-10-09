@@ -264,10 +264,14 @@ export function ProductForm({variants}) {
     quantity: 1,
   };
 
+
   const isOptionSelected = (optionName, optionValue) => {
+    console.log('optionName', optionName);
+    console.log('optionValue', optionValue);
     return (
       selectedVariant &&
       selectedVariant.selectedOptions.some((option) => {
+        console.log('option.name === optionName', option.name === optionName);
         return option.name === optionName && option.value === optionValue;
       })
     );
@@ -343,13 +347,7 @@ export function ProductForm({variants}) {
             data={selectedVariant.price}
           />
         </span>
-        <span className="o-price">
-        <Money
-            measurement
-            withoutTrailingZeros
-            data={selectedVariant.compareAtPrice}
-          />
-        </span>
+        <span className="o-price">$140</span>
       </div>
       <form>
         <VariantSelector
@@ -374,7 +372,7 @@ export function ProductForm({variants}) {
                   >
                     <input
                       type="checked"
-                      name={`option-${index}`}
+                      name={`option-${option.name}`}
                       value={value}
                       id="swatch-1-size"
                       checked={selectedVariant?.[option.name] === value}
@@ -383,23 +381,31 @@ export function ProductForm({variants}) {
                   </div>
                 ) : (
                   option.values.map(({value, index, to}) => (
-                    <Link
-                      key={option.name + value}
-                      to={to}
-                      preventScrollReset
-                      prefetch="intent"
-                      replace
+                    <div
+                      key={index}
+                      data-value={value}
+                      className={`swatch-element ${
+                        isOptionSelected(option.name, value) ? 'available' : ''
+                      }`}
+                      title={value}
                     >
-                      <div
-                        key={index}
-                        data-value={value}
-                        className="swatch-element available"
-                        title={value}
+                      <Link
+                        key={option.name + value}
+                        to={to}
+                        preventScrollReset
+                        prefetch="intent"
+                        replace
                       >
-                        <input type="radio" value={value} />
-                        <label>{value}</label>
-                      </div>
-                    </Link>
+                        <input
+                          type="checked"
+                          name={`option-${option.name}`}
+                          value={value}
+                          id="swatch-1-size"
+                          checked={selectedVariant?.[option.name] === value}
+                        />
+                        <label htmlFor="swatch-1-size">{value}</label>
+                      </Link>
+                    </div>
                   ))
                 )}
               </div>
@@ -425,8 +431,8 @@ export function ProductForm({variants}) {
             {isOutOfStock ? (
               <button
                 variant="secondary"
-                disabled
-                className="btn btn-full add-cart-btn lp-0"
+                disabled={isOutOfStock}
+                className="btn btn-full soldOut"
               >
                 <span>Sold out</span>
               </button>

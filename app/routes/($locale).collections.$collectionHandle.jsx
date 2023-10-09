@@ -76,6 +76,8 @@ export async function loader({params, request, context}) {
     });
   }
 
+  console.log('collectionHandle', collectionHandle);
+
   const {collection, collections} = await context.storefront.query(
     COLLECTION_QUERY,
     {
@@ -100,7 +102,7 @@ export async function loader({params, request, context}) {
   return json({
     collection,
     appliedFilters,
-    collections: flattenConnection(collections),
+    collections: collections,
     analytics: {
       pageType: AnalyticsPageType.collection,
       collectionHandle,
@@ -113,7 +115,7 @@ export async function loader({params, request, context}) {
 export default function Collection() {
   const {collection, collections, appliedFilters} = useLoaderData();
 
-  console.log('collection', collection)
+  console.log('collection', collection.products);
 
   return (
     <div className="collection-page">
@@ -151,7 +153,7 @@ export default function Collection() {
                   <div className="pagination dfx flxcntr flxwrp">
                     <span className="pager-prev">
                       <PreviousLink>
-                       <button className='btn'>Previous</button>
+                        <button className="btn">Previous</button>
                       </PreviousLink>
                     </span>
 
@@ -162,7 +164,9 @@ export default function Collection() {
                       ))} */}
 
                     <span className="pager-next">
-                      <NextLink><button className='btn'>Load More</button></NextLink>
+                      <NextLink>
+                        <button className="btn">Load More</button>
+                      </NextLink>
                     </span>
                   </div>
                 </div>
@@ -181,7 +185,7 @@ export default function Collection() {
             industry. Lorem Ipsum has been the industry's standard dummy text
             ever since the 1500s
           </p>
-          <a href="/collections" className="btn btn-white">
+          <a href="#" className="btn btn-white">
             Shop now
           </a>
         </div>

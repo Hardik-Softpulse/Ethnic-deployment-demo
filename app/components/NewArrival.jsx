@@ -1,21 +1,19 @@
 import React, {useEffect} from 'react';
-// import Swiper, {Navigation} from 'swiper';
-// import 'swiper/swiper-bundle.min.css';
+import Swiper, {Navigation} from 'swiper';
+import 'swiper/swiper-bundle.min.css';
 import {SectionProductCard} from '~/components';
 
-
-
 export function NewArrival({product, title}) {
-  // useEffect(() => {
-  //   Swiper.use([Navigation]);
-  //   var productSlider = new Swiper('.product-slider', {
-  //     slidesPerView: 'auto',
-  //     navigation: {
-  //       nextEl: '.swiper-button-next',
-  //       prevEl: '.swiper-button-prev',
-  //     },
-  //   });
-  // }, [product]);
+  useEffect(() => {
+    Swiper.use([Navigation]);
+    var productSlider = new Swiper('.product-slider', {
+      slidesPerView: 'auto',
+      navigation: {
+        nextEl: '.swiper-button-next',
+        prevEl: '.swiper-button-prev',
+      },
+    });
+  }, [product]);
 
   return (
     <div className="collection-products">

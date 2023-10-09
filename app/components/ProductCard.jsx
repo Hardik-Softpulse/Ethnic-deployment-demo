@@ -32,7 +32,7 @@ export function ProductCard({
   }
 
   return (
-    <div className={`product-item ${className}`}>
+    <div className={`product-item test ${className}`}>
       <Link
         className="product-img"
         onClick={onClick}

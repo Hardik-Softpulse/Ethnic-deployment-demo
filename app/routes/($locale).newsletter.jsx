@@ -82,7 +82,7 @@ export function loader() {
 //   });
 // }
 
-// export default function Newslatter() {
+// export default function Newsletter() {
 //   const {subscribedToNewsletter} = useLoaderData();
 //   const {Form, ...fetcher} = useFetcher();
 //   const {data} = fetcher;

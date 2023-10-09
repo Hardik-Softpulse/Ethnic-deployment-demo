@@ -1,4 +1,4 @@
-import logoImg from '../img/logo2.jpg';
+import logo2 from '../img/logo2.jpg';
 import footerLogo from '../img/footer-logo.jpg';
 import {Suspense, useEffect, useMemo, useState} from 'react';
 import {useIsHomePath} from '~/lib/utils';
@@ -102,6 +102,45 @@ function DesktopHeader({isHome, menu, title, openCart}) {
                   }
                   className="st-nav-ic st-nav-search visible-x searchForm"
                 >
+                  <input
+                    className="search"
+                    type="search"
+                    variant="minisearch"
+                    placeholder="Search"
+                    name="q"
+                    style={{display: 'block'}}
+                  />
+                  <a
+                    href="/search"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      const searchInput =
+                        document.getElementById('searchInput');
+                      searchInput.style.display =
+                        searchInput.style.display === 'none' ? 'block' : 'none';
+                    }}
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="22"
+                      height="22"
+                      viewBox="0 0 12 12"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M8.18 8.5C6.41 9.92 3.83 9.81 2.19 8.18C0.43 6.42 0.42 3.57 2.18 1.81C3.93 0.05 6.78 0.05 8.54 1.8C10.18 3.44 10.3 6.03 8.88 7.79L11.74 10.64L11.03 11.35L8.18 8.5ZM2.89 2.52C1.52 3.89 1.52 6.1 2.89 7.47C4.26 8.83 6.47 8.83 7.84 7.47L7.85 7.46C9.21 6.09 9.2 3.88 7.84 2.51C6.47 1.15 4.25 1.15 2.89 2.52Z"
+                      />
+                    </svg>
+                  </a>
+                </Form>
+
+                {/* <Form
+                  method="get"
+                  action={
+                    params.locale ? `/${params.locale}/search` : '/search'
+                  }
+                  className="st-nav-ic st-nav-search visible-x searchForm"
+                >
                   <button type="submit" className="submit">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -123,11 +162,11 @@ function DesktopHeader({isHome, menu, title, openCart}) {
                     name="q"
                     style={{display: 'none'}}
                   />
-                </Form>
+                </Form> */}
               </div>
               <div className="st-col st-nav-logo flx-auto">
                 <a href="/">
-                  <img src={logoImg} />
+                  <img src={logo2} />
                 </a>
               </div>
               <div className="st-col st-nav-menu  hidden-x">
@@ -168,7 +207,7 @@ function DesktopHeader({isHome, menu, title, openCart}) {
                     style={{display: 'none'}}
                   />
                   <a
-                    href="#"
+                    href="/search"
                     onClick={(e) => {
                       e.preventDefault();
                       const searchInput =
@@ -260,7 +299,7 @@ function Badge({openCart, dark, count}) {
 
   const BadgeCounter = useMemo(
     () => (
-      <a href={isHydrated ? '/cart' : '#'} className="st-nav-ic st-nav-cart">
+      <a href="/cart" className="st-nav-ic st-nav-cart">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width="25"
@@ -272,7 +311,6 @@ function Badge({openCart, dark, count}) {
           <path d="M30.45 57.15C26.22 57.15 22.41 59.69 20.8 63.6C19.18 67.5 20.07 72 23.06 74.99C26.04 77.98 30.54 78.87 34.44 77.26C38.35 75.64 40.9 71.84 40.9 67.61C40.9 66.24 40.63 64.88 40.1 63.61C39.58 62.34 38.81 61.19 37.84 60.22C36.87 59.25 35.72 58.48 34.45 57.95C33.18 57.43 31.82 57.15 30.45 57.15L30.45 57.15Z"></path>
         </svg>
         <span>{count || 0}</span>
-       
       </a>
     ),
     [count, dark],
