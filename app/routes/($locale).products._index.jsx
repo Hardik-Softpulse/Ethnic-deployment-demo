@@ -52,14 +52,12 @@ export async function loader({request, context: {storefront}}) {
 export default function AllProducts() {
   const {products, seo} = useLoaderData();
 
-  console.log('products', products);
-
   return (
     <div className="all-collection">
       <div className="cllctn-page-in pb-60">
         <div className="container">
           <h2 className="page-title text-up text-center">{seo.title}</h2>
-          <SortFilter />
+
           <Pagination connection={products}>
             {({nodes, isLoading, PreviousLink, NextLink, pageInfo}) => (
               <>
@@ -105,6 +103,17 @@ const ALL_PRODUCTS_QUERY = `#graphql
     $endCursor: String
   ) @inContext(country: $country, language: $language) {
     products(first: $first, last: $last, before: $startCursor, after: $endCursor) {
+      filters {
+        id
+        label
+        type
+        values {
+          id
+          label
+          count
+          input
+        }
+      }
       nodes {
         ...ProductCard
       }

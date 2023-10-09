@@ -347,7 +347,14 @@ export function ProductForm({variants}) {
             data={selectedVariant.price}
           />
         </span>
-        <span className="o-price">$140</span>
+        <span className="o-price">
+        {/* <Money
+            measurement
+            withoutTrailingZeros
+            data={selectedVariant.compareAtPrice}
+          /> */}
+
+        </span>
       </div>
       <form>
         <VariantSelector
