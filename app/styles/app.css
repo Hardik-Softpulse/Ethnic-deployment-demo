@@ -3921,6 +3921,10 @@ a.btn.btn-col:hover {
   padding: 5px;
 }
 
+.custom-dot-list-style .react-multi-carousel-dot--active button {
+  background: rgb(0, 0, 0);
+}
+
 ul.react-multi-carousel-dot-list.custom-dot-list-style {
   margin: 10px;
   position: absolute;
