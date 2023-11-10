@@ -25,7 +25,7 @@ export function Hero() {
     <div className="slideshow-slider mb-96">
       <Carousel
         swipeable={true}
-        draggable={false}
+        draggable={true}
         responsive={responsive}
         ssr={true}
         showDots={true}
