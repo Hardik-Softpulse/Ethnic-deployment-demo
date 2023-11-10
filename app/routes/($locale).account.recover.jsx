@@ -44,103 +44,93 @@ export const meta = () => {
   return [{title: 'Recover Password'}];
 };
 
-export default function Recover({isChangePasswordPopupOpen}) {
+export default function Recover() {
   const actionData = useActionData();
   const [nativeEmailError, setNativeEmailError] = useState(null);
-  const [email, setEmail] = useState('');
   const isSubmitted = actionData?.resetRequested;
-
+  console.log('isSubmitted', isSubmitted);
+  console.log(' actionData', actionData);
   return (
-    <>
-      {isSubmitted ? (
-        <>
-          <h1 className="text-4xl">Request Sent.</h1>
-          <p className="mt-4">
-            If that email address is in our system, you will receive an email
-            with instructions about how to reset your password in a few minutes.
-          </p>
-        </>
-      ) : (
-        <div
-          className="cst-chng-password"
-          style={{display: isChangePasswordPopupOpen ? 'block' : 'block'}}
-        >
-          <h4>Change your password</h4>
-          <p>We will send you an email to change your password.</p>
-          <Form method="post" noValidate>
-            {actionData?.formError && (
-              <div className="flex items-center justify-center mb-6 bg-zinc-500">
-                <p className="m-4 text-s text-contrast">
-                  {actionData.formError}
-                </p>
-              </div>
-            )}
-            <div className="input-field">
-              <label>
-                <strong>Email Id</strong>
-              </label>
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                name="email"
-                id="recover-email"
-                placeholder="Enter your email address..."
-                autocorrect="off"
-                autoCapitalize="off"
-                className={`${getInputStyleClasses(nativeEmailError)}`}
-                autoFocus
-                onBlur={(event) => {
-                  setNativeEmailError(
-                    event.currentTarget.value.length &&
-                      !event.currentTarget.validity.valid
-                      ? 'Invalid email address'
-                      : null,
-                  );
-                }}
-              />
-              {nativeEmailError && (
-                <p className="text-red-500 text-xs">
-                  {nativeEmailError} &nbsp;
-                </p>
-              )}
-            </div>
-            <div className="error recover_password_error"></div>
-            <div className="input-subtn dfx">
-              <Link
-                to="/account"
-                type="submit"
-                className="btn lp-05 m-0"
-                value="Submit"
-                disabled={!nativeEmailError}
-                style={{display: isChangePasswordPopupOpen && isSubmitted ? 'block' : 'none'}}
-              >
-                submit
-              </Link>
-
-              <Link
-                to="/account"
-                className="change-psw-close lp-05 text-up"
-                style={{display: isChangePasswordPopupOpen ? 'block' : 'none'}}
-              >
-                Cancle
-              </Link>
-            </div>
-          </Form>
+    <div className="cust-sign-page bg-grey clearfix">
+      <div className="breadcrumb">
+        <div className="container">
+          <span>
+            <a href="/">Home</a>
+          </span>
+          <span>Forgot Password</span>
         </div>
-      )}
-    </>
+      </div>
+      <div className="container">
+        {isSubmitted ? (
+          <>
+            <h1 className="text-4xl">Request Sent.</h1>
+            <p className="mt-4">
+              If that email address is in our system, you will receive an email
+              with instructions about how to reset your password in a few
+              minutes.
+            </p>
+          </>
+        ) : (
+          <>
+            <h1 className="page-title text-up text-center">Forgot Password</h1>
+            <div className="cust-sign-form">
+              <p className="mt-4">
+                Enter the email address associated with your account to receive
+                a link to reset your password.
+              </p>
+              <Form
+                method="post"
+                noValidate
+                className="pt-6 pb-8 mt-4 mb-4 space-y-3"
+              >
+                {actionData?.formError && (
+                  <div className="flex items-center justify-center mb-6 bg-zinc-500">
+                    <p className="m-4 text-s text-contrast">
+                      {actionData.formError}
+                    </p>
+                  </div>
+                )}
+                <div>
+                  <input
+                    className={`mb-1 ${getInputStyleClasses(nativeEmailError)}`}
+                    id="email"
+                    name="email"
+                    type="email"
+                    autoComplete="email"
+                    required
+                    placeholder="Email address"
+                    aria-label="Email address"
+                    // eslint-disable-next-line jsx-a11y/no-autofocus
+                    autoFocus
+                    onBlur={(event) => {
+                      setNativeEmailError(
+                        event.currentTarget.value.length &&
+                          !event.currentTarget.validity.valid
+                          ? 'Invalid email address'
+                          : null,
+                      );
+                    }}
+                  />
+                  {nativeEmailError && (
+                    <p className="text-red-500 text-xs">
+                      {nativeEmailError} &nbsp;
+                    </p>
+                  )}
+                </div>
+                <button className="btn" type="submit">
+                  Request Reset Link
+                </button>
+                <p>
+                  Return to &nbsp;
+                  <Link to="/account/login">Login</Link>
+                </p>
+              </Form>
+            </div>
+          </>
+        )}
+      </div>
+    </div>
   );
 }
 
-const CUSTOMER_RECOVER_MUTATION = `#graphql
-  mutation customerRecover($email: String!) {
-    customerRecover(email: $email) {
-      customerUserErrors {
-        code
-        field
-        message
-      }
-    }
-  }
-`;
+

@@ -3,9 +3,8 @@ import {Await, Link, useLoaderData} from '@remix-run/react';
 import invariant from 'tiny-invariant';
 import {seoPayload} from '~/lib/seo.server';
 import {routeHeaders} from '~/data/cache';
-import {Image} from '@shopify/hydrogen';
-import {OurBlogs} from '~/components';
-import {Suspense} from 'react';
+import {Image, getPaginationVariables} from '@shopify/hydrogen';
+import {getImageLoadingPriority} from '~/lib/const';
 
 const BLOG_HANDLE = 'news';
 
@@ -15,6 +14,40 @@ export async function loader({request, params, context}) {
   const {language, country} = context.storefront.i18n;
 
   invariant(params.newsHandle, 'Missing journal handle');
+
+  const paginationVariables = getPaginationVariables(request, {
+    pageBy: 10,
+  });
+
+  const blogs = await context.storefront.query(BLOGS_QUERY, {
+    variables: {
+      blogHandle: BLOG_HANDLE,
+      ...paginationVariables,
+      language,
+    },
+  });
+
+  const allBlog = blogs.blog.articles;
+
+  if (!blogs?.blog?.articles) {
+    throw new Response('Not found', {status: 404});
+  }
+
+  const articles = allBlog.nodes.map((article) => {
+    const {publishedAt} = article;
+    return {
+      ...article,
+      publishedAt: new Intl.DateTimeFormat(`${language}-${country}`, {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+      }).format(new Date(publishedAt)),
+    };
+  });
+
+  const seoblog = seoPayload.blog({blogs, url: request.url});
+
+  /* -------  articale ----------*/
 
   const {blog} = await context.storefront.query(ARTICLE_QUERY, {
     variables: {
@@ -38,17 +71,17 @@ export async function loader({request, params, context}) {
 
   const seo = seoPayload.article({article, url: request.url});
 
-  return json({article, formattedDate, seo, blog});
+  return json({article, formattedDate, seo, blog, seoblog, articles});
 }
 
 export default function Article() {
-  const {article, formattedDate, seo, blog} = useLoaderData();
+  const {article, formattedDate, seo, blog, seoblog, articles} =
+    useLoaderData();
   const {title, image, contentHtml, author} = article;
-
   return (
     <div className="article-post-page clearfix">
-      <div className="breadcrumb">
-        <div className="container">
+      <div className="container">
+        <div className="breadcrumb">
           <span>
             <Link to="/">Home </Link>
           </span>
@@ -67,7 +100,9 @@ export default function Article() {
               <time>{formattedDate}</time> &nbsp;|&nbsp; By softpulse infotech
             </p>
           </div>
-          <Image data={image} className="article-image" />
+          <div className="article-img">
+            <Image data={image} className="article-image" />
+          </div>
           <div className="article-rte">
             <p dangerouslySetInnerHTML={{__html: contentHtml}} />
           </div>
@@ -134,17 +169,40 @@ export default function Article() {
           </div>
         </div>
       </div>
-      <Suspense>
-        <Await errorElement="There was a problem loading related products">
-          {(article) => (
-            <OurBlogs
-              articles={article}
-              title="RELATED BLOGS"
-              blogHandle={BLOG_HANDLE}
-            />
-          )}
-        </Await>
-      </Suspense>
+      <div className="related-blogs">
+        <div className="container">
+          <div className="sctn-title text-center">
+            <h2 className="h2 text-up">Related Blogs</h2>
+          </div>
+          <div className="row m-15">
+            {articles?.map((article, i) => (
+              <div className="blog-post-item col" key={i}>
+                <Link
+                  to={`/${BLOG_HANDLE}/${article.handle}`}
+                  className="blog-img"
+                >
+                  {article.image && (
+                    <Image
+                      alt={article.image.altText || article.title}
+                      data={article.image}
+                      loading={getImageLoadingPriority(i, 2)}
+                    />
+                  )}
+                </Link>
+                <p className="blog-date">{article.publishedAt}</p>
+                <div className="blog-title">{article.title}</div>
+                <p className="blogtitle-subtext">
+                  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
+                  do eiusmod tempor incididunt ut labore et dolore magna aliqua.{' '}
+                </p>
+                <Link to={`/${BLOG_HANDLE}`} className="shop-link">
+                  Read More
+                </Link>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
@@ -177,4 +235,55 @@ const ARTICLE_QUERY = `#graphql
       }
     }
   }
+`;
+
+const BLOGS_QUERY = `#graphql
+query Blog(
+  $language: LanguageCode, 
+  $blogHandle: String!, 
+  $last: Int,
+  $startCursor: String,
+  $cursor: String) @inContext(language: $language) {
+  blog(handle: $blogHandle) {
+    title
+    seo {
+      title
+      description
+    }
+    articles(
+      first: 3, 
+      after: $cursor ,
+      last: $last,
+      before: $startCursor
+    ) {
+      nodes {  
+        ...Article
+      }
+      pageInfo {
+        hasPreviousPage
+        hasNextPage
+        startCursor
+        endCursor
+      }
+    }
+  }
+}
+
+fragment Article on Article {
+  author: authorV2 {
+    name
+  }
+  contentHtml
+  handle
+  id
+  image {
+    id
+    altText
+    url
+    width
+    height
+  }
+  publishedAt
+  title
+}
 `;

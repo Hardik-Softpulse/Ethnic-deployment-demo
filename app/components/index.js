@@ -30,3 +30,5 @@ export {OurBlogs} from './OurBlogs';
 export {SubBanner} from './SubBanner';
 export {BestSeller} from './BestSeller';
 export * from './Icon';
+export {FilterDrawer} from './FilterDrawer';
+export {ReviewCard} from './Review/ReviewCard';

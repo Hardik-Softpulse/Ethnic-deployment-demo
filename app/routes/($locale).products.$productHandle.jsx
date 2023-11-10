@@ -3,6 +3,7 @@ import {Await, Link, useLoaderData} from '@remix-run/react';
 import {
   AnalyticsPageType,
   Money,
+  Pagination,
   VariantSelector,
   getSelectedProductOptions,
 } from '@shopify/hydrogen';
@@ -13,13 +14,15 @@ import {MEDIA_FRAGMENT, PRODUCT_CARD_FRAGMENT} from '~/data/fragments';
 import {Suspense, useEffect, useState} from 'react';
 import {
   AddToCartButton,
-  FeaturedCollections,
+  FeaturedProducts,
   ProductGallery,
   NewArrival,
 } from '~/components';
 import {getExcerpt} from '~/lib/utils';
 import Swiper from 'swiper';
 import Productsec from '../img/Productsec.jpg';
+import Rating from '@mui/material/Rating';
+import {ReviewCard} from '../components';
 
 export const headers = routeHeaders;
 
@@ -101,8 +104,8 @@ function redirectToFirstVariant({product, request}) {
 
 export default function Product() {
   const {product, shop, recommended, variants} = useLoaderData();
-  const {media, title, vendor, descriptionHtml} = product;
-  const {shippingPolicy, refundPolicy} = shop;
+  const {media} = product;
+  const [selectedReviewType, setSelectedReviewType] = useState('Yotpo');
 
   useEffect(() => {
     const thumbSlider = new Swiper('.thumb-i1slider', {
@@ -201,25 +204,6 @@ export default function Product() {
               </p>
             </div>
           </div>
-          {/* <div className="col-block">
-            <div className="col-item">
-              <img src="img/product-i1.jpg" />
-            </div>
-            <div className="col-item">
-              <h2>Shopify theme NMD_R1 Shoes</h2>
-              <p>
-                Lorem Ipsum is simply dummy text of the printing and typesetting
-                industry. Lorem Ipsum has been the industry's standard dummy
-                text ever since the 1500s.
-              </p>
-              <p>
-                When an unknown printer took a galley of type and scrambled it
-                to make a type specimen book. It has survived not only five
-                centuries, but also the leap into electronic typesetting,
-                remaining essentially unchanged.
-              </p>
-            </div>
-          </div> */}
         </div>
       </div>
 
@@ -228,8 +212,8 @@ export default function Product() {
           errorElement="There was a problem loading related products"
           resolve={recommended}
         >
-          {(products) => (
-            <FeaturedCollections title="Related Products" products={products} />
+          {(product) => (
+            <NewArrival title="Related Products" product={product.nodes} />
           )}
         </Await>
       </Suspense>
@@ -247,11 +231,15 @@ export default function Product() {
           )}
         </Await>
       </Suspense>
+      <div className="container review-container ">
+        <h4>Customer Reviews</h4>
+        <ReviewCard reviewType={selectedReviewType} product={product} />
+      </div>
     </div>
   );
 }
 
-export function ProductForm({variants}) {
+export function ProductForm({variants, productIdReviews}) {
   const {product, shop, analytics} = useLoaderData();
   const {descriptionHtml} = product;
   const {shippingPolicy, refundPolicy} = shop;
@@ -264,80 +252,54 @@ export function ProductForm({variants}) {
     quantity: 1,
   };
 
-
   const isOptionSelected = (optionName, optionValue) => {
-    console.log('optionName', optionName);
-    console.log('optionValue', optionValue);
     return (
       selectedVariant &&
       selectedVariant.selectedOptions.some((option) => {
-        console.log('option.name === optionName', option.name === optionName);
         return option.name === optionName && option.value === optionValue;
       })
     );
   };
+
+  const handleCheckboxChange = (event) => {
+    const isChecked = event.target.checked;
+  };
+
+  const isOnSale =
+    selectedVariant?.price?.amount &&
+    selectedVariant?.compareAtPrice?.amount &&
+    selectedVariant?.price?.amount < selectedVariant?.compareAtPrice?.amount;
+
+  const calculatePercentageDifference = (compareAtPrice, price) => {
+    if (
+      compareAtPrice !== null &&
+      price !== null &&
+      !isNaN(compareAtPrice) &&
+      !isNaN(price)
+    ) {
+      const percentageDifference =
+        ((compareAtPrice - price) / compareAtPrice) * 100;
+      return percentageDifference;
+    } else {
+      return null;
+    }
+  };
+
+  const compareAtPrice = selectedVariant?.compareAtPrice?.amount;
+  const price = selectedVariant?.price?.amount;
+
+  // const percentageDifference = calculatePercentageDifference(
+  //   compareAtPrice,
+  //   price,
+  // ).toFixed(0);
 
   return (
     <div className="product-dscrptn flx-cover">
       <h4>{product.title}</h4>
       <div className="dscrptn-xs lp-05">{product.description}</div>
       <div className="product-review dfx lp-05">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="16"
-          height="16"
-          viewBox="0 0 16 16"
-        >
-          <path
-            d="M969,293l2.445,5.308L977,299.11l-4.043,4.088L973.944,309,969,306.222,964.056,309l0.987-5.806L961,299.11l5.554-.807Z"
-            transform="translate(-961 -293)"
-          />
-        </svg>
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="16"
-          height="16"
-          viewBox="0 0 16 16"
-        >
-          <path
-            d="M969,293l2.445,5.308L977,299.11l-4.043,4.088L973.944,309,969,306.222,964.056,309l0.987-5.806L961,299.11l5.554-.807Z"
-            transform="translate(-961 -293)"
-          />
-        </svg>
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="16"
-          height="16"
-          viewBox="0 0 16 16"
-        >
-          <path
-            d="M969,293l2.445,5.308L977,299.11l-4.043,4.088L973.944,309,969,306.222,964.056,309l0.987-5.806L961,299.11l5.554-.807Z"
-            transform="translate(-961 -293)"
-          />
-        </svg>
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="16"
-          height="16"
-          viewBox="0 0 16 16"
-        >
-          <path
-            d="M969,293l2.445,5.308L977,299.11l-4.043,4.088L973.944,309,969,306.222,964.056,309l0.987-5.806L961,299.11l5.554-.807Z"
-            transform="translate(-961 -293)"
-          />
-        </svg>
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="16"
-          height="16"
-          viewBox="0 0 16 16"
-        >
-          <path
-            d="M969,293l2.445,5.308L977,299.11l-4.043,4.088L973.944,309,969,306.222,964.056,309l0.987-5.806L961,299.11l5.554-.807Z"
-            transform="translate(-961 -293)"
-          />
-        </svg>
-        <span>5 Reviews</span>
+        <Rating name="simple-controlled" readOnly />
+        <span> Reviews</span>
       </div>
       <div className="product-i1price">
         <span className="s-price">
@@ -347,14 +309,24 @@ export function ProductForm({variants}) {
             data={selectedVariant.price}
           />
         </span>
-        <span className="o-price">
-        {/* <Money
-            measurement
-            withoutTrailingZeros
-            data={selectedVariant.compareAtPrice}
-          /> */}
 
+        <span className="o-price">
+          {selectedVariant?.compareAtPrice === null ? (
+            ''
+          ) : (
+            <Money
+              withoutTrailingZeros
+              data={selectedVariant?.compareAtPrice}
+            />
+          )}
         </span>
+        {/* <span>
+          {selectedVariant?.compareAtPrice === null ? (
+            ''
+          ) : (
+            <span>{`(${percentageDifference}% OFF)`}</span>
+          )}
+        </span> */}
       </div>
       <form>
         <VariantSelector
@@ -362,15 +334,16 @@ export function ProductForm({variants}) {
           options={product.options}
           variants={variants}
         >
-          {({option}) => {
+          {({option, id}) => {
+            console.log('option', option);
             return (
-              <div className="swatch clearfix" data-option-index="1">
+              <div className="swatch clearfix" data-option-index="1" key={id}>
                 <div className="swatch-title">
                   <strong>{option.name}</strong>
                 </div>
                 {option.values.length > 7 ? (
                   <div
-                    key={index}
+                    key={id}
                     data-value={value}
                     className={`swatch-element ${
                       isOptionSelected(option.name, value) ? 'available' : ''
@@ -378,11 +351,12 @@ export function ProductForm({variants}) {
                     title={value}
                   >
                     <input
-                      type="checked"
+                      type="checkbox"
                       name={`option-${option.name}`}
                       value={value}
-                      id="swatch-1-size"
-                      checked={selectedVariant?.[option.name] === value}
+                      id={`swatch-${id}-${value}`}
+                      checked={isOptionSelected(option.name, value)}
+                      onChange={handleCheckboxChange}
                     />
                     <label htmlFor="swatch-1-size">{value}</label>
                   </div>
@@ -404,11 +378,12 @@ export function ProductForm({variants}) {
                         replace
                       >
                         <input
-                          type="checked"
+                          type="checkbox"
                           name={`option-${option.name}`}
                           value={value}
-                          id="swatch-1-size"
-                          checked={selectedVariant?.[option.name] === value}
+                          id={`swatch-${index}-${value}`}
+                          checked={isOptionSelected(option.name, value)}
+                          onChange={handleCheckboxChange}
                         />
                         <label htmlFor="swatch-1-size">{value}</label>
                       </Link>
@@ -433,6 +408,7 @@ export function ProductForm({variants}) {
             Size chart
           </a>
         </div>
+
         {selectedVariant && (
           <>
             {isOutOfStock ? (

@@ -96,7 +96,7 @@ export async function loader({request, params, context}) {
 export default function HomePage() {
   const {featuredCollections, featuredProducts, collection, articles, seoblog} =
     useLoaderData();
-    
+
   return (
     <div>
       <Hero />
@@ -223,7 +223,7 @@ export const HOMEPAGE_FEATURED_PRODUCTS_QUERY = `#graphql
 `;
 
 const SINGLE_COLLECTION_QUERY = `#graphql
-query getCollectionByHandle($handle: String!) {
+query getCollectionByHandle($handle: String!,$country: CountryCode, $language: LanguageCode) @inContext(country: $country, language: $language) {
   collection(handle: $handle) {
     id
     title

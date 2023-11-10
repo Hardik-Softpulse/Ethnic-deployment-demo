@@ -1,40 +1,34 @@
-import {Link} from '~/components';
+import {Link} from './Link';
 
-export function AccountDetails({customer}) {
-  const {firstName, lastName, email, phone} = customer;
-
+export function AccountDetails({activeTab, customer}) {
   return (
-    <>
-      <div className="grid w-full gap-4 p-4 py-6 md:gap-8 md:p-8 lg:p-12">
-        <h3 className="font-bold text-lead">Account Details</h3>
-        <div className="lg:p-8 p-6 border border-gray-200 rounded">
-          <div className="flex">
-            <h3 className="font-bold text-base flex-1">Profile & Security</h3>
-            <Link
-              prefetch="intent"
-              className="underline text-sm font-normal"
-              to="/account/edit"
-            >
-              Edit
-            </Link>
-          </div>
-          <div className="mt-4 text-sm text-primary/50">Name</div>
-          <p className="mt-1">
-            {firstName || lastName
-              ? (firstName ? firstName + ' ' : '') + lastName
-              : 'Add name'}{' '}
-          </p>
-
-          <div className="mt-4 text-sm text-primary/50">Contact</div>
-          <p className="mt-1">{phone ?? 'Add mobile'}</p>
-
-          <div className="mt-4 text-sm text-primary/50">Email address</div>
-          <p className="mt-1">{email}</p>
-
-          <div className="mt-4 text-sm text-primary/50">Password</div>
-          <p className="mt-1">**************</p>
-        </div>
+    <div
+      className="cust-side-content"
+      id="cst-information"
+      style={{display: activeTab === 'cst-information' ? 'block' : 'none'}}
+    >
+      <h2>Account Details</h2>
+      <div className="address-info">
+        <h5>{customer.firstName + ' ' + customer.lastName}</h5>
+        <p>
+          {customer.firstName}
+          <br />
+          {customer.lastName}
+          <br />
+          surat
+          <br />
+          GJ
+          <br />
+          395006
+          <br />
+          India
+          <br />
+          {customer.phone}
+        </p>
+        <Link href="/account" className="btn lp-05">
+          View addresses (1)
+        </Link>
       </div>
-    </>
+    </div>
   );
 }

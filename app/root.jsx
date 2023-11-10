@@ -23,9 +23,14 @@ import {NotFound} from './components/NotFound';
 import styles from './styles/app.css';
 import {DEFAULT_LOCALE, parseMenu} from './lib/utils';
 import {useAnalytics} from './hooks/useAnalytics';
+import {useState} from 'react';
+import swipercss from 'swiper/css';
+import swipernavigationcss from 'swiper/css/navigation';
 
 export const links = () => {
   return [
+    {rel: 'stylesheet', href: swipercss},
+    {rel: 'stylesheet', href: swipernavigationcss},
     {rel: 'stylesheet', href: styles},
     {
       rel: 'preconnect',
@@ -65,6 +70,8 @@ export default function App() {
   const data = useLoaderData();
   const locale = data.selectedLocale ?? DEFAULT_LOCALE;
   const hasUserConsent = true;
+  const [toggle, setToggle] = useState(false);
+  const [isCartOpen, setCartOpen] = useState(false);
 
   useAnalytics(hasUserConsent, locale);
 
@@ -77,13 +84,19 @@ export default function App() {
         <Meta />
         <Links />
       </head>
-      <body>
-        <Layout
-          key={`${locale.language}-${locale.country}`}
-          layout={data.layout}
-        >
-          <Outlet />
-        </Layout>
+      <body >
+        <div className={`${toggle || isCartOpen ? 'drawer ' : ''}`}>
+          <Layout
+            key={`${locale.language}-${locale.country}`}
+            layout={data.layout}
+            toggle={toggle}
+            setToggle={setToggle}
+            isCartOpen={isCartOpen}
+            setCartOpen={setCartOpen}
+          >
+            <Outlet />
+          </Layout>
+        </div>
         <ScrollRestoration />
         <Scripts />
       </body>

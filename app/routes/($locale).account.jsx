@@ -2,7 +2,6 @@ import {
   Form,
   Link,
   Outlet,
-  useActionData,
   useLoaderData,
   useMatches,
   useOutlet,
@@ -19,9 +18,35 @@ import {
   OrderCard,
   AccountDetails,
 } from '~/components';
-import Recover from './($locale).account.recover';
+
+import ChangePassword from './($locale).account.changePassword';
 
 export const headers = routeHeaders;
+
+const badRequest = (data) => json(data, {status: 400});
+
+export const action = async ({request, context}) => {
+  const formData = await request.formData();
+  const email = formData.get('email');
+
+  if (!email || typeof email !== 'string') {
+    return badRequest({
+      formError: 'Please provide an email.',
+    });
+  }
+
+  try {
+    await context.storefront.mutate(CUSTOMER_RECOVER_MUTATION, {
+      variables: {email},
+    });
+
+    return json({resetRequested: true});
+  } catch (error) {
+    return badRequest({
+      formError: 'Something went wrong. Please try again later.',
+    });
+  }
+};
 
 export async function loader({request, context, params}) {
   const {pathname} = new URL(request.url);
@@ -176,9 +201,9 @@ function Account({customer, toggleFormVisibility}) {
               method="post"
               action={usePrefixPathWithLocale('/account/logout')}
             >
-              <Link type="submit" className="signout">
+              <button type="submit" className="signout">
                 Sign out
-              </Link>
+              </button>
             </Form>
           </div>
           <div
@@ -197,12 +222,15 @@ function Account({customer, toggleFormVisibility}) {
               onClick={() =>
                 setChangePasswordPopupOpen(!isChangePasswordPopupOpen)
               }
-              style={{display: isChangePasswordPopupOpen ? 'none' : ''}}
+              style={{display: isChangePasswordPopupOpen ? 'none' : 'block'}}
             >
               Change Password
             </button>
             {activeTab === 'cst-dashboard' && isChangePasswordPopupOpen && (
-              <Recover isChangePasswordPopupOpen={isChangePasswordPopupOpen} />
+              <ChangePassword
+                isChangePasswordPopupOpen={isChangePasswordPopupOpen}
+                setChangePasswordPopupOpen={setChangePasswordPopupOpen}
+              />
             )}
           </div>
           <AccountDetails activeTab={activeTab} customer={customer} />
@@ -220,7 +248,6 @@ function Account({customer, toggleFormVisibility}) {
 }
 
 function AccountOrderHistory({orders, activeTab}) {
-  'first', orders;
   return (
     <div
       className="cust-side-content"
@@ -242,13 +269,9 @@ function AccountOrderHistory({orders, activeTab}) {
           </thead>
           <tbody>
             {orders.map((order) => (
-              <>
-                {orders?.length ? (
-                  <OrderCard order={order} key={order.id} />
-                ) : (
-                  <EmptyOrders />
-                )}
-              </>
+              <tr key={order.id}>
+                {orders?.length ? <OrderCard order={order} /> : <EmptyOrders />}
+              </tr>
             ))}
           </tbody>
         </table>
@@ -379,3 +402,16 @@ export async function getCustomer(context, customerAccessToken) {
 
   return data.customer;
 }
+
+
+const CUSTOMER_RECOVER_MUTATION = `#graphql
+  mutation customerRecover($email: String!) {
+    customerRecover(email: $email) {
+      customerUserErrors {
+        code
+        field
+        message
+      }
+    }
+  }
+`;

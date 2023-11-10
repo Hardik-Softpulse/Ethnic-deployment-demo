@@ -1,20 +1,10 @@
-import React, {useEffect} from 'react';
-import Swiper, {Navigation} from 'swiper';
-import 'swiper/swiper-bundle.min.css';
-import {SectionProductCard} from '~/components';
+import React, { useEffect } from 'react';
+// import Swiper from 'swiper';
+// import { SwiperSlide } from 'swiper/react';
+import { SectionProductCard } from '~/components';
 
-export function NewArrival({product, title}) {
-  useEffect(() => {
-    Swiper.use([Navigation]);
-    var productSlider = new Swiper('.product-slider', {
-      slidesPerView: 'auto',
-      navigation: {
-        nextEl: '.swiper-button-next',
-        prevEl: '.swiper-button-prev',
-      },
-    });
-  }, [product]);
-
+export function NewArrival({ product, title }) {
+  // console.log('NewArrival',product)
   return (
     <div className="collection-products">
       <div className="container">
@@ -22,11 +12,33 @@ export function NewArrival({product, title}) {
           <h2 className="h2 text-up">{title}</h2>
         </div>
         <div className="product-slider swiper-container">
-          <div className="swiper-wrapper">
+          {/* <Swiper
+            spaceBetween={15}
+            slidesPerView={1.3}
+            navigation={true}
+            // modules={[Navigation]}
+            breakpoints={{
+              640: {
+                slidesPerView: 2.4,
+                spaceBetween: 15,
+              },
+              768: {
+                slidesPerView: 3,
+                spaceBetween: 20,
+              },
+              1024: {
+                slidesPerView: 4,
+                spaceBetween: 30,
+              },
+            }}
+            className="swiper-wrapper"
+          >
             {product?.map((products) => (
-              <SectionProductCard product={products} key={products.id} />
+              <SwiperSlide key={products.id}>
+                <SectionProductCard product={products} />
+              </SwiperSlide>
             ))}
-          </div>
+          </Swiper> */}
           <div className="swiper-button-prev ">
             <svg
               xmlns="http://www.w3.org/2000/svg"

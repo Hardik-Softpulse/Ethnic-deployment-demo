@@ -29,10 +29,13 @@ export function ProductCard({
     cardLabel = 'Sale';
   } else if (isNewArrival(product.publishedAt)) {
     cardLabel = 'New';
+
+    
   }
 
+ 
   return (
-    <div className={`product-item test ${className}`}>
+    <div className={`product-item ${className}`}>
       <Link
         className="product-img"
         onClick={onClick}
@@ -41,7 +44,7 @@ export function ProductCard({
       >
         <Image src={image?.url} alt={image?.altText} loading={loading} />
 
-        {product.variants[0]?.onSale && (
+        {product.variants?.onSale && (
           <div className="product-tag sale-tag">
             Sale {item.salePercentage}%
           </div>
@@ -61,11 +64,15 @@ export function ProductCard({
       <div className="product-price">
         <span className="s-price">
           <Money withoutTrailingZeros data={price} />
-          {isDiscounted(price, compareAtPrice) && (
-            <CompareAtPrice className={'opacity-50'} data={compareAtPrice} />
+        </span>
+     
+        <span className="o-price">
+          {compareAtPrice === null ? (
+            ''
+          ) : (
+            <Money withoutTrailingZeros data={compareAtPrice} />
           )}
         </span>
-        <span className="o-price">$140</span>
       </div>
     </div>
   );
@@ -74,6 +81,8 @@ export function ProductCard({
 function CompareAtPrice({data, className}) {
   const {currencyNarrowSymbol, withoutTrailingZerosAndCurrency} =
     useMoney(data);
+
+  console.log('currencyNarrowSymbol', currencyNarrowSymbol);
 
   const styles = ('strike', className);
 

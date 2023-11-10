@@ -89,7 +89,7 @@ export default function Login() {
       <div className="breadcrumb">
         <div className="container">
           <span>
-            <a href="#">Home</a>
+            <a href="/">Home</a>
           </span>
           <span>login</span>
         </div>
@@ -194,8 +194,8 @@ export default function Login() {
               <Link to="/account/register">Register </Link>.
             </p>
             <p className="policy-text">
-              By logging in, you agree to Our's <a href="#">Privacy Policy</a>{' '}
-              and <a href="#">Terms of Use</a>
+              By logging in, you agree to Our's <a href="/pages/privacy-policy">Privacy Policy</a>{' '}
+              and <a href="/pages/terms-and-conditions">Terms of Use</a>
             </p>
           </Form>
         </div>

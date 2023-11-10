@@ -1,4 +1,4 @@
-import logo2 from '../img/logo2.jpg';
+import logoImg from '../img/logo2.jpg';
 import footerLogo from '../img/footer-logo.jpg';
 import {Suspense, useEffect, useMemo, useState} from 'react';
 import {useIsHomePath} from '~/lib/utils';
@@ -12,18 +12,35 @@ import {
   useMatches,
   useParams,
 } from '@remix-run/react';
-import {useIsHydrated} from '~/hooks/useIsHydrated';
-import {useDrawer} from './Drawer';
+
+import {CartLoading} from './CartLoading';
+import {CartDrawer} from './CartDrawer';
 import {Newsletter} from './Newsletter';
 
 // import {Newsletter} from './Newsletter';
 
-export function Layout({children, layout}) {
+export function Layout({
+  children,
+  layout,
+  toggle,
+  setToggle,
+  isCartOpen,
+  setCartOpen,
+}) {
   const {headerMenu, footerMenu} = layout;
 
   return (
     <div>
-      {headerMenu && <Header title={layout.shop.name} menu={headerMenu} />}
+      {headerMenu && (
+        <Header
+          title={layout.shop.name}
+          menu={headerMenu}
+          toggle={toggle}
+          setToggle={setToggle}
+          isCartOpen={isCartOpen}
+          setCartOpen={setCartOpen}
+        />
+      )}
       <main role="main" id="mainContent" className="flex-grow">
         {children}
       </main>
@@ -33,37 +50,41 @@ export function Layout({children, layout}) {
   );
 }
 
-function Header({title, menu}) {
+function Header({title, menu, toggle, setToggle, isCartOpen, setCartOpen}) {
   const isHome = useIsHomePath();
 
-  const addToCartFetchers = useCartFetchers(CartForm.ACTIONS.LinesAdd);
-
-  const {
-    isOpen: isCartOpen,
-    openDrawer: openCart,
-    closeDrawer: closeCart,
-  } = useDrawer();
-
-  // toggle cart drawer when adding to cart
-  useEffect(() => {
-    if (!addToCartFetchers.length) return;
-    openCart();
-  }, [addToCartFetchers, openCart]);
-
   return (
-    <DesktopHeader
-      isHome={isHome}
-      title={title}
-      menu={menu}
-      openCart={openCart}
-    />
+    <>
+      <DesktopHeader
+        isHome={isHome}
+        title={title}
+        menu={menu}
+        toggle={toggle}
+        setToggle={setToggle}
+        isCartOpen={isCartOpen}
+        setCartOpen={setCartOpen}
+      />
+    </>
   );
 }
 
-function DesktopHeader({isHome, menu, title, openCart}) {
+function DesktopHeader({
+  isHome,
+  menu,
+  title,
+  toggle,
+  setToggle,
+  isCartOpen,
+  setCartOpen,
+}) {
   const params = useParams();
   // const {searchTerm, products, noResultRecommendations} = useLoaderData();
   const [isSticky, setIsSticky] = useState(false);
+
+  const handleClick = (e) => {
+    e.preventDefault();
+    setToggle(!toggle);
+  };
 
   useEffect(() => {
     const handleScroll = () => {
@@ -90,51 +111,16 @@ function DesktopHeader({isHome, menu, title, openCart}) {
           <div className="container">
             <div className="row flxnwrp">
               <div className="st-col st-nav-icon icx dfx visible-x">
-                <a href="/" className="st-nav-ic st-nav-trigger">
+                <a
+                  href="/"
+                  className="st-nav-ic st-nav-trigger"
+                  onClick={handleClick}
+                >
                   <span></span>
                   <span></span>
                   <span></span>
                 </a>
                 <Form
-                  method="get"
-                  action={
-                    params.locale ? `/${params.locale}/search` : '/search'
-                  }
-                  className="st-nav-ic st-nav-search visible-x searchForm"
-                >
-                  <input
-                    className="search"
-                    type="search"
-                    variant="minisearch"
-                    placeholder="Search"
-                    name="q"
-                    style={{display: 'block'}}
-                  />
-                  <a
-                    href="/search"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      const searchInput =
-                        document.getElementById('searchInput');
-                      searchInput.style.display =
-                        searchInput.style.display === 'none' ? 'block' : 'none';
-                    }}
-                  >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="22"
-                      height="22"
-                      viewBox="0 0 12 12"
-                    >
-                      <path
-                        fillRule="evenodd"
-                        d="M8.18 8.5C6.41 9.92 3.83 9.81 2.19 8.18C0.43 6.42 0.42 3.57 2.18 1.81C3.93 0.05 6.78 0.05 8.54 1.8C10.18 3.44 10.3 6.03 8.88 7.79L11.74 10.64L11.03 11.35L8.18 8.5ZM2.89 2.52C1.52 3.89 1.52 6.1 2.89 7.47C4.26 8.83 6.47 8.83 7.84 7.47L7.85 7.46C9.21 6.09 9.2 3.88 7.84 2.51C6.47 1.15 4.25 1.15 2.89 2.52Z"
-                      />
-                    </svg>
-                  </a>
-                </Form>
-
-                {/* <Form
                   method="get"
                   action={
                     params.locale ? `/${params.locale}/search` : '/search'
@@ -162,14 +148,15 @@ function DesktopHeader({isHome, menu, title, openCart}) {
                     name="q"
                     style={{display: 'none'}}
                   />
-                </Form> */}
+                </Form>
               </div>
               <div className="st-col st-nav-logo flx-auto">
                 <a href="/">
-                  <img src={logo2} />
+                  <img src={logoImg} />
                 </a>
               </div>
-              <div className="st-col st-nav-menu  hidden-x">
+              <div className={`st-col st-nav-menu ${toggle ? 'open' : ''}`}>
+              <span className="close_icon"><svg onClick={() =>setToggle(!toggle)} xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M2.28167 0.391468C1.7597 -0.130489 0.913438 -0.130489 0.391468 0.391468C-0.130489 0.913438 -0.130489 1.7597 0.391468 2.28167L8.10978 9.99996L0.391548 17.7182C-0.130409 18.2402 -0.130409 19.0865 0.391548 19.6084C0.913518 20.1303 1.75978 20.1303 2.28174 19.6084L9.99996 11.8901L17.7182 19.6084C18.2402 20.1303 19.0865 20.1303 19.6084 19.6084C20.1303 19.0865 20.1303 18.2402 19.6084 17.7182L11.8901 9.99996L19.6086 2.28167C20.1305 1.7597 20.1305 0.913438 19.6086 0.391468C19.0866 -0.130489 18.2403 -0.130489 17.7184 0.391468L9.99996 8.10978L2.28167 0.391468Z" fill="black"></path></svg></span>
                 <ul className="site-nav">
                   {(menu?.items || []).map((item) => (
                     <li key={item.id} prefetch="intent" className="st-nav-li">
@@ -188,7 +175,7 @@ function DesktopHeader({isHome, menu, title, openCart}) {
                   ))}
                 </ul>
               </div>
-
+              <div className={`drawer-overlay ${toggle ? 'active' : ''}`} onClick={() =>setToggle(!toggle)}></div>
               <div className="st-col st-nav-icon dfx flxwrp flxend ">
                 <Form
                   method="get"
@@ -207,7 +194,7 @@ function DesktopHeader({isHome, menu, title, openCart}) {
                     style={{display: 'none'}}
                   />
                   <a
-                    href="/search"
+                    href="#"
                     onClick={(e) => {
                       e.preventDefault();
                       const searchInput =
@@ -231,7 +218,11 @@ function DesktopHeader({isHome, menu, title, openCart}) {
                 </Form>
 
                 <AccountLink className="st-nav-ic st-nav-user " />
-                <CartCount isHome={isHome} openCart={openCart} />
+                <CartCount
+                  isHome={isHome}
+                  isCartOpen={isCartOpen}
+                  setCartOpen={setCartOpen}
+                />
               </div>
             </div>
           </div>
@@ -276,17 +267,27 @@ function AccountLink({className}) {
   );
 }
 
-function CartCount({isHome, openCart}) {
+function CartCount({isHome, isCartOpen, setCartOpen}) {
   const [root] = useMatches();
 
+  const addToCartFetchers = useCartFetchers(CartForm.ACTIONS.LinesAdd);
+
+  useEffect(() => {
+    if (isCartOpen || !addToCartFetchers.length) return;
+    openCart();
+  }, [addToCartFetchers, isCartOpen]);
+
   return (
-    <Suspense fallback={<Badge count={0} dark={isHome} openCart={openCart} />}>
+    <Suspense
+      fallback={<Badge count={0} dark={isHome} isCartOpen={isCartOpen} />}
+    >
       <Await resolve={root.data?.cart}>
         {(cart) => (
           <Badge
             dark={isHome}
-            openCart={openCart}
+            isCartOpen={isCartOpen}
             count={cart?.totalQuantity || 0}
+            setCartOpen={setCartOpen}
           />
         )}
       </Await>
@@ -294,12 +295,13 @@ function CartCount({isHome, openCart}) {
   );
 }
 
-function Badge({openCart, dark, count}) {
-  const isHydrated = useIsHydrated();
-
-  const BadgeCounter = useMemo(
-    () => (
-      <a href="/cart" className="st-nav-ic st-nav-cart">
+function Badge({isCartOpen, count, setCartOpen}) {
+  return (
+    <>
+      <div
+        className="st-nav-ic st-nav-cart"
+        onClick={() => setCartOpen(!isCartOpen)}
+      >
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width="25"
@@ -311,15 +313,30 @@ function Badge({openCart, dark, count}) {
           <path d="M30.45 57.15C26.22 57.15 22.41 59.69 20.8 63.6C19.18 67.5 20.07 72 23.06 74.99C26.04 77.98 30.54 78.87 34.44 77.26C38.35 75.64 40.9 71.84 40.9 67.61C40.9 66.24 40.63 64.88 40.1 63.61C39.58 62.34 38.81 61.19 37.84 60.22C36.87 59.25 35.72 58.48 34.45 57.95C33.18 57.43 31.82 57.15 30.45 57.15L30.45 57.15Z"></path>
         </svg>
         <span>{count || 0}</span>
-      </a>
-    ),
-    [count, dark],
+      </div>
+      {isCartOpen && (
+        <MiniCart isCartOpen={isCartOpen} setCartOpen={setCartOpen} />
+      )}
+    </>
   );
+}
 
-  return isHydrated ? (
-    <div onClick={openCart}>{BadgeCounter}</div>
-  ) : (
-    <Link to="/cart">{BadgeCounter}</Link>
+function MiniCart({isCartOpen, onClose, setCartOpen}) {
+  const [root] = useMatches();
+
+  return (
+    <Suspense fallback={<CartLoading />}>
+      <Await resolve={root.data?.cart}>
+        {(cart) => (
+          <CartDrawer
+            onClose={onClose}
+            cart={cart}
+            isCartOpen={isCartOpen}
+            setCartOpen={setCartOpen}
+          />
+        )}
+      </Await>
+    </Suspense>
   );
 }
 
