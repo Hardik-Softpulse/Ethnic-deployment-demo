@@ -182,9 +182,9 @@ export default function Collection() {
           </span>
           <div className="filter_sort">
             <h6 className="filter-label">
-              <label for="SortBy">Sort by:</label>
+              <label htmlFor="SortBy">Sort by:</label>
             </h6>
-            <div className="select">
+            <div class="select">
               <select
                 id="sortSelect"
                 value={activeItem ? activeItem.key : ''}
@@ -198,13 +198,15 @@ export default function Collection() {
               </select>
             </div>
           </div>
-          <FilterDrawer
-            filters={collection.products.filters}
-            appliedFilters={appliedFilters}
-            collection={collection}
-            filterDrawerOpen={filterDrawerOpen}
-            setFilterDrawerOpen={setFilterDrawerOpen}
-          />
+          {filterDrawerOpen && (
+            <FilterDrawer
+              filters={collection.products.filters}
+              appliedFilters={appliedFilters}
+              collection={collection}
+              filterDrawerOpen={filterDrawerOpen}
+              setFilterDrawerOpen={setFilterDrawerOpen}
+            />
+          )}
           {/* <div className={`filter-drawer  ${filterDrawerOpen ? 'open' : ''}`}>
             <div className=" filter-container">
               <div className="filter-header">
@@ -285,12 +287,6 @@ export default function Collection() {
                         <button className="btn">Previous</button>
                       </PreviousLink>
                     </span>
-
-                    {/* {Array.from({length: nodes.length}, (_, index) => (
-                        <span key={index}>
-                          <a href={`?page=${index + 1}`}>{index + 1}</a>
-                        </span>
-                      ))} */}
 
                     <span className="pager-next">
                       <NextLink>
