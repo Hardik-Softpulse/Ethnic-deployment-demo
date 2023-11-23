@@ -3862,9 +3862,8 @@ li.st-nav-li.drop_down {
   box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
   padding: 10px;
   transition: all 0.3s ease-in-out;
-  opacity: 0;
-  visibility: hidden;
   font-size: 15px;
+  z-index: 9;
 }
 .hdr_sub_menu a::after {
   display: none;
