@@ -261,43 +261,58 @@ export default function EditAddress() {
             <label for="address_country_new">
               <strong>Country</strong>
             </label>
-            <select
-              id="country"
-              name="country"
-              type="text"
-              autoComplete="country-name"
-              placeholder="Country"
-              required
-              aria-label="Country"
-              className={`selcountry ${getInputStyleClasses()}`}
-              data-default=""
-              defaultValue={address?.country ?? ''}
-            >
-              <option value="---" data-provinces="[]">
-                ---
-              </option>
-              <option value="Afghanistan" data-provinces="[]">
-                Afghanistan
-              </option>
-              <option value="Aland Islands" data-provinces="[]">
-                Åland Islands
-              </option>
-              <option value="Albania" data-provinces="[]">
-                Albania
-              </option>
-              <option value="Algeria" data-provinces="[]">
-                Algeria
-              </option>
-              <option value="Andorra" data-provinces="[]">
-                Andorra
-              </option>
-              <option value="Angola" data-provinces="[]">
-                Angola
-              </option>
-              <option value="Anguilla" data-provinces="[]">
-                Anguilla
-              </option>
-            </select>
+            <div className="select">
+              <select
+                id="country"
+                name="country"
+                type="text"
+                autoComplete="country-name"
+                placeholder="Country"
+                required
+                aria-label="Country"
+                className={`selcountry ${getInputStyleClasses()}`}
+                data-default=""
+                defaultValue={address?.country ?? ''}
+              >
+                <option value="---" data-provinces="[]">
+                  ---
+                </option>
+                <option value="Afghanistan" data-provinces="[]">
+                  Afghanistan
+                </option>
+                <option value="Aland Islands" data-provinces="[]">
+                  Åland Islands
+                </option>
+                <option value="Albania" data-provinces="[]">
+                  Albania
+                </option>
+                <option value="Algeria" data-provinces="[]">
+                  Algeria
+                </option>
+                <option value="Andorra" data-provinces="[]">
+                  Andorra
+                </option>
+                <option value="Angola" data-provinces="[]">
+                  Angola
+                </option>
+                <option value="Anguilla" data-provinces="[]">
+                  Anguilla
+                </option>
+              </select>
+              <svg
+                aria-hidden="true"
+                focusable="false"
+                className="icon icon-caret"
+                viewBox="0 0 10 6"
+              >
+                <path
+                  fillRule="evenodd"
+                  clipRule="evenodd"
+                  d="M9.354.646a.5.5 0 00-.708 0L5 4.293 1.354.646a.5.5 0 00-.708.708l4 4a.5.5 0 00.708 0l4-4a.5.5 0 000-.708z"
+                  fill="currentColor"
+                ></path>
+              </svg>
+            </div>
             <div className="form-error err-selcountry"></div>
           </div>
           <div
@@ -307,22 +322,37 @@ export default function EditAddress() {
             <label for="address_province_new">
               <strong>Province</strong>
             </label>
-            <select
-              id="province"
-              name="province"
-              type="text"
-              autoComplete="address-level1"
-              placeholder="State / Province"
-              required
-              aria-label="State"
-              className={`address_form ${getInputStyleClasses()}`}
-              data-default=""
-              defaultValue={address?.province ?? ''}
-            >
-              <option value="---" data-provinces="[]">
-                ---
-              </option>
-            </select>
+            <div className="select">
+              <select
+                id="province"
+                name="province"
+                type="text"
+                autoComplete="address-level1"
+                placeholder="State / Province"
+                required
+                aria-label="State"
+                className={`address_form ${getInputStyleClasses()}`}
+                data-default=""
+                defaultValue={address?.province ?? ''}
+              >
+                <option value="---" data-provinces="[]">
+                  ---
+                </option>
+              </select>
+              <svg
+                aria-hidden="true"
+                focusable="false"
+                className="icon icon-caret"
+                viewBox="0 0 10 6"
+              >
+                <path
+                  fillRule="evenodd"
+                  clipRule="evenodd"
+                  d="M9.354.646a.5.5 0 00-.708 0L5 4.293 1.354.646a.5.5 0 00-.708.708l4 4a.5.5 0 00.708 0l4-4a.5.5 0 000-.708z"
+                  fill="currentColor"
+                ></path>
+              </svg>
+            </div>
           </div>
           <div className="input-field col-50">
             <label for="address_zip_new">

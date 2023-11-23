@@ -157,8 +157,8 @@ function Account({customer, toggleFormVisibility}) {
         </div>
       </div>
       <div className="container">
-        <h2 className="page-title">My Account</h2>
-        <div className="row flxnwrp flxanst">
+      <h2 className="page-title text-center">My Account</h2>
+        <div className="row flxnwrp ">
           <div className="cust-side-links">
             <Link
               to="/account"
@@ -259,7 +259,6 @@ function AccountOrderHistory({orders, activeTab}) {
         <table>
           <thead>
             <tr>
-              <th>Order id</th>
               <th>Order Number</th>
               <th>Date</th>
               <th>Payment Status</th>
@@ -402,7 +401,6 @@ export async function getCustomer(context, customerAccessToken) {
 
   return data.customer;
 }
-
 
 const CUSTOMER_RECOVER_MUTATION = `#graphql
   mutation customerRecover($email: String!) {

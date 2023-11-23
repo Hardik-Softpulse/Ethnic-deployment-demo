@@ -58,12 +58,15 @@ export default function Search() {
   const {searchTerm, products, noResultRecommendations, seo} = useLoaderData();
   const noResults = products?.nodes?.length === 0;
 
+
+
   return (
     <div className="all-collection">
       <div className="container">
         <h2 className="page-title text-up text-center">{seo.title}</h2>
         {!searchTerm || noResults ? (
           <NoResults
+            searchTerm={searchTerm}
             noResults={noResults}
             recommendations={noResultRecommendations}
           />
@@ -110,10 +113,25 @@ export default function Search() {
   );
 }
 
-function NoResults({noResults, recommendations}) {
-  return <></>;
+function NoResults({noResults, recommendations, searchTerm}) {
+ 
+  return (
+    <>
+      <div className="mb-60 no_result text-center">
+        <ul>
+          <li>
+            We are sorry! We couldn't find results for
+            <span>{`"searched ${searchTerm}"`}</span>.
+          </li>
+          <li>
+            But don't give up – check the spelling or try less specific search
+            terms.
+          </li>
+        </ul>
+      </div>
+    </>
+  );
 }
-
 export function getNoResultRecommendations(storefront) {
   return getFeaturedData(storefront, {pageBy: PAGINATION_SIZE});
 }

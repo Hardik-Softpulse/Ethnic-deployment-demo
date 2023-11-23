@@ -16,8 +16,7 @@ import {
 import {CartLoading} from './CartLoading';
 import {CartDrawer} from './CartDrawer';
 import {Newsletter} from './Newsletter';
-
-// import {Newsletter} from './Newsletter';
+import {useLocation} from 'react-use';
 
 export function Layout({
   children,
@@ -71,15 +70,18 @@ function Header({title, menu, toggle, setToggle, isCartOpen, setCartOpen}) {
 function DesktopHeader({
   isHome,
   menu,
-  title,
   toggle,
   setToggle,
   isCartOpen,
   setCartOpen,
 }) {
   const params = useParams();
-  // const {searchTerm, products, noResultRecommendations} = useLoaderData();
+
   const [isSticky, setIsSticky] = useState(false);
+  const location = useLocation();
+  const [subMenu, setSubMenu] = useState(false);
+  const [activeMenu, setActiveMenu] = useState('Home');
+  const [searchBar, setSearchBar] = useState(false);
 
   const handleClick = (e) => {
     e.preventDefault();
@@ -127,7 +129,7 @@ function DesktopHeader({
                   }
                   className="st-nav-ic st-nav-search visible-x searchForm"
                 >
-                  <button type="submit" className="submit">
+                  <a href="#" onClick={(e) => setSearchBar(!searchBar)}>
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       width="22"
@@ -139,14 +141,14 @@ function DesktopHeader({
                         d="M8.18 8.5C6.41 9.92 3.83 9.81 2.19 8.18C0.43 6.42 0.42 3.57 2.18 1.81C3.93 0.05 6.78 0.05 8.54 1.8C10.18 3.44 10.3 6.03 8.88 7.79L11.74 10.64L11.03 11.35L8.18 8.5ZM2.89 2.52C1.52 3.89 1.52 6.1 2.89 7.47C4.26 8.83 6.47 8.83 7.84 7.47L7.85 7.46C9.21 6.09 9.2 3.88 7.84 2.51C6.47 1.15 4.25 1.15 2.89 2.52Z"
                       />
                     </svg>
-                  </button>
+                  </a>
                   <input
                     className="search"
                     type="search"
                     variant="minisearch"
                     placeholder="Search"
                     name="q"
-                    style={{display: 'none'}}
+                    style={{display: searchBar ? 'block' : 'none'}}
                   />
                 </Form>
               </div>
@@ -156,26 +158,85 @@ function DesktopHeader({
                 </a>
               </div>
               <div className={`st-col st-nav-menu ${toggle ? 'open' : ''}`}>
-              <span className="close_icon"><svg onClick={() =>setToggle(!toggle)} xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M2.28167 0.391468C1.7597 -0.130489 0.913438 -0.130489 0.391468 0.391468C-0.130489 0.913438 -0.130489 1.7597 0.391468 2.28167L8.10978 9.99996L0.391548 17.7182C-0.130409 18.2402 -0.130409 19.0865 0.391548 19.6084C0.913518 20.1303 1.75978 20.1303 2.28174 19.6084L9.99996 11.8901L17.7182 19.6084C18.2402 20.1303 19.0865 20.1303 19.6084 19.6084C20.1303 19.0865 20.1303 18.2402 19.6084 17.7182L11.8901 9.99996L19.6086 2.28167C20.1305 1.7597 20.1305 0.913438 19.6086 0.391468C19.0866 -0.130489 18.2403 -0.130489 17.7184 0.391468L9.99996 8.10978L2.28167 0.391468Z" fill="black"></path></svg></span>
+                <span className="close_icon">
+                  <svg
+                    onClick={() => setToggle(!toggle)}
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="20"
+                    height="20"
+                    viewBox="0 0 20 20"
+                    fill="none"
+                  >
+                    <path
+                      d="M2.28167 0.391468C1.7597 -0.130489 0.913438 -0.130489 0.391468 0.391468C-0.130489 0.913438 -0.130489 1.7597 0.391468 2.28167L8.10978 9.99996L0.391548 17.7182C-0.130409 18.2402 -0.130409 19.0865 0.391548 19.6084C0.913518 20.1303 1.75978 20.1303 2.28174 19.6084L9.99996 11.8901L17.7182 19.6084C18.2402 20.1303 19.0865 20.1303 19.6084 19.6084C20.1303 19.0865 20.1303 18.2402 19.6084 17.7182L11.8901 9.99996L19.6086 2.28167C20.1305 1.7597 20.1305 0.913438 19.6086 0.391468C19.0866 -0.130489 18.2403 -0.130489 17.7184 0.391468L9.99996 8.10978L2.28167 0.391468Z"
+                      fill="black"
+                    ></path>
+                  </svg>
+                </span>
                 <ul className="site-nav">
-                  {(menu?.items || []).map((item) => (
-                    <li key={item.id} prefetch="intent" className="st-nav-li">
-                      <a
-                        href={item.to}
-                        target={item.target}
-                        className={
-                          item.title == 'Home'
-                            ? 'st-nav-link active'
-                            : 'st-nav-link'
-                        }
+                  {(menu?.items || []).map((item) => {
+                    console.log('items', item);
+                    return (
+                      <li
+                        key={item.id}
+                        prefetch="intent"
+                        className="st-nav-li drop_down"
                       >
-                        {item.title}
-                      </a>
-                    </li>
-                  ))}
+                        <a
+                          href={item.to}
+                          target={item.target}
+                          className={`${
+                            activeMenu === item.title
+                              ? 'st-nav-link active'
+                              : 'st-nav-link'
+                          }`}
+                          onClick={(e) => {
+                            e.preventDefault();
+                            setActiveMenu(item.title),
+                              console.log('activeMenu', activeMenu);
+                          }}
+                        >
+                          {item.title}
+                        </a>
+
+                        {item.items != 0 && (
+                          <span
+                            className="down_arw"
+                            onClick={() => setSubMenu(!subMenu)}
+                          >
+                            <svg
+                              aria-hidden="true"
+                              focusable="false"
+                              viewBox="0 0 10 6"
+                              width="11px"
+                              height="11px"
+                            >
+                              <path
+                                fillRule="evenodd"
+                                clipRule="evenodd"
+                                d="M9.354.646a.5.5 0 00-.708 0L5 4.293 1.354.646a.5.5 0 00-.708.708l4 4a.5.5 0 00.708 0l4-4a.5.5 0 000-.708z"
+                                fill="currentColor"
+                              ></path>
+                            </svg>
+                          </span>
+                        )}
+
+                        {subMenu &&
+                          item.items?.map((menuItem) => (
+                            <div className="hdr_sub_menu" key={menuItem.id}>
+                              <a href={menuItem.to}>{menuItem.title}</a>
+                            </div>
+                          ))}
+                      </li>
+                    );
+                  })}
                 </ul>
               </div>
-              <div className={`drawer-overlay ${toggle ? 'active' : ''}`} onClick={() =>setToggle(!toggle)}></div>
+
+              <div
+                className={`drawer-overlay ${toggle ? 'active' : ''}`}
+                onClick={() => setToggle(!toggle)}
+              ></div>
               <div className="st-col st-nav-icon dfx flxwrp flxend ">
                 <Form
                   method="get"
@@ -323,17 +384,20 @@ function Badge({isCartOpen, count, setCartOpen}) {
 
 function MiniCart({isCartOpen, onClose, setCartOpen}) {
   const [root] = useMatches();
+  const location = useLocation();
 
   return (
     <Suspense fallback={<CartLoading />}>
       <Await resolve={root.data?.cart}>
         {(cart) => (
-          <CartDrawer
-            onClose={onClose}
-            cart={cart}
-            isCartOpen={isCartOpen}
-            setCartOpen={setCartOpen}
-          />
+          <>
+            <CartDrawer
+              onClose={onClose}
+              cart={cart}
+              isCartOpen={isCartOpen}
+              setCartOpen={setCartOpen}
+            />
+          </>
         )}
       </Await>
     </Suspense>

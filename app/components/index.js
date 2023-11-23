@@ -1,3 +1,5 @@
+import { ResentlyView } from './ResentlyView';
+
 export {Layout} from './Layout';
 export {Drawer, useDrawer} from './Drawer';
 export {Heading, Section, Text, PageHeader} from './Text';
@@ -32,3 +34,4 @@ export {BestSeller} from './BestSeller';
 export * from './Icon';
 export {FilterDrawer} from './FilterDrawer';
 export {ReviewCard} from './Review/ReviewCard';
+export {ResentlyView} from './ResentlyView';

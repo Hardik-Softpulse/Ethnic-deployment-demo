@@ -1,27 +1,26 @@
-import {flattenConnection} from '@shopify/hydrogen';
 import {Link} from './Link';
+import moment from 'moment';
 
 export function OrderCard({order}) {
   if (!order?.id) return null;
   const [legacyOrderId, key] = order.id.split('/').pop().split('?');
-  const lineItems = flattenConnection(order?.lineItems);
 
+  const date = moment(order.processedAt).format('DD/MM/YYYY');
   return (
-    <tr>
+    <>
       <td>
         <Link
           to={`/account/orders/${legacyOrderId}?${key}`}
           title="OrderDatail"
         >
-          {order.id}
+          {order.orderNumber}
         </Link>
       </td>
-      <td>{order.orderNumber}</td>
-      <td>{order.processedAt}</td>
+      <td>{date}</td>
       <td>{order.financialStatus}</td>
       <td>{order.fulfillmentStatus}</td>
       <td>{order.currentTotalPrice.amount}</td>
-    </tr>
+    </>
   );
 }
 

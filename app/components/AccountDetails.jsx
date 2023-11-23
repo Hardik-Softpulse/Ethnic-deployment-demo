@@ -3,7 +3,7 @@ import {Link} from './Link';
 export function AccountDetails({activeTab, customer}) {
   return (
     <div
-      className="cust-side-content"
+      className="cust-side-content account_dtl"
       id="cst-information"
       style={{display: activeTab === 'cst-information' ? 'block' : 'none'}}
     >
@@ -25,9 +25,9 @@ export function AccountDetails({activeTab, customer}) {
           <br />
           {customer.phone}
         </p>
-        <Link href="/account" className="btn lp-05">
+        {/* <Link href="/account" className="btn lp-05">
           View addresses (1)
-        </Link>
+        </Link> */}
       </div>
     </div>
   );

@@ -15,9 +15,7 @@ import invariant from 'tiny-invariant';
 
 import {Layout} from '~/components';
 import {seoPayload} from '~/lib/seo.server';
-
 import favicon from '../public/favicon.png';
-
 import {GenericError} from './components/GenericError';
 import {NotFound} from './components/NotFound';
 import styles from './styles/app.css';
@@ -25,12 +23,14 @@ import {DEFAULT_LOCALE, parseMenu} from './lib/utils';
 import {useAnalytics} from './hooks/useAnalytics';
 import {useState} from 'react';
 import swipercss from 'swiper/css';
-import swipernavigationcss from 'swiper/css/navigation';
+import swipernavigation from 'swiper/css/navigation';
+import swiperPagination from'swiper/css/pagination';
 
 export const links = () => {
   return [
     {rel: 'stylesheet', href: swipercss},
-    {rel: 'stylesheet', href: swipernavigationcss},
+    {rel: 'stylesheet', href: swipernavigation},
+    {rel: 'stylesheet', href: swiperPagination},
     {rel: 'stylesheet', href: styles},
     {
       rel: 'preconnect',
@@ -84,7 +84,7 @@ export default function App() {
         <Meta />
         <Links />
       </head>
-      <body >
+      <body>
         <div className={`${toggle || isCartOpen ? 'drawer ' : ''}`}>
           <Layout
             key={`${locale.language}-${locale.country}`}
@@ -94,7 +94,7 @@ export default function App() {
             isCartOpen={isCartOpen}
             setCartOpen={setCartOpen}
           >
-            <Outlet />
+            <Outlet context={[isCartOpen, setCartOpen]}/>
           </Layout>
         </div>
         <ScrollRestoration />

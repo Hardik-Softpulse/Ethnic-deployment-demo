@@ -26,7 +26,7 @@ export function SectionProductCard({
   }
 
   return (
-    <div className="swiper-slide product-item">
+    <div className="product-item">
       <Link
         className="product-img"
         onClick={onClick}

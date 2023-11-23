@@ -119,7 +119,7 @@ export async function loader({params, request, context}) {
 export default function Collection() {
   const {collection, collections, appliedFilters} = useLoaderData();
   const [filterDrawerOpen, setFilterDrawerOpen] = useState(false);
-  const [selectedFilters, setSelectedFilters] = useState([]);
+
   const items = [
     {label: 'Featured', key: 'featured'},
     {
@@ -160,6 +160,8 @@ export default function Collection() {
     return `${location.pathname}?${params.toString()}`;
   };
 
+  console.log('collection', collection);
+
   return (
     <div className="collection-page">
       <div className="breadcrumb">
@@ -184,7 +186,7 @@ export default function Collection() {
             <h6 className="filter-label">
               <label htmlFor="SortBy">Sort by:</label>
             </h6>
-            <div class="select">
+            <div className="select">
               <select
                 id="sortSelect"
                 value={activeItem ? activeItem.key : ''}
@@ -196,6 +198,19 @@ export default function Collection() {
                   </option>
                 ))}
               </select>
+              <svg
+                aria-hidden="true"
+                focusable="false"
+                className="icon icon-caret"
+                viewBox="0 0 10 6"
+              >
+                <path
+                  fillRule="evenodd"
+                  clipRule="evenodd"
+                  d="M9.354.646a.5.5 0 00-.708 0L5 4.293 1.354.646a.5.5 0 00-.708.708l4 4a.5.5 0 00.708 0l4-4a.5.5 0 000-.708z"
+                  fill="currentColor"
+                ></path>
+              </svg>
             </div>
           </div>
           {filterDrawerOpen && (
@@ -207,57 +222,7 @@ export default function Collection() {
               setFilterDrawerOpen={setFilterDrawerOpen}
             />
           )}
-          {/* <div className={`filter-drawer  ${filterDrawerOpen ? 'open' : ''}`}>
-            <div className=" filter-container">
-              <div className="filter-header">
-                <h2 className="page-title text-up">Filter</h2>
-                <span
-                  className="close_icon"
-                  onClick={() => setFilterDrawerOpen(!filterDrawerOpen)}
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="20"
-                    height="20"
-                    viewBox="0 0 20 20"
-                    fill="none"
-                  >
-                    <path
-                      d="M2.28167 0.391468C1.7597 -0.130489 0.913438 -0.130489 0.391468 0.391468C-0.130489 0.913438 -0.130489 1.7597 0.391468 2.28167L8.10978 9.99996L0.391548 17.7182C-0.130409 18.2402 -0.130409 19.0865 0.391548 19.6084C0.913518 20.1303 1.75978 20.1303 2.28174 19.6084L9.99996 11.8901L17.7182 19.6084C18.2402 20.1303 19.0865 20.1303 19.6084 19.6084C20.1303 19.0865 20.1303 18.2402 19.6084 17.7182L11.8901 9.99996L19.6086 2.28167C20.1305 1.7597 20.1305 0.913438 19.6086 0.391468C19.0866 -0.130489 18.2403 -0.130489 17.7184 0.391468L9.99996 8.10978L2.28167 0.391468Z"
-                      fill="black"
-                    ></path>
-                  </svg>
-                </span>
-              </div>
-              <div className="filter-content">
-                <div className="filter-item-list">
-                  <SortFilter
-                    filters={collection.products.filters}
-                    appliedFilters={appliedFilters}
-                    collections={collections}
-                    filterDrawerOpen={filterDrawerOpen}
-                  />
-                </div>
-              </div>
-              <div className="filter-footer">
-                <a
-                  href={`/collections/${collection.handle}`}
-                  className="remove_link"
-                  onClick={() => setFilterDrawerOpen(!filterDrawerOpen)}
-                >
-                  Remove All
-                </a>
-                <button
-                  className="btn"
-                  onClick={() => {
-                    setFilterDrawerOpen(!filterDrawerOpen);
-                  }}
-                >
-                  Apply
-                </button>
-              </div>
-            </div>
-          </div> */}
+
           <div
             className={`drawer-overlay  ${filterDrawerOpen ? 'active' : ''}`}
             onClick={() => setFilterDrawerOpen(!filterDrawerOpen)}
@@ -273,13 +238,19 @@ export default function Collection() {
               {({nodes, isLoading, PreviousLink, NextLink, pageInfo}) => (
                 <div className="cllctn-list">
                   <div className="row m-15">
-                    {nodes.map((product, i) => (
-                      <ProductCard
-                        key={product.id}
-                        loading={getImageLoadingPriority(i)}
-                        product={product}
-                      />
-                    ))}
+                    {nodes.length > 0 ? (
+                      nodes.map((product, i) => (
+                        <ProductCard
+                          key={product.id}
+                          loading={getImageLoadingPriority(i)}
+                          product={product}
+                        />
+                      ))
+                    ) : (
+                      <p className="text-center no_product">
+                        There are no products in this collection.
+                      </p>
+                    )}
                   </div>
                   <div className="pagination dfx flxcntr flxwrp">
                     <span className="pager-prev">

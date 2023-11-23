@@ -1,22 +1,14 @@
-import visa from '../img/visa.png';
-import paypal from '../img/paypal.png';
-import mastercard from '../img/mastercard.png';
-import americanExpress from '../img/american-express.png';
-import masestro from '../img/masestro.png';
-import dinersClub from '../img/diners-club.png';
-
 import {CartForm, Image, Money, flattenConnection} from '@shopify/hydrogen';
 import {Link} from './Link';
-import {BestSeller} from '~/components';
-import {useLoaderData} from '@remix-run/react';
 
 export function CartDrawer({isCartOpen, cart, setCartOpen}) {
   const linesCount = Boolean(cart?.lines?.edges?.length || 0);
   console.log('cart', cart);
-
+ 
   return (
     <>
       <div
+        id="cart-drawer"
         className={`cart-drawer cartdrawer-block ${isCartOpen ? 'open' : ''}`}
       >
         <div className="cart-container">
@@ -38,7 +30,8 @@ export function CartDrawer({isCartOpen, cart, setCartOpen}) {
               </svg>
             </span>
           </div>
-          <CartEmpty hidden={linesCount} />
+          <CartEmpty hidden={linesCount}    setCartOpen={setCartOpen}
+            isCartOpen={isCartOpen}/>
           <CartDetails
             cart={cart}
             setCartOpen={setCartOpen}
@@ -64,8 +57,7 @@ export function CartDetails({cart, setCartOpen, isCartOpen}) {
         <CartSummary
           cost={cart.cost}
           checkoutUrl={cart.checkoutUrl}
-          setCartOpen={setCartOpen}
-          isCartOpen={isCartOpen}
+          
         />
       )}
     </div>
@@ -82,7 +74,7 @@ export function CartEmpty({hidden = false}) {
         Looks like you haven&rsquo;t added anything yet, let&rsquo;s get you
         started!
       </p>
-      <Link className="btn" to={'/collections'}>
+      <Link className="btn" to={'/collections'} onClick={() => setCartOpen(!isCartOpen)}>
         Continue shopping
       </Link>
     </div>
@@ -136,7 +128,6 @@ function CartLineItem({line}) {
                 </strong>
               </span>
             </div>
-            <CartLineQuantityAdjust line={line} />
           </div>
         ) : (
           <h6>{merchandise?.product?.title || ''}</h6>
@@ -150,6 +141,7 @@ function CartLineItem({line}) {
         </div>
         <div className="cart-edits dfx">
           <div className="cart-elinks">
+            <CartLineQuantityAdjust line={line} />
             <ItemRemoveButton lineIds={[id]} />
           </div>
         </div>
@@ -192,7 +184,7 @@ function CartLineQuantityAdjust({line}) {
         </button>
       </UpdateCartButton>
       <input
-        type="number"
+        type="text"
         name=""
         className="qty-input"
         value={quantity}
@@ -216,8 +208,7 @@ function CartSummary({
   cost,
   discountCodes,
   checkoutUrl,
-  setCartOpen,
-  isCartOpen,
+  
 }) {
   const codes =
     discountCodes
@@ -294,7 +285,7 @@ function CartCheckoutActions({checkoutUrl}) {
 
   return (
     <Link to={checkoutUrl} target="_self">
-      <button type="button" name="" className="btn chckc-btn" value="Checkout">
+      <button type="button" name="" className="btn chckc-btn" value="Checkout" >
         Checkout
       </button>
     </Link>
