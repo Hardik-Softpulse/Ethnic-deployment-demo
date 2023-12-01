@@ -76,9 +76,7 @@ function DesktopHeader({
   setCartOpen,
 }) {
   const params = useParams();
-
   const [isSticky, setIsSticky] = useState(false);
-  const location = useLocation();
   const [subMenu, setSubMenu] = useState(false);
   const [activeMenu, setActiveMenu] = useState('Home');
   const [searchBar, setSearchBar] = useState(false);
@@ -86,6 +84,12 @@ function DesktopHeader({
   const handleClick = (e) => {
     e.preventDefault();
     setToggle(!toggle);
+  };
+
+  const handleMenu = (title) => {
+    if (activeMenu !== title) {
+      setActiveMenu(title);
+    }
   };
 
   useEffect(() => {
@@ -101,7 +105,7 @@ function DesktopHeader({
     return () => {
       window.removeEventListener('scroll', handleScroll);
     };
-  }, []);
+  }, [activeMenu]);
 
   return (
     <>
@@ -129,7 +133,7 @@ function DesktopHeader({
                   }
                   className="st-nav-ic st-nav-search visible-x searchForm"
                 >
-                  <a href="#" onClick={(e) => setSearchBar(!searchBar)}>
+                  <a href="#" onClick={() => setSearchBar(!searchBar)}>
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       width="22"
@@ -175,30 +179,26 @@ function DesktopHeader({
                 </span>
                 <ul className="site-nav">
                   {(menu?.items || []).map((item) => {
-                    console.log('items', item);
                     return (
                       <li
                         key={item.id}
                         prefetch="intent"
                         className="st-nav-li drop_down"
                       >
-                        <a
-                          href={item.to}
+                        <Link
+                          to={item.to}
                           target={item.target}
+                          onClick={() => {
+                            handleMenu(item.title);
+                          }}
                           className={`${
                             activeMenu === item.title
                               ? 'st-nav-link active'
                               : 'st-nav-link'
                           }`}
-                          onClick={(e) => {
-                            e.preventDefault();
-                            setActiveMenu(item.title),
-                              console.log('activeMenu', activeMenu);
-                          }}
                         >
                           {item.title}
-                        </a>
-
+                        </Link>
                         {item.items != 0 && (
                           <span
                             className="down_arw"
@@ -224,7 +224,19 @@ function DesktopHeader({
                         {subMenu &&
                           item.items?.map((menuItem) => (
                             <div className="hdr_sub_menu" key={menuItem.id}>
-                              <a href={menuItem.to}>{menuItem.title}</a>
+                              <Link
+                                to={menuItem.to}
+                                target={item.target}
+                                onClick={() => {
+                                  handleMenu(item.title);
+                                }}
+                                className={`${
+                                  activeMenu === item.title ? 'active' : ''
+                                }`}
+                              >
+                                {menuItem.title}
+                              </Link>
+                              {/* <a href={menuItem.to}>{menuItem.title}</a> */}
                             </div>
                           ))}
                       </li>

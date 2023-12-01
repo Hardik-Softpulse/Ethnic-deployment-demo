@@ -157,8 +157,8 @@ function Account({customer, toggleFormVisibility}) {
         </div>
       </div>
       <div className="container">
-      <h2 className="page-title text-center">My Account</h2>
-        <div className="row flxnwrp ">
+        <h2 className="page-title text-center">My Account</h2>
+        <div className="row ">
           <div className="cust-side-links">
             <Link
               to="/account"

@@ -6,10 +6,14 @@ import {
   useNavigate,
 } from '@remix-run/react';
 
-export function SortFilter({filters, appliedFilters = [], filterDrawerOpen}) {
+export function SortFilter({filters, appliedFilters = []}) {
   const [params] = useSearchParams();
   const location = useLocation();
   const navigate = useNavigate();
+
+  if (!filters || filters.length === 0) {y
+    return <p>No filters available.</p>;
+  }
 
   return (
     <div className="cllctn-sidebar">
@@ -33,12 +37,13 @@ export function SortFilter({filters, appliedFilters = [], filterDrawerOpen}) {
                       params,
                       location,
                     );
+
                     return (
                       <div className="filter-item" key={option.id}>
                         <input
                           type="radio"
                           checked={
-                            appliedFilters?.some(
+                            appliedFilters.some(
                               (obj) => obj.label === option.label,
                             )
                               ? true

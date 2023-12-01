@@ -49,8 +49,10 @@ export function SectionProductCard({
       <div className="product-price">
         <span className="s-price">
           <Money withoutTrailingZeros data={price} />
+        </span>
+        <span className="o-price">
           {isDiscounted(price, compareAtPrice) && (
-            <CompareAtPrice className={'opacity-50'} data={compareAtPrice} />
+            <CompareAtPrice data={compareAtPrice} />
           )}
         </span>
       </div>

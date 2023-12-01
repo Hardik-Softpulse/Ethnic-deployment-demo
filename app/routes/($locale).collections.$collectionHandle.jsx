@@ -91,8 +91,6 @@ export async function loader({params, request, context}) {
         filters,
         sortKey,
         reverse,
-        country: context.storefront.i18n.country,
-        language: context.storefront.i18n.language,
       },
     },
   );
@@ -293,8 +291,6 @@ export default function Collection() {
 const COLLECTION_QUERY = `#graphql
   query CollectionDetails(
     $handle: String!
-    $country: CountryCode
-    $language: LanguageCode
     $filters: [ProductFilter!]
     $sortKey: ProductCollectionSortKeys!
     $reverse: Boolean
@@ -302,7 +298,7 @@ const COLLECTION_QUERY = `#graphql
     $last: Int
     $startCursor: String
     $endCursor: String
-  ) @inContext(country: $country, language: $language) {
+  ) {
     collection(handle: $handle) {
       id
       handle

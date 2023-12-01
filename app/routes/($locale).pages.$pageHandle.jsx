@@ -31,7 +31,7 @@ export default function Page() {
   const {page, seo} = useLoaderData();
 
   if (page.id === 'gid://shopify/Page/30708353') {
-    return page.body && <Index />;
+    return page.body && <Index seo={seo.title}/>;
   }
 
   return (
@@ -48,8 +48,7 @@ export default function Page() {
 }
 
 const PAGE_QUERY = `#graphql
-  query PageDetails($language: LanguageCode, $handle: String!)
-  @inContext(language: $language) {
+  query PageDetails( $handle: String!){
     page(handle: $handle) {
       id
       title

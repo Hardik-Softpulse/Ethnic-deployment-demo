@@ -145,8 +145,7 @@ export default function HomePage() {
 
 // @see: https://shopify.dev/api/storefront/2023-07/queries/collections
 export const FEATURED_COLLECTIONS_QUERY = `#graphql
-  query homepageFeaturedCollections($country: CountryCode, $language: LanguageCode)
-  @inContext(country: $country, language: $language) {
+  query homepageFeaturedCollections {
     collections(
       first: 10,
       sortKey: UPDATED_AT
@@ -196,8 +195,8 @@ const COLLECTION_CONTENT_FRAGMENT = `#graphql
 `;
 
 const HOMEPAGE_SEO_QUERY = `#graphql
-  query seoCollectionContent($handle: String, $country: CountryCode, $language: LanguageCode)
-  @inContext(country: $country, language: $language) {
+  query seoCollectionContent($handle: String)
+   {
     hero: collection(handle: $handle) {
       ...CollectionContent
     }
@@ -211,8 +210,7 @@ const HOMEPAGE_SEO_QUERY = `#graphql
 
 // @see: https://shopify.dev/api/storefront/2023-07/queries/products
 export const HOMEPAGE_FEATURED_PRODUCTS_QUERY = `#graphql
-  query homepageFeaturedProducts($country: CountryCode, $language: LanguageCode)
-  @inContext(country: $country, language: $language) {
+  query homepageFeaturedProducts{
     products(first: 8) {
       nodes {
         ...ProductCard
@@ -223,7 +221,7 @@ export const HOMEPAGE_FEATURED_PRODUCTS_QUERY = `#graphql
 `;
 
 const SINGLE_COLLECTION_QUERY = `#graphql
-query getCollectionByHandle($handle: String!,$country: CountryCode, $language: LanguageCode) @inContext(country: $country, language: $language) {
+query getCollectionByHandle($handle: String!){
   collection(handle: $handle) {
     id
     title

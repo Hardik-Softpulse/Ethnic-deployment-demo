@@ -115,8 +115,7 @@ function renderUrlTag({url, lastMod, changeFreq, image}) {
 }
 
 const SITEMAP_QUERY = `#graphql
-  query sitemaps($urlLimits: Int, $language: LanguageCode)
-  @inContext(language: $language) {
+  query sitemaps($urlLimits: Int,) {
     products(
       first: $urlLimits
       query: "published_status:'online_store:visible'"
