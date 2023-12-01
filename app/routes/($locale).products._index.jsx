@@ -95,13 +95,11 @@ export default function AllProducts() {
 
 const ALL_PRODUCTS_QUERY = `#graphql
   query AllProducts(
-    $country: CountryCode
-    $language: LanguageCode
     $first: Int
     $last: Int
     $startCursor: String
     $endCursor: String
-  ) @inContext(country: $country, language: $language) {
+  ) {
     products(first: $first, last: $last, before: $startCursor, after: $endCursor) {
       filters {
         id

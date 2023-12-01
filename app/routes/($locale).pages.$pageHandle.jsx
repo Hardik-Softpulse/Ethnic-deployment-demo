@@ -48,8 +48,7 @@ export default function Page() {
 }
 
 const PAGE_QUERY = `#graphql
-  query PageDetails($language: LanguageCode, $handle: String!)
-  @inContext(language: $language) {
+  query PageDetails{
     page(handle: $handle) {
       id
       title

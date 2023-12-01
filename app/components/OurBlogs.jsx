@@ -1,4 +1,3 @@
-
 import React from 'react';
 import {Link} from '@remix-run/react';
 import {Image} from '@shopify/hydrogen';
@@ -22,7 +21,7 @@ export function OurBlogs({blogHandle, articles, title}) {
                 // spaceBetween: 10,
               },
               768: {
-                slidesPerView: 2, 
+                slidesPerView: 2,
                 // spaceBetween: 20,
               },
               1024: {
@@ -33,7 +32,7 @@ export function OurBlogs({blogHandle, articles, title}) {
             className="swiper-wrapper"
           >
             {articles?.map((article, i) => (
-              <SwiperSlide>
+              <SwiperSlide key={i}>
                 <div className="blog-post-item col" key={i}>
                   <Link
                     to={`/${blogHandle}/${article.handle}`}

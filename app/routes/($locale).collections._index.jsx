@@ -105,13 +105,11 @@ function CollectionCard({collection, loading}) {
 
 const COLLECTIONS_QUERY = `#graphql
   query Collections(
-    $country: CountryCode
-    $language: LanguageCode
     $first: Int
     $last: Int
     $startCursor: String
     $endCursor: String
-  ) @inContext(country: $country, language: $language) {
+  )  {
     collections(first: $first, last: $last, before: $startCursor, after: $endCursor) {
       nodes {
         id

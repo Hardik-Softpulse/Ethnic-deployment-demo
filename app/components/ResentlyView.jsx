@@ -35,7 +35,7 @@ export function ResentlyView({product}) {
 
   useEffect(() => {
     resentProduct();
-  }, [product, productData]);
+  }, [product]);
 
   return (
     <div className="collection-products">
@@ -66,7 +66,7 @@ export function ResentlyView({product}) {
             }}
           >
             {items?.map((item, index) => (
-              <SwiperSlide key={item.id}>
+              <SwiperSlide key={index}>
                 <div className="product-item">
                   <Link
                     className="product-img"

@@ -36,16 +36,12 @@ export async function loader({params, request, context}) {
     variables: {
       handle: productHandle,
       selectedOptions,
-      country: context.storefront.i18n.country,
-      language: context.storefront.i18n.language,
     },
   });
 
   const variants = context.storefront.query(VARIANTS_QUERY, {
     variables: {
       handle: productHandle,
-      country: context.storefront.i18n.country,
-      language: context.storefront.i18n.language,
     },
   });
 
@@ -217,21 +213,6 @@ export default function Product() {
           )}
         </Await>
       </Suspense>
-      {/* 
-      <Suspense>
-        <Await
-          errorElement="There was a problem loading related products"
-          resolve={recommended}
-        >
-          {(product) => (
-            <NewArrival
-              title="Recently viewed products"
-              product={product.nodes}
-            />
-          )}
-        </Await>
-      </Suspense> */}
-
       <ResentlyView product={product.variants.nodes} />
       <div className="container review-container ">
         <h2 className="h2 text-up text-center">Customer Reviews</h2>
@@ -308,7 +289,6 @@ export function ProductForm({variants}) {
               data={selectedVariant.price}
             />
           </span>
-
           <span className="o-price">
             {selectedVariant?.compareAtPrice === null ? (
               ''
@@ -319,13 +299,6 @@ export function ProductForm({variants}) {
               />
             )}
           </span>
-          {/* <span>
-          {selectedVariant?.compareAtPrice === null ? (
-            ''
-          ) : (
-            <span>{`(${percentageDifference}% OFF)`}</span>
-          )}
-        </span> */}
         </div>
         <form>
           <VariantSelector
@@ -334,12 +307,31 @@ export function ProductForm({variants}) {
             variants={variants}
           >
             {({option, id}) => {
-              return (
-                <div className="swatch clearfix" data-option-index="1" key={id}>
-                  <div className="swatch-title">
-                    <strong>{option.name}</strong>
+              <div className="swatch clearfix" data-option-index="1">
+                <div className="swatch-title">
+                  <strong>{option.name}</strong>
+                </div>
+                {option.values.length > 7 ? (
+                  <div
+                    key={id}
+                    data-value={value}
+                    className={`swatch-element ${
+                      isOptionSelected(option.name, value) ? 'available' : ''
+                    }`}
+                    title={value}
+                  >
+                    <input
+                      type="checkbox"
+                      name={`option-${option.name}`}
+                      value={value}
+                      id={`swatch-${id}-${value}`}
+                      checked={isOptionSelected(option.name, value)}
+                      onChange={handleCheckboxChange}
+                    />
+                    <label htmlFor="swatch-1-size">{value}</label>
                   </div>
-                  {option.values.length > 7 ? (
+                ) : (
+                  option.values.map(({value, id, to}) => (
                     <div
                       key={id}
                       data-value={value}
@@ -348,53 +340,29 @@ export function ProductForm({variants}) {
                       }`}
                       title={value}
                     >
-                      <input
-                        type="checkbox"
-                        name={`option-${option.name}`}
-                        value={value}
-                        id={`swatch-${id}-${value}`}
-                        checked={isOptionSelected(option.name, value)}
-                        onChange={handleCheckboxChange}
-                      />
-                      <label htmlFor="swatch-1-size">{value}</label>
-                    </div>
-                  ) : (
-                    option.values.map(({value, index, to}) => (
-                      <div
-                        key={index}
-                        data-value={value}
-                        className={`swatch-element ${
-                          isOptionSelected(option.name, value)
-                            ? 'available'
-                            : ''
-                        }`}
-                        title={value}
+                      <Link
+                        key={option.name + value}
+                        to={to}
+                        preventScrollReset
+                        prefetch="intent"
+                        replace
                       >
-                        <Link
-                          key={option.name + value}
-                          to={to}
-                          preventScrollReset
-                          prefetch="intent"
-                          replace
-                        >
-                          <input
-                            type="checkbox"
-                            name={`option-${option.name}`}
-                            value={value}
-                            id={`swatch-${index}-${value}`}
-                            checked={isOptionSelected(option.name, value)}
-                            onChange={handleCheckboxChange}
-                          />
-                          <label htmlFor="swatch-1-size">{value}</label>
-                        </Link>
-                      </div>
-                    ))
-                  )}
-                </div>
-              );
+                        <input
+                          type="checkbox"
+                          name={`option-${option.name}`}
+                          value={value}
+                          id={`swatch-${id}-${value}`}
+                          checked={isOptionSelected(option.name, value)}
+                          onChange={handleCheckboxChange}
+                        />
+                        <label htmlFor="swatch-1-size">{value}</label>
+                      </Link>
+                    </div>
+                  ))
+                )}
+              </div>;
             }}
           </VariantSelector>
-
           <div className="size-chart-link clearfix">
             <div
               className="f-left"
@@ -407,7 +375,7 @@ export function ProductForm({variants}) {
                 height="10"
               >
                 <path d="M28.3 0L28.3 4.29L26.96 4.29L26.96 0L24.26 0L24.26 2.86L22.91 2.86L22.91 0L20.22 0L20.22 2.86L18.87 2.86L18.87 0L16.17 0L16.17 4.29L14.83 4.29L14.83 0L12.13 0L12.13 2.86L10.78 2.86L10.78 0L8.09 0L8.09 2.86L6.74 2.86L6.74 0L4.04 0L4.04 4.29L2.7 4.29L2.7 0L0 0L0 10L31 10L31 0L28.3 0Z" />
-              </svg>{' '}
+              </svg>
               Size chart
             </div>
           </div>
@@ -479,12 +447,12 @@ export function ProductForm({variants}) {
           </div>
         </form>
       </div>
-      <div class={`size-chart-popup ${isSizeChartOpen ? 'open' : ''}`}>
-        <div class="size-chart-content">
+      <div className={`size-chart-popup ${isSizeChartOpen ? 'open' : ''}`}>
+        <div className="size-chart-content">
           <div className="popoup_hdr">
             <h4 className="text-center mb-0">Size Chart</h4>
             <span
-              class="close_icon"
+              className="close_icon"
               onClick={() => setIsSizeChartOpen(!isSizeChartOpen)}
             >
               <svg
@@ -501,7 +469,7 @@ export function ProductForm({variants}) {
               </svg>
             </span>
           </div>
-          <div class="size_chart_tabel">
+          <div className="size_chart_tabel">
             <h6>Clothes Pant and Dress Size</h6>
             <table>
               <thead>
@@ -731,12 +699,6 @@ export function ProductForm({variants}) {
               </tbody>
             </table>
           </div>
-          {/* {isSizeChartOpen && (
-            <img
-              src={sizeChart}
-              onClick={() => setIsSizeChartOpen(isSizeChartOpen)}
-            />
-          )} */}
         </div>
       </div>
     </>
@@ -804,11 +766,9 @@ const PRODUCT_VARIANT_FRAGMENT = `#graphql
 
 const PRODUCT_QUERY = `#graphql
   query Product(
-    $country: CountryCode
-    $language: LanguageCode
     $handle: String!
     $selectedOptions: [SelectedOptionInput!]!
-  ) @inContext(country: $country, language: $language) {
+  ) {
     product(handle: $handle) {
       id
       title
@@ -859,10 +819,8 @@ const PRODUCT_QUERY = `#graphql
 
 const VARIANTS_QUERY = `#graphql
   query variants(
-    $country: CountryCode
-    $language: LanguageCode
     $handle: String!
-  ) @inContext(country: $country, language: $language) {
+  ) {
     product(handle: $handle) {
       variants(first: 250) {
         nodes {
@@ -878,9 +836,7 @@ const RECOMMENDED_PRODUCTS_QUERY = `#graphql
   query productRecommendations(
     $productId: ID!
     $count: Int
-    $country: CountryCode
-    $language: LanguageCode
-  ) @inContext(country: $country, language: $language) {
+  ) {
     recommended: productRecommendations(productId: $productId) {
       ...ProductCard
     }
