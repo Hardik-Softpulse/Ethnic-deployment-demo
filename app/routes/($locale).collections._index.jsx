@@ -32,7 +32,7 @@ export const loader = async ({request, context: {storefront}}) => {
 export default function Collections() {
   const {collections, seo} = useLoaderData();
 
-  console.log('collections', collections)
+
 
   return (
     <div className="all-collection">

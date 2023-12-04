@@ -82,7 +82,7 @@ function CompareAtPrice({data, className}) {
   const {currencyNarrowSymbol, withoutTrailingZerosAndCurrency} =
     useMoney(data);
 
-  console.log('currencyNarrowSymbol', currencyNarrowSymbol);
+  
 
   const styles = ('strike', className);
 

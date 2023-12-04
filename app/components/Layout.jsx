@@ -179,6 +179,10 @@ function DesktopHeader({
                 </span>
                 <ul className="site-nav">
                   {(menu?.items || []).map((item) => {
+<<<<<<< HEAD
+                    
+=======
+>>>>>>> 8a46a988dab2d91ea773b47aeef71923ea0ae10d
                     return (
                       <li
                         key={item.id}
@@ -230,9 +234,12 @@ function DesktopHeader({
                                 onClick={() => {
                                   handleMenu(item.title);
                                 }}
+<<<<<<< HEAD
+=======
                                 className={`${
                                   activeMenu === item.title ? 'active' : ''
                                 }`}
+>>>>>>> 8a46a988dab2d91ea773b47aeef71923ea0ae10d
                               >
                                 {menuItem.title}
                               </Link>
@@ -255,7 +262,7 @@ function DesktopHeader({
                   action={
                     params.locale ? `/${params.locale}/search` : '/search'
                   }
-                  className="st-nav-ic st-nav-search hidden-x searchForm "
+                  className="st-nav-ic st-nav-search hidden-x searchForm"
                 >
                   <input
                     id="searchInput"
@@ -290,7 +297,7 @@ function DesktopHeader({
                   </a>
                 </Form>
 
-                <AccountLink className="st-nav-ic st-nav-user " />
+                <AccountLink className="st-nav-ic st-nav-user" />
                 <CartCount
                   isHome={isHome}
                   isCartOpen={isCartOpen}

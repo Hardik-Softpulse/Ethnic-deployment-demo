@@ -158,7 +158,7 @@ export default function Collection() {
     return `${location.pathname}?${params.toString()}`;
   };
 
-  console.log('collection', collection);
+
 
   return (
     <div className="collection-page">

@@ -6,6 +6,15 @@ import {Navigation} from 'swiper/modules';
 
 export function ResentlyView({product}) {
   const [items, setItems] = useState([]);
+  const [showSwiper, setShowSwiper] = useState(false);
+
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      setShowSwiper(true);
+    }, 1000);
+
+    return () => clearTimeout(timeoutId);
+  }, []);
 
   const productData = {
     productHandle: product[0].product.handle,
@@ -44,6 +53,45 @@ export function ResentlyView({product}) {
           <h2 className="h2 text-up">RECENTLY VIEWED PRODUCTS</h2>
         </div>
         <div className="product-slider">
+<<<<<<< HEAD
+          {showSwiper && (
+            <Swiper
+              spaceBetween={15}
+              draggable={true}
+              slidesPerView={1.3}
+              modules={[Navigation]}
+              navigation={true}
+              breakpoints={{
+                375:{
+                  slidesPerView: 1,
+                  spaceBetween: 10,
+                },
+                640: {
+                  slidesPerView: 2.4,
+                  spaceBetween: 15,
+                },
+                768: {
+                  slidesPerView: 3,
+                  spaceBetween: 20,
+                },
+                1024: {
+                  slidesPerView: 4,
+                  spaceBetween: 30,
+                },
+              }}
+            >
+              {items?.map((item, index) => (
+                <SwiperSlide key={index}>
+                  <div className="product-item">
+                    <Link
+                      className="product-img"
+                      to={`/products/${item.productHandle}`}
+                    >
+                      <Image
+                        src={item.productImg}
+                        alt={`Picture of ${item.productTitle}`}
+                      />
+=======
           <Swiper
             spaceBetween={15}
             draggable={true}
@@ -81,17 +129,24 @@ export function ResentlyView({product}) {
                   <h5>
                     <Link to={`/products/${item.productHandle}`}>
                       {item.productTitle}
+>>>>>>> 8a46a988dab2d91ea773b47aeef71923ea0ae10d
                     </Link>
-                  </h5>
-                  <div className="product-price">
-                    <span className="s-price">
-                      <Money withoutTrailingZeros data={item?.productPrice} />
-                    </span>
+
+                    <h5>
+                      <Link to={`/products/${item.productHandle}`}>
+                        {item.productTitle}
+                      </Link>
+                    </h5>
+                    <div className="product-price">
+                      <span className="s-price">
+                        <Money withoutTrailingZeros data={item?.productPrice} />
+                      </span>
+                    </div>
                   </div>
-                </div>
-              </SwiperSlide>
-            ))}
-          </Swiper>
+                </SwiperSlide>
+              ))}
+            </Swiper>
+          )}
         </div>
       </div>
     </div>

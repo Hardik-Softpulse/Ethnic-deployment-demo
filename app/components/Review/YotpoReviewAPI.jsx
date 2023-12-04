@@ -29,7 +29,7 @@ export async function fetchYotpoReviewData(
     options,
   );
   const result = await response.json();
-  console.log('result', result);
+
   return result.response.reviews;
 }
 

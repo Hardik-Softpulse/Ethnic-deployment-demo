@@ -4,16 +4,14 @@ export function GenericError({error}) {
   const heading = `Something’s wrong here.`;
   let description = `We found an error while loading this page.`;
 
-  // TODO hide error in prod?
   if (error) {
     description += `\n${error.message}`;
-    // eslint-disable-next-line no-console
     console.error(error);
   }
 
   return (
     <div className="all-contain-page genericError">
-      <div>
+      <div className="error-contain"> 
         <h3>{heading}</h3>
         <p>{description}</p>
         {error?.stack && (

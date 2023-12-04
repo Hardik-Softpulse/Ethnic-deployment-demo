@@ -3,7 +3,8 @@ import {useFetcher} from 'react-router-dom';
 import invariant from 'tiny-invariant';
 import ContactUs from '../components/ContactUS';
 import {json} from '@shopify/remix-oxygen';
-// import createAdminClient from '../lib/createAdminClient';
+import createAdminClient from '~/lib/createAdminClient';
+
 
 export async function action({request, context}) {
   const formData = await request.formData();
@@ -154,7 +155,7 @@ async function createContactFormEntry({fields, context}) {
     }
   `;
 
-  console.log('METAOBJECT_UPSERT', METAOBJECT_UPSERT);
+  
 
   const metaobjectHandle = {
     handle: 'contact-form',
@@ -192,9 +193,7 @@ async function createContactFormEntry({fields, context}) {
     ],
     handle: formHandle,
   };
-  console.log('metaobject', metaobject);
-  console.log('metaobjectHandle', metaobjectHandle);
-  console.log('context.admin', context.admin);
+
   const adminClient = createAdminClient({
     adminApiVersion: '2023-01',
     privateAdminToken: 'your-private-admin-token',

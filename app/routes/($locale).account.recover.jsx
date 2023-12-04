@@ -48,8 +48,7 @@ export default function Recover() {
   const actionData = useActionData();
   const [nativeEmailError, setNativeEmailError] = useState(null);
   const isSubmitted = actionData?.resetRequested;
-  console.log('isSubmitted', isSubmitted);
-  console.log(' actionData', actionData);
+
   return (
     <div className="cust-sign-page bg-grey clearfix">
       <div className="breadcrumb">

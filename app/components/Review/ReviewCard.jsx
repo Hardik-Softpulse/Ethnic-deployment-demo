@@ -138,8 +138,7 @@ export function ReviewCard({product, reviewType}) {
         star,
       );
       setReviewData(reviews);
-      console.log('reviewData', reviewData)
-      console.log('reviews', reviews);
+     
     }
     setIsLoading(false);
   };

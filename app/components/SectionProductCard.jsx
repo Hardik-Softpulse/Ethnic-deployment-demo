@@ -42,7 +42,7 @@ export function SectionProductCard({
       </Link>
 
       <h5>
-        <Link onClick={onClick} to={`/products/${product.handle}`}>
+        <Link onClick={onClick} to={`/products/${product.handle}`} className="product-title">
           {product.title}
         </Link>
       </h5>
@@ -50,9 +50,15 @@ export function SectionProductCard({
         <span className="s-price">
           <Money withoutTrailingZeros data={price} />
         </span>
+<<<<<<< HEAD
+        <span>
+          {isDiscounted(price, compareAtPrice) && (
+            <CompareAtPrice className="o-price" data={compareAtPrice} />
+=======
         <span className="o-price">
           {isDiscounted(price, compareAtPrice) && (
             <CompareAtPrice data={compareAtPrice} />
+>>>>>>> 8a46a988dab2d91ea773b47aeef71923ea0ae10d
           )}
         </span>
       </div>

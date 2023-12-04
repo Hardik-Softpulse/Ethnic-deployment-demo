@@ -3,7 +3,7 @@ import {useLoaderData} from '@remix-run/react';
 import invariant from 'tiny-invariant';
 import {routeHeaders} from '~/data/cache';
 import {seoPayload} from '~/lib/seo.server';
-import Index from './($locale).api.contact-form';
+import Index from './($locale).contact-form';
 
 export const headers = routeHeaders;
 
@@ -49,10 +49,14 @@ export default function Page() {
 
 const PAGE_QUERY = `#graphql
 <<<<<<< HEAD
+  query PageDetails( $handle: String!){
+=======
+<<<<<<< HEAD
   query PageDetails{
 =======
   query PageDetails( $handle: String!){
 >>>>>>> 016ef9159105879aca6f26a13f07c406b89ce697
+>>>>>>> 8a46a988dab2d91ea773b47aeef71923ea0ae10d
     page(handle: $handle) {
       id
       title

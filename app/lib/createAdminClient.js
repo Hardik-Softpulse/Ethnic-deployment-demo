@@ -6,8 +6,7 @@ export default function createAdminClient({
 
     const admin = async function ({ query, variables = {} }) {
 
-        console.log('variables', variables)
-        console.log('query', query)
+      
 
         // if (!query) {
         //     throw new Error('Must provide a `query` to the admin client');

@@ -55,7 +55,7 @@ export const loader = async ({request, context: {storefront}, params}) => {
 
 export default function Journals() {
   const {articles, seo, title} = useLoaderData();
-  console.log('articles', articles);
+
 
   return (
     <div className="blog-post-page clearfix">

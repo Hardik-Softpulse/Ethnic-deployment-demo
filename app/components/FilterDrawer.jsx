@@ -98,33 +98,6 @@ export function FilterDrawer({
           >
             Remove All
           </a>
-          {/* <button
-            className="btn"
-            onClick={() => {
-              const data = filters.map(
-                (filter) => (
-                  console.log('filter', filter),
-                  filter.values.length > 0 && (
-                    <>
-                      {filter.values?.map((option) => {
-                        console.log('option', option);
-                        const to = getFilterLink(
-                          filter,
-                          option.input,
-                          params,
-                          location,
-                        );
-                        return navigate(to);
-                      })}
-                    </>
-                  )
-                ),
-              );
-              setFilterDrawerOpen(!filterDrawerOpen);
-            }}
-          >
-            Apply
-          </button> */}
           <button
             className="btn"
             onClick={() => {
@@ -134,7 +107,6 @@ export function FilterDrawer({
                   .map((option) => (
                     <>
                       {selectedOptions.map((selectOption) => {
-                        console.log(' optionInput', selectOption.optionInput);
                         navigate(
                           getFilterLink(
                             filter,
@@ -147,36 +119,12 @@ export function FilterDrawer({
                     </>
                   )),
               );
-              Promise.all(navigationPromises).then(() => {
-                setFilterDrawerOpen(!filterDrawerOpen);
-              });
+              console.log('navigationPromises', navigationPromises);
+              setFilterDrawerOpen(!filterDrawerOpen);
             }}
           >
             Apply
           </button>
-          {/* <button
-            className="btn"
-            onClick={() => {
-              const navigationPromises = selectedOptions.map(
-                (selectedOption) => {
-                  console.log('selectedOption', selectedOption);
-                  const to = getFilterLink(
-                    selectedOption.filterId,
-                    selectedOption.input,
-                    params,
-                    location,
-                  );
-                  return navigate(to);
-                },
-              );
-
-              Promise.all(navigationPromises).then(() => {
-                setFilterDrawerOpen(!filterDrawerOpen);
-              });
-            }}
-          >
-            Apply
-          </button> */}
         </div>
       </div>
     </div>

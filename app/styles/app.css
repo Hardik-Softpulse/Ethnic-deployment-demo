@@ -3219,6 +3219,13 @@ ul.site-nav {
   margin-bottom: 40px;
 }
 
+<<<<<<< HEAD
+.error-contain {
+  padding-bottom: 60px;
+}
+
+=======
+>>>>>>> 8a46a988dab2d91ea773b47aeef71923ea0ae10d
 @media (min-width: 768px) {
   .stft-cl-title svg {
     display: none;
@@ -4051,6 +4058,9 @@ p.no_product {
 
 .size-chart-link>div {
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 5px;
 }
 
 .size-chart-content .close_icon svg {

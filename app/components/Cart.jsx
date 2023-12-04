@@ -7,11 +7,11 @@ import dinersClub from '../img/diners-club.png';
 
 import {CartForm, Image, Money, flattenConnection} from '@shopify/hydrogen';
 import {Link} from './Link';
-import {BestSeller} from '~/components';
-import {useLoaderData} from '@remix-run/react';
+import {useEffect} from 'react';
 
 export function Cart({cart}) {
   const linesCount = Boolean(cart?.lines?.edges?.length || 0);
+  useEffect(() => {}, [cart]);
 
   return (
     <div className="cart-page bg-grey ">
@@ -55,7 +55,9 @@ export function CartEmpty({hidden = false}) {
         Looks like you haven&rsquo;t added anything yet, let&rsquo;s get you
         started!
       </p>
-      <Link className="btn" to={'/collections'}>Continue shopping</Link>
+      <Link className="btn" to={'/collections'}>
+        Continue shopping
+      </Link>
     </div>
   );
 }
@@ -193,7 +195,6 @@ function CartSummary({
   cartHasItems,
   checkoutUrl,
 }) {
-  console.log('discountCodes', discountCodes);
   const codes =
     discountCodes
       ?.filter((discount) => discount.applicable)

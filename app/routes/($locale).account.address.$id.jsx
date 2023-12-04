@@ -133,9 +133,7 @@ export default function EditAddress() {
     address.id.startsWith(normalizedAddress),
   );
 
-  console.log('state', state);
-  console.log('addresses', addresses);
-  console.log('customer', customer);
+
 
   return (
     <>
