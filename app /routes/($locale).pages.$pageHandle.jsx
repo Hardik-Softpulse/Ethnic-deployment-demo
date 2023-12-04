@@ -48,15 +48,7 @@ export default function Page() {
 }
 
 const PAGE_QUERY = `#graphql
-<<<<<<< HEAD
   query PageDetails( $handle: String!){
-=======
-<<<<<<< HEAD
-  query PageDetails{
-=======
-  query PageDetails( $handle: String!){
->>>>>>> 016ef9159105879aca6f26a13f07c406b89ce697
->>>>>>> 8a46a988dab2d91ea773b47aeef71923ea0ae10d
     page(handle: $handle) {
       id
       title

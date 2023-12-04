@@ -53,7 +53,6 @@ export function ResentlyView({product}) {
           <h2 className="h2 text-up">RECENTLY VIEWED PRODUCTS</h2>
         </div>
         <div className="product-slider">
-<<<<<<< HEAD
           {showSwiper && (
             <Swiper
               spaceBetween={15}
@@ -91,45 +90,6 @@ export function ResentlyView({product}) {
                         src={item.productImg}
                         alt={`Picture of ${item.productTitle}`}
                       />
-=======
-          <Swiper
-            spaceBetween={15}
-            draggable={true}
-            slidesPerView={1.3}
-            modules={[Navigation]}
-            navigation={true}
-            breakpoints={{
-              640: {
-                slidesPerView: 2.4,
-                spaceBetween: 15,
-              },
-              768: {
-                slidesPerView: 3,
-                spaceBetween: 20,
-              },
-              1024: {
-                slidesPerView: 4,
-                spaceBetween: 30,
-              },
-            }}
-          >
-            {items?.map((item, index) => (
-              <SwiperSlide key={index}>
-                <div className="product-item">
-                  <Link
-                    className="product-img"
-                    to={`/products/${item.productHandle}`}
-                  >
-                    <Image
-                      src={item.productImg}
-                      alt={`Picture of ${item.productTitle}`}
-                    />
-                  </Link>
-
-                  <h5>
-                    <Link to={`/products/${item.productHandle}`}>
-                      {item.productTitle}
->>>>>>> 8a46a988dab2d91ea773b47aeef71923ea0ae10d
                     </Link>
 
                     <h5>

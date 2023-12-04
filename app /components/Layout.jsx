@@ -179,10 +179,7 @@ function DesktopHeader({
                 </span>
                 <ul className="site-nav">
                   {(menu?.items || []).map((item) => {
-<<<<<<< HEAD
                     
-=======
->>>>>>> 8a46a988dab2d91ea773b47aeef71923ea0ae10d
                     return (
                       <li
                         key={item.id}
@@ -234,12 +231,6 @@ function DesktopHeader({
                                 onClick={() => {
                                   handleMenu(item.title);
                                 }}
-<<<<<<< HEAD
-=======
-                                className={`${
-                                  activeMenu === item.title ? 'active' : ''
-                                }`}
->>>>>>> 8a46a988dab2d91ea773b47aeef71923ea0ae10d
                               >
                                 {menuItem.title}
                               </Link>

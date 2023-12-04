@@ -3,13 +3,9 @@ import {Navigation} from 'swiper/modules';
 import {Swiper, SwiperSlide} from 'swiper/react';
 import {SectionProductCard} from '~/components';
 
-<<<<<<< HEAD
 export function FeaturedCollections({
   title = 'SHOP NEW ARRIVALS',
   products,
-=======
-export function FeaturedCollections({title = 'SHOP NEW ARRIVALS', products, count = 4}) {
->>>>>>> 8a46a988dab2d91ea773b47aeef71923ea0ae10d
 
 }) {
   const [showSwiper, setShowSwiper] = useState(false);
