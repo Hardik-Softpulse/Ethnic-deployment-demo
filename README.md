@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 ## # Hydrogen template: Demo Store
+=======
+### # Hydrogen template: Demo Store
+>>>>>>> 48268981b81a78ea485ee0a77595cfed815bb4c8
 
 Hydrogen is Shopify’s stack for headless commerce. Hydrogen is designed to dovetail with [Remix](https://remix.run/), Shopify’s full stack web framework. This template contains a **full-featured setup** of components, queries and tooling to get started with Hydrogen.
 
