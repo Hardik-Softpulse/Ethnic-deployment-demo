@@ -1,4 +1,3 @@
-import {useMemo, useState} from 'react';
 import {
   Link,
   useLocation,
@@ -11,7 +10,7 @@ export function SortFilter({filters, appliedFilters = []}) {
   const location = useLocation();
   const navigate = useNavigate();
 
-  if (!filters || filters.length === 0) {y
+  if (!filters || filters.length === 0) {
     return <p>No filters available.</p>;
   }
 

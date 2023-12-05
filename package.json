@@ -14,17 +14,20 @@
   "browserslist": [
     "defaults"
   ],
+  "proxy": "https://cors-anywhere.herokuapp.com/",
   "prettier": "@shopify/prettier-config",
   "dependencies": {
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
     "@headlessui/react": "^1.7.2",
     "@mui/material": "^5.14.16",
+    "@remix-run/deno": "^2.3.1",
     "@remix-run/react": "1.19.1",
     "@shopify/cli": "3.48.0",
     "@shopify/cli-hydrogen": "^5.1.1",
     "@shopify/hydrogen": "^2023.7.1",
     "@shopify/remix-oxygen": "^1.1.2",
+    "classnames": "^2.3.2",
     "clsx": "^1.2.1",
     "cross-env": "^7.0.3",
     "graphql": "^16.6.0",

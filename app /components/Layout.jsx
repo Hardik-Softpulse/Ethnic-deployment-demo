@@ -8,11 +8,9 @@ import {
   Await,
   Form,
   Link,
-  useActionData,
   useMatches,
   useParams,
 } from '@remix-run/react';
-
 import {CartLoading} from './CartLoading';
 import {CartDrawer} from './CartDrawer';
 import {Newsletter} from './Newsletter';
