@@ -1,6 +1,6 @@
 import logoImg from '../img/logo2.jpg';
 import footerLogo from '../img/footer-logo.jpg';
-import {Suspense, useEffect, useState} from 'react';
+import {Suspense, useEffect, useMemo, useState} from 'react';
 import {useIsHomePath} from '~/lib/utils';
 import {useCartFetchers} from '~/hooks/useCartFetchers';
 import {CartForm} from '@shopify/hydrogen';
@@ -8,9 +8,11 @@ import {
   Await,
   Form,
   Link,
+  useActionData,
   useMatches,
   useParams,
 } from '@remix-run/react';
+
 import {CartLoading} from './CartLoading';
 import {CartDrawer} from './CartDrawer';
 import {Newsletter} from './Newsletter';
@@ -85,9 +87,7 @@ function DesktopHeader({
   };
 
   const handleMenu = (title) => {
-    if (activeMenu !== title) {
-      setActiveMenu(title);
-    }
+    setActiveMenu(title);
   };
 
   useEffect(() => {
@@ -177,7 +177,6 @@ function DesktopHeader({
                 </span>
                 <ul className="site-nav">
                   {(menu?.items || []).map((item) => {
-                    
                     return (
                       <li
                         key={item.id}
@@ -223,16 +222,7 @@ function DesktopHeader({
                         {subMenu &&
                           item.items?.map((menuItem) => (
                             <div className="hdr_sub_menu" key={menuItem.id}>
-                              <Link
-                                to={menuItem.to}
-                                target={item.target}
-                                onClick={() => {
-                                  handleMenu(item.title);
-                                }}
-                              >
-                                {menuItem.title}
-                              </Link>
-                              {/* <a href={menuItem.to}>{menuItem.title}</a> */}
+                              <a href={menuItem.to}>{menuItem.title}</a>
                             </div>
                           ))}
                       </li>
@@ -251,7 +241,7 @@ function DesktopHeader({
                   action={
                     params.locale ? `/${params.locale}/search` : '/search'
                   }
-                  className="st-nav-ic st-nav-search hidden-x searchForm"
+                  className="st-nav-ic st-nav-search hidden-x searchForm "
                 >
                   <input
                     id="searchInput"
@@ -286,7 +276,7 @@ function DesktopHeader({
                   </a>
                 </Form>
 
-                <AccountLink className="st-nav-ic st-nav-user" />
+                <AccountLink className="st-nav-ic st-nav-user " />
                 <CartCount
                   isHome={isHome}
                   isCartOpen={isCartOpen}
