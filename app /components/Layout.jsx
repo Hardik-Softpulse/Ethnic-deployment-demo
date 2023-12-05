@@ -1,6 +1,6 @@
 import logoImg from '../img/logo2.jpg';
 import footerLogo from '../img/footer-logo.jpg';
-import {Suspense, useEffect, useMemo, useState} from 'react';
+import {Suspense, useEffect, useState} from 'react';
 import {useIsHomePath} from '~/lib/utils';
 import {useCartFetchers} from '~/hooks/useCartFetchers';
 import {CartForm} from '@shopify/hydrogen';
