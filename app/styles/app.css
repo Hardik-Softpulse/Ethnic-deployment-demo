@@ -4005,6 +4005,7 @@ button.signout {
 
 p.no_product {
   width: 100%;
+  padding-top: 100px;
 }
 
 .size-chart-popup {
@@ -5777,4 +5778,8 @@ p.no_product {
 
 .swiper-pagination-bullet-active {
   background: #000000;
+}
+
+.featuredSection {
+  padding-top: 50px;
 }

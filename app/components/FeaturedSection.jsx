@@ -19,7 +19,7 @@ export function FeaturedSection() {
 
 
   return (
-    <>
+    <div className='featuredSection'>
       {featuredCollections.nodes.length < 2 && (
         <BestSeller 
           title="Popular Collections"
@@ -27,6 +27,6 @@ export function FeaturedSection() {
         />
       )}
       <FeaturedCollections products={featuredProducts} />
-    </>
+    </div>
   );
 }

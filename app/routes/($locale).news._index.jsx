@@ -120,19 +120,7 @@ export default function Journals() {
                     </svg>
                   </PreviousLink>
                 </span>
-                 {pages.map((page, index) => (
-                    <span
-                      key={index}
-                      className={currentPage === page ? 'active' : ''}
-                    >
-                      <Link
-                        to={`/blog/${BLOG_HANDLE}/page/${page}`}
-                        onClick={() => goToPage(page)}
-                      >
-                        {page}
-                      </Link>
-                    </span>
-                  ))} 
+               
                 <span className="pager-next">
                   <NextLink>
                     <svg
