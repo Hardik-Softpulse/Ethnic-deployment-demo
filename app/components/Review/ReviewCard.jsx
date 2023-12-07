@@ -1,6 +1,6 @@
 import {Rating} from '@mui/material';
 import moment from 'moment';
-import React, {Suspense, useEffect, useState} from 'react';
+import {Suspense, useEffect, useState} from 'react';
 
 export function ReviewCard({product, reviewType}) {
   const [reviewData, setReviewData] = useState([]);
@@ -138,7 +138,7 @@ export function ReviewCard({product, reviewType}) {
         star,
       );
       setReviewData(reviews);
-      console.log('reviewData', reviewData)
+      console.log('reviewData', reviewData);
       console.log('reviews', reviews);
     }
     setIsLoading(false);

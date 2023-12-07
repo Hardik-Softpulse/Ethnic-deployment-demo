@@ -3,7 +3,6 @@ import {Link} from './Link';
 
 export function CartDrawer({isCartOpen, cart, setCartOpen}) {
   const linesCount = Boolean(cart?.lines?.edges?.length || 0);
-  console.log('cart', cart);
  
   return (
     <>
@@ -217,7 +216,6 @@ function CartSummary({
 
   const originalSubtotal = cost?.subtotalAmount?.amount || 0;
   const originalTotal = cost?.totalAmount?.amount || 0;
-
   const discountAmount = originalSubtotal - originalTotal;
   const discountAmountNumber = parseFloat(discountAmount);
   const discountPrice = {

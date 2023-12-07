@@ -4,11 +4,8 @@ import mastercard from '../img/mastercard.png';
 import americanExpress from '../img/american-express.png';
 import masestro from '../img/masestro.png';
 import dinersClub from '../img/diners-club.png';
-
 import {CartForm, Image, Money, flattenConnection} from '@shopify/hydrogen';
 import {Link} from './Link';
-import {BestSeller} from '~/components';
-import {useLoaderData} from '@remix-run/react';
 
 export function Cart({cart}) {
   const linesCount = Boolean(cart?.lines?.edges?.length || 0);
@@ -55,7 +52,9 @@ export function CartEmpty({hidden = false}) {
         Looks like you haven&rsquo;t added anything yet, let&rsquo;s get you
         started!
       </p>
-      <Link className="btn" to={'/collections'}>Continue shopping</Link>
+      <Link className="btn" to={'/collections'}>
+        Continue shopping
+      </Link>
     </div>
   );
 }
@@ -220,7 +219,6 @@ function CartSummary({
   return (
     <div className="cart-subtotal">
       <h5 className="text-up">Order Summary</h5>
-
       <ul>
         <li>
           <span>SUBTOTAL</span>{' '}

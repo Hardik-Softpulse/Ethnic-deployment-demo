@@ -24,7 +24,9 @@ export function Banner() {
               the community. $1 dollar from every purchase will be donated to a
               local charity.
             </p>
-            <Link to='/collections' className='shop-link'>View More</Link>
+            <Link to="/collections" className="shop-link">
+              View More
+            </Link>
           </div>
         </div>
       </div>
