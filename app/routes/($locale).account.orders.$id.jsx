@@ -1,9 +1,7 @@
 import invariant from 'tiny-invariant';
-import clsx from 'clsx';
 import {json, redirect} from '@shopify/remix-oxygen';
 import {useLoaderData} from '@remix-run/react';
 import {Money, Image, flattenConnection} from '@shopify/hydrogen';
-
 import {statusMessage} from '~/lib/utils';
 import {Link} from '~/components';
 
@@ -15,10 +13,8 @@ export async function loader({request, context, params}) {
   if (!params.id) {
     return redirect(params?.locale ? `${params.locale}/account` : '/account');
   }
-
   const queryParams = new URL(request.url).searchParams;
   const orderToken = queryParams.get('key');
-
   invariant(orderToken, 'Order token is required');
 
   const customerAccessToken = await context.session.get('customerAccessToken');
@@ -41,14 +37,10 @@ export async function loader({request, context, params}) {
   }
 
   const lineItems = flattenConnection(order.lineItems);
-
   const discountApplications = flattenConnection(order.discountApplications);
-
   const firstDiscount = discountApplications[0]?.value;
-
   const discountValue =
     firstDiscount?.__typename === 'MoneyV2' && firstDiscount;
-
   const discountPercentage =
     firstDiscount?.__typename === 'PricingPercentageValue' &&
     firstDiscount?.percentage;
@@ -63,7 +55,7 @@ export async function loader({request, context, params}) {
 
 export default function OrderRoute() {
   const {order, lineItems, discountValue, discountPercentage} = useLoaderData();
-  console.log('order', order);
+
   return (
     <div className="cust-account-page clearfix">
       <div className="breadcrumb">

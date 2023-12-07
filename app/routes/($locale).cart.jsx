@@ -2,7 +2,6 @@ import {Await, useMatches} from '@remix-run/react';
 import invariant from 'tiny-invariant';
 import {json} from '@shopify/remix-oxygen';
 import {CartForm} from '@shopify/hydrogen';
-
 import {isLocalPath} from '~/lib/utils';
 import {Cart} from '~/components';
 

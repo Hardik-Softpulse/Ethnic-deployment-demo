@@ -1,7 +1,6 @@
 import {json, redirect} from '@shopify/remix-oxygen';
-import {Form, useActionData, useLoaderData} from '@remix-run/react';
+import {Form, useActionData} from '@remix-run/react';
 import {useState} from 'react';
-
 import {getInputStyleClasses} from '~/lib/utils';
 import {Link} from '~/components';
 
@@ -15,8 +14,6 @@ export async function loader({context, params}) {
   if (customerAccessToken) {
     return redirect(params.locale ? `${params.locale}/account` : '/account');
   }
-
-  // TODO: Query for this?
   return json({shopName: 'Hydrogen'});
 }
 
@@ -24,7 +21,6 @@ const badRequest = (data) => json(data, {status: 400});
 
 export const action = async ({request, context, params}) => {
   const formData = await request.formData();
-
 
   const email = formData.get('email');
   const password = formData.get('password');
@@ -194,8 +190,9 @@ export default function Login() {
               <Link to="/account/register">Register </Link>.
             </p>
             <p className="policy-text">
-              By logging in, you agree to Our's <a href="/pages/privacy-policy">Privacy Policy</a>{' '}
-              and <a href="/pages/terms-and-conditions">Terms of Use</a>
+              By logging in, you agree to Our's{' '}
+              <a href="/pages/privacy-policy">Privacy Policy</a> and{' '}
+              <a href="/pages/terms-and-conditions">Terms of Use</a>
             </p>
           </Form>
         </div>

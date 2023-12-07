@@ -1,7 +1,6 @@
 import {json, redirect} from '@shopify/remix-oxygen';
 import {Form, useActionData} from '@remix-run/react';
 import {useRef, useState} from 'react';
-
 import {getInputStyleClasses} from '~/lib/utils';
 
 const badRequest = (data) => json(data, {status: 400});
