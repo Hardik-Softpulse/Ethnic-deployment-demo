@@ -16,10 +16,6 @@ export async function action({request, context}) {
   invariant(fields.message, 'Message is required');
 
   const {form, error} = await createContactFormEntry({fields, context});
-
-  console.log('form', form);
-
-  console.log('error', error);
   if (error) {
     return json({error}, {status: 400});
   }
@@ -32,8 +28,6 @@ export default function Index({seo}) {
   const data = fetcher.data;
   const formSubmitted = data?.form;
   const formError = data?.error;
-
-  console.log('data', data);
 
   return (
     <div className="cust-sign-page bg-grey clearfix">
@@ -138,7 +132,6 @@ export default function Index({seo}) {
 }
 
 async function createContactFormEntry({fields, context}) {
-  console.log('filelds', fields, context);
   const METAOBJECT_UPSERT = `#graphql
     mutation metaobjectUpsert($handle: MetaobjectHandleInput!, $metaobject: MetaobjectUpsertInput!) {
       metaobjectUpsert(handle: $handle, metaobject: $metaobject) {
@@ -153,8 +146,6 @@ async function createContactFormEntry({fields, context}) {
       }
     }
   `;
-
-  console.log('METAOBJECT_UPSERT', METAOBJECT_UPSERT);
 
   const metaobjectHandle = {
     handle: 'contact-form',
@@ -192,9 +183,7 @@ async function createContactFormEntry({fields, context}) {
     ],
     handle: formHandle,
   };
-  console.log('metaobject', metaobject);
-  console.log('metaobjectHandle', metaobjectHandle);
-  console.log('context.admin', context.admin);
+
   const adminClient = createAdminClient({
     adminApiVersion: '2023-01',
     privateAdminToken: 'your-private-admin-token',
@@ -204,8 +193,6 @@ async function createContactFormEntry({fields, context}) {
   const {metaobjectUpsert} = await adminClient.admin(METAOBJECT_UPSERT, {
     variables: {handle: metaobjectHandle, metaobject: metaobject},
   });
-
-  console.log('metaobjectUpsert', metaobjectUpsert);
 
   if (metaobjectUpsert.userErrors.length > 0) {
     const error = metaobjectUpsert.userErrors[0];

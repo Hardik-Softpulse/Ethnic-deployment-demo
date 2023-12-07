@@ -2,8 +2,6 @@ import React from 'react';
 
 function ContactUS({Form}) {
 
-  console.log('Form', Form)
-  
   return (
     <Form method="post" action="/api/contact-form">
       <div className="input-field">

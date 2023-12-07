@@ -19,9 +19,6 @@ export const Newsletter = () => {
   const subscribeSuccess = data?.subscriber;
   const subscribeError = data?.error;
 
-  console.log('Form', Form)
-  console.log('data', data)
-
   return (
     <div>
       {subscribeSuccess ? (
