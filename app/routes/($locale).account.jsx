@@ -18,7 +18,6 @@ import {
   OrderCard,
   AccountDetails,
 } from '~/components';
-
 import ChangePassword from './($locale).account.changePassword';
 
 export const headers = routeHeaders;

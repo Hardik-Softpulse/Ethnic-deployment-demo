@@ -1,15 +1,12 @@
 import {Form, Link, useActionData} from '@remix-run/react';
-import React, {useState} from 'react';
-import {routeHeaders} from '~/data/cache';
+import {useState} from 'react';
 import {getInputStyleClasses} from '~/lib/utils';
 
 export async function loader({context, params}) {
   const customerAccessToken = await context.session.get('customerAccessToken');
-
   if (customerAccessToken) {
     return redirect(params.locale ? `${params.locale}/account` : '/account');
   }
-
   return new Response(null);
 }
 
@@ -26,9 +23,6 @@ function ChangePassword({
   const [email, setEmail] = useState('');
 
   const isSubmitted = actionData?.resetRequested;
-  console.log('isSubmitted', isSubmitted);
-  console.log('email', email);
-  console.log('actionData', actionData);
 
   return (
     <div
