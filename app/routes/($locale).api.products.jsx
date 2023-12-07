@@ -46,7 +46,6 @@ export async function loader({request, context: {storefront}}) {
       query,
       reverse,
       sortKey,
-      country: storefront.i18n.country,
       language: storefront.i18n.language,
     },
     cache: storefront.CacheLong(),
@@ -64,10 +63,9 @@ const API_ALL_PRODUCTS_QUERY = `#graphql
     $query: String
     $count: Int
     $reverse: Boolean
-    $country: CountryCode
     $language: LanguageCode
     $sortKey: ProductSortKeys
-  ) @inContext(country: $country, language: $language) {
+  ) @inContext( language: $language) {
     products(first: $count, sortKey: $sortKey, reverse: $reverse, query: $query) {
       nodes {
         ...ProductCard

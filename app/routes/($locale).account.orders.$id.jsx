@@ -26,7 +26,6 @@ export async function loader({request, context, params}) {
   }
 
   const orderId = `gid://shopify/Order/${params.id}?key=${orderToken}`;
-  console.log('orderId', orderId);
 
   const {node: order} = await context.storefront.query(CUSTOMER_ORDER_QUERY, {
     variables: {orderId},
@@ -243,10 +242,9 @@ const CUSTOMER_ORDER_QUERY = `#graphql
   }
 
   query CustomerOrder(
-    $country: CountryCode
     $language: LanguageCode
     $orderId: ID!
-  ) @inContext(country: $country, language: $language) {
+  ) @inContext( language: $language) {
     node(id: $orderId) {
       ... on Order {
         id

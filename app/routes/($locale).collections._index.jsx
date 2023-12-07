@@ -15,7 +15,6 @@ export const loader = async ({request, context: {storefront}}) => {
   const {collections} = await storefront.query(COLLECTIONS_QUERY, {
     variables: {
       ...variables,
-      country: storefront.i18n.country,
       language: storefront.i18n.language,
     },
   });
@@ -97,13 +96,12 @@ function CollectionCard({collection, loading}) {
 
 const COLLECTIONS_QUERY = `#graphql
   query Collections(
-    $country: CountryCode
     $language: LanguageCode
     $first: Int
     $last: Int
     $startCursor: String
     $endCursor: String
-  ) @inContext(country: $country, language: $language) {
+  ) @inContext( language: $language) {
     collections(first: $first, last: $last, before: $startCursor, after: $endCursor) {
       nodes {
         id

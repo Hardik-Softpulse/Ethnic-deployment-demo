@@ -798,11 +798,10 @@ const PRODUCT_VARIANT_FRAGMENT = `#graphql
 
 const PRODUCT_QUERY = `#graphql
   query Product(
-    $country: CountryCode
     $language: LanguageCode
     $handle: String!
     $selectedOptions: [SelectedOptionInput!]!
-  ) @inContext(country: $country, language: $language) {
+  ) @inContext(language: $language) {
     product(handle: $handle) {
       id
       title
@@ -872,9 +871,8 @@ const RECOMMENDED_PRODUCTS_QUERY = `#graphql
   query productRecommendations(
     $productId: ID!
     $count: Int
-    $country: CountryCode
     $language: LanguageCode
-  ) @inContext(country: $country, language: $language) {
+  ) @inContext( language: $language) {
     recommended: productRecommendations(productId: $productId) {
       ...ProductCard
     }

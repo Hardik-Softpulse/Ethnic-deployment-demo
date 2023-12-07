@@ -14,7 +14,6 @@ export async function getFeaturedData(storefront, variables = {}) {
   const data = await storefront.query(FEATURED_ITEMS_QUERY, {
     variables: {
       pageBy: 12,
-      country: storefront.i18n.country,
       language: storefront.i18n.language,
       ...variables,
     },
@@ -27,10 +26,9 @@ export async function getFeaturedData(storefront, variables = {}) {
 
 export const FEATURED_ITEMS_QUERY = `#graphql
   query FeaturedItems(
-    $country: CountryCode
     $language: LanguageCode
     $pageBy: Int = 12
-  ) @inContext(country: $country, language: $language) {
+  ) @inContext(language: $language) {
     featuredCollections: collections(first: 3, sortKey: UPDATED_AT) {
       nodes {
         ...FeaturedCollectionDetails

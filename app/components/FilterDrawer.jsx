@@ -134,7 +134,7 @@ export function FilterDrawer({
                   .map((option) => (
                     <>
                       {selectedOptions.map((selectOption) => {
-                        console.log(' optionInput', selectOption.optionInput);
+                     
                         navigate(
                           getFilterLink(
                             filter,

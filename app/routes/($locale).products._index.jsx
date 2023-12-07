@@ -18,7 +18,6 @@ export async function loader({request, context: {storefront}}) {
   const data = await storefront.query(ALL_PRODUCTS_QUERY, {
     variables: {
       ...variables,
-      country: storefront.i18n.country,
       language: storefront.i18n.language,
     },
   });
@@ -95,13 +94,12 @@ export default function AllProducts() {
 
 const ALL_PRODUCTS_QUERY = `#graphql
   query AllProducts(
-    $country: CountryCode
     $language: LanguageCode
     $first: Int
     $last: Int
     $startCursor: String
     $endCursor: String
-  ) @inContext(country: $country, language: $language) {
+  ) @inContext(language: $language) {
     products(first: $first, last: $last, before: $startCursor, after: $endCursor) {
       filters {
         id

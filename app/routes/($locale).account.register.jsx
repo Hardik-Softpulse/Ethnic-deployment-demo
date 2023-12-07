@@ -82,8 +82,6 @@ export default function Ragister() {
   const [nativeEmailError, setNativeEmailError] = useState(null);
   const [nativePasswordError, setNativePasswordError] = useState(null);
 
-  console.log('actionData', actionData)
-
   return (
     <div className="cust-sign-page clearfix">
       <div className="breadcrumb">
