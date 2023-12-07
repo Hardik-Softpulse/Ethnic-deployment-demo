@@ -2,6 +2,7 @@ import {Link} from '@remix-run/react';
 import {Image} from '@shopify/hydrogen';
 import {getImageLoadingPriority} from '~/lib/const';
 import {Swiper, SwiperSlide} from 'swiper/react';
+import { useState } from 'react';
 
 export function OurBlogs({blogHandle, articles, title}) {
   const [showSwiper, setShowSwiper] = useState(false);

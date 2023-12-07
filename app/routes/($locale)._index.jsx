@@ -7,7 +7,6 @@ import {
   BrandSection,
   Hero,
   NewArrival,
-  // SaleOn,
   OurCollection,
   OurBlogs,
   SubBanner,
