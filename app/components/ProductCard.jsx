@@ -1,6 +1,4 @@
-// import clsx from 'clsx';
 import {flattenConnection, Image, Money, useMoney} from '@shopify/hydrogen';
-import {AddToCartButton} from '~/components';
 import {isDiscounted, isNewArrival} from '~/lib/utils';
 import {getProductPlaceholder} from '~/lib/placeholders';
 import {Link} from './Link';
@@ -11,7 +9,6 @@ export function ProductCard({
   className = 'all-collection-item',
   loading,
   onClick,
-  quickAdd,
 }) {
   let cardLabel;
 
@@ -29,11 +26,8 @@ export function ProductCard({
     cardLabel = 'Sale';
   } else if (isNewArrival(product.publishedAt)) {
     cardLabel = 'New';
-
-    
   }
 
- 
   return (
     <div className={`product-item ${className}`}>
       <Link
@@ -50,7 +44,6 @@ export function ProductCard({
           </div>
         )}
       </Link>
-
       <h5>
         <Link
           onClick={onClick}
@@ -65,7 +58,7 @@ export function ProductCard({
         <span className="s-price">
           <Money withoutTrailingZeros data={price} />
         </span>
-     
+
         <span className="o-price">
           {compareAtPrice === null ? (
             ''

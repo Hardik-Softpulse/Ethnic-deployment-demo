@@ -1,5 +1,3 @@
-import { ResentlyView } from './ResentlyView';
-
 export {Layout} from './Layout';
 export {Drawer, useDrawer} from './Drawer';
 export {Heading, Section, Text, PageHeader} from './Text';

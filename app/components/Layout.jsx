@@ -1,6 +1,6 @@
 import logoImg from '../img/logo2.jpg';
 import footerLogo from '../img/footer-logo.jpg';
-import {Suspense, useEffect, useMemo, useState} from 'react';
+import {Suspense, useEffect,useState} from 'react';
 import {useIsHomePath} from '~/lib/utils';
 import {useCartFetchers} from '~/hooks/useCartFetchers';
 import {CartForm} from '@shopify/hydrogen';
@@ -8,16 +8,13 @@ import {
   Await,
   Form,
   Link,
-  useActionData,
   useMatches,
   useParams,
 } from '@remix-run/react';
-
 import {CartLoading} from './CartLoading';
 import {CartDrawer} from './CartDrawer';
 import {Newsletter} from './Newsletter';
 import {useLocation} from 'react-use';
-
 export function Layout({
   children,
   layout,
@@ -76,9 +73,7 @@ function DesktopHeader({
   setCartOpen,
 }) {
   const params = useParams();
-
   const [isSticky, setIsSticky] = useState(false);
-  const location = useLocation();
   const [subMenu, setSubMenu] = useState(false);
   const [activeMenu, setActiveMenu] = useState('Home');
   const [searchBar, setSearchBar] = useState(false);
@@ -86,6 +81,10 @@ function DesktopHeader({
   const handleClick = (e) => {
     e.preventDefault();
     setToggle(!toggle);
+  };
+
+  const handleMenu = (title) => {
+    setActiveMenu(title);
   };
 
   useEffect(() => {
@@ -101,7 +100,7 @@ function DesktopHeader({
     return () => {
       window.removeEventListener('scroll', handleScroll);
     };
-  }, []);
+  }, [activeMenu]);
 
   return (
     <>
@@ -129,7 +128,7 @@ function DesktopHeader({
                   }
                   className="st-nav-ic st-nav-search visible-x searchForm"
                 >
-                  <a href="#" onClick={(e) => setSearchBar(!searchBar)}>
+                  <a href="#" onClick={() => setSearchBar(!searchBar)}>
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       width="22"
@@ -175,30 +174,26 @@ function DesktopHeader({
                 </span>
                 <ul className="site-nav">
                   {(menu?.items || []).map((item) => {
-                    console.log('items', item);
                     return (
                       <li
                         key={item.id}
                         prefetch="intent"
                         className="st-nav-li drop_down"
                       >
-                        <a
-                          href={item.to}
+                        <Link
+                          to={item.to}
                           target={item.target}
+                          onClick={() => {
+                            handleMenu(item.title);
+                          }}
                           className={`${
                             activeMenu === item.title
                               ? 'st-nav-link active'
                               : 'st-nav-link'
                           }`}
-                          onClick={(e) => {
-                            e.preventDefault();
-                            setActiveMenu(item.title),
-                              console.log('activeMenu', activeMenu);
-                          }}
                         >
                           {item.title}
-                        </a>
-
+                        </Link>
                         {item.items != 0 && (
                           <span
                             className="down_arw"
