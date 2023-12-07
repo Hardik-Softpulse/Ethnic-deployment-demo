@@ -312,7 +312,7 @@ export function ReviewCard({product, reviewType}) {
                 <svg
                   aria-hidden="true"
                   focusable="false"
-                  class="icon icon-caret"
+                  className="icon icon-caret"
                   viewBox="0 0 10 6"
                 >
                   <path

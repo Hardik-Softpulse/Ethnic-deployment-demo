@@ -10,7 +10,7 @@ import invariant from 'tiny-invariant';
 import {seoPayload} from '~/lib/seo.server';
 import {routeHeaders} from '~/data/cache';
 import {MEDIA_FRAGMENT, PRODUCT_CARD_FRAGMENT} from '~/data/fragments';
-import {Suspense, useEffect, useState} from 'react';
+import {Suspense,  useEffect,  useState} from 'react';
 import {AddToCartButton, ProductGallery, NewArrival} from '~/components';
 import {getExcerpt} from '~/lib/utils';
 import Swiper from 'swiper';
@@ -30,7 +30,6 @@ export async function loader({params, request, context}) {
     variables: {
       handle: productHandle,
       selectedOptions,
-      country: context.storefront.i18n.country,
       language: context.storefront.i18n.language,
     },
   });
@@ -38,7 +37,6 @@ export async function loader({params, request, context}) {
   const variants = context.storefront.query(VARIANTS_QUERY, {
     variables: {
       handle: productHandle,
-      country: context.storefront.i18n.country,
       language: context.storefront.i18n.language,
     },
   });
@@ -211,21 +209,6 @@ export default function Product() {
           )}
         </Await>
       </Suspense>
-      {/* 
-      <Suspense>
-        <Await
-          errorElement="There was a problem loading related products"
-          resolve={recommended}
-        >
-          {(product) => (
-            <NewArrival
-              title="Recently viewed products"
-              product={product.nodes}
-            />
-          )}
-        </Await>
-      </Suspense> */}
-
       <ResentlyView product={product.variants.nodes} />
       <div className="container review-container ">
         <h2 className="h2 text-up text-center">Customer Reviews</h2>
