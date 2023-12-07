@@ -1,13 +1,11 @@
 import {defer} from '@shopify/remix-oxygen';
-import {Await, Form, useLoaderData} from '@remix-run/react';
-import {Suspense} from 'react';
+import {useLoaderData} from '@remix-run/react';
 import {Pagination, getPaginationVariables} from '@shopify/hydrogen';
 import {ProductCard} from '~/components';
 import {PAGINATION_SIZE} from '~/lib/const';
 import {PRODUCT_CARD_FRAGMENT} from '~/data/fragments';
 import {getImageLoadingPriority} from '~/lib/const';
 import {seoPayload} from '~/lib/seo.server';
-
 import {getFeaturedData} from './($locale).featured-products';
 
 export async function loader({request, context: {storefront}}) {
@@ -58,8 +56,6 @@ export default function Search() {
   const {searchTerm, products, noResultRecommendations, seo} = useLoaderData();
   const noResults = products?.nodes?.length === 0;
 
-
-
   return (
     <div className="all-collection">
       <div className="container">
@@ -91,13 +87,6 @@ export default function Search() {
                       <button>previous</button>
                     </PreviousLink>
                   </span>
-
-                  {/* {Array.from({length: nodes.length}, (_, index) => (
-                        <span key={index}>
-                          <a href={`?page=${index + 1}`}>{index + 1}</a>
-                        </span>
-                      ))} */}
-
                   <span className="pager-next">
                     <NextLink>
                       <button className="btn">Load More</button>
@@ -114,7 +103,6 @@ export default function Search() {
 }
 
 function NoResults({noResults, recommendations, searchTerm}) {
- 
   return (
     <>
       <div className="mb-60 no_result text-center">

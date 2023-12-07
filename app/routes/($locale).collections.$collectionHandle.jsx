@@ -19,7 +19,7 @@ import {seoPayload} from '~/lib/seo.server';
 import {getImageLoadingPriority} from '~/lib/const';
 import colPageImg from '../img/women-coll.jpg';
 import filterIcn from '../img/filter-icon-11.png';
-import {useEffect, useState} from 'react';
+import {useState} from 'react';
 export const headers = routeHeaders;
 
 export async function loader({params, request, context}) {
@@ -160,7 +160,6 @@ export default function Collection() {
     return `${location.pathname}?${params.toString()}`;
   };
 
-  console.log('collection', collection);
 
   return (
     <div className="collection-page">

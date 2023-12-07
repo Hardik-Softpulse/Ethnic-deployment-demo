@@ -1,5 +1,5 @@
 import {json} from '@shopify/remix-oxygen';
-import {Await, Link, useLoaderData} from '@remix-run/react';
+import { Link, useLoaderData} from '@remix-run/react';
 import invariant from 'tiny-invariant';
 import {seoPayload} from '~/lib/seo.server';
 import {routeHeaders} from '~/data/cache';

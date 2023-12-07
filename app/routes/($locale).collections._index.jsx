@@ -1,7 +1,6 @@
 import {json} from '@shopify/remix-oxygen';
 import {useLoaderData} from '@remix-run/react';
 import {Image, Pagination, getPaginationVariables} from '@shopify/hydrogen';
-
 import {Link} from '~/components';
 import {getImageLoadingPriority} from '~/lib/const';
 import {seoPayload} from '~/lib/seo.server';
@@ -32,7 +31,7 @@ export const loader = async ({request, context: {storefront}}) => {
 export default function Collections() {
   const {collections, seo} = useLoaderData();
 
-  console.log('collections', collections)
+  console.log('collections', collections);
 
   return (
     <div className="all-collection">
@@ -40,7 +39,7 @@ export default function Collections() {
         <div className="container">
           <h2 className="page-title text-up text-center">{seo.title}</h2>
           <Pagination connection={collections}>
-            {({nodes, isLoading, PreviousLink, NextLink, pageInfo}) => (
+            {({nodes, isLoading, PreviousLink, NextLink}) => (
               <>
                 <div className="row m-15 ">
                   {nodes.map((collection, i) => (
@@ -55,16 +54,9 @@ export default function Collections() {
                 <div className="pagination dfx flxcntr flxwrp">
                   <span className="pager-prev">
                     <PreviousLink>
-                     <button>previous</button>
+                      <button>previous</button>
                     </PreviousLink>
                   </span>
-
-                  {/* {Array.from({length: nodes.length}, (_, index) => (
-                        <span key={index}>
-                          <a href={`?page=${index + 1}`}>{index + 1}</a>
-                        </span>
-                      ))} */}
-
                   <span className="pager-next">
                     <NextLink>
                       <button className="btn">Load More</button>

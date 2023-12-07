@@ -2,7 +2,7 @@ import {json} from '@shopify/remix-oxygen';
 import {useLoaderData} from '@remix-run/react';
 import invariant from 'tiny-invariant';
 import {Pagination, getPaginationVariables} from '@shopify/hydrogen';
-import {ProductCard, SortFilter} from '~/components';
+import {ProductCard} from '~/components';
 import {PRODUCT_CARD_FRAGMENT} from '~/data/fragments';
 import {getImageLoadingPriority} from '~/lib/const';
 import {seoPayload} from '~/lib/seo.server';

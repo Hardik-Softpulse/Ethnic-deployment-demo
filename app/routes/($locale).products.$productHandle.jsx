@@ -3,7 +3,6 @@ import {Await, Link, useLoaderData} from '@remix-run/react';
 import {
   AnalyticsPageType,
   Money,
-  Pagination,
   VariantSelector,
   getSelectedProductOptions,
 } from '@shopify/hydrogen';
@@ -12,12 +11,7 @@ import {seoPayload} from '~/lib/seo.server';
 import {routeHeaders} from '~/data/cache';
 import {MEDIA_FRAGMENT, PRODUCT_CARD_FRAGMENT} from '~/data/fragments';
 import {Suspense, useEffect, useState} from 'react';
-import {
-  AddToCartButton,
-  FeaturedProducts,
-  ProductGallery,
-  NewArrival,
-} from '~/components';
+import {AddToCartButton, ProductGallery, NewArrival} from '~/components';
 import {getExcerpt} from '~/lib/utils';
 import Swiper from 'swiper';
 import Productsec from '../img/Productsec.jpg';
