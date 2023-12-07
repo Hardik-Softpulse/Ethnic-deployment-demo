@@ -5,7 +5,6 @@ import {
   useOutletContext,
   useParams,
   useNavigation,
-  Link,
 } from '@remix-run/react';
 import {flattenConnection} from '@shopify/hydrogen';
 import invariant from 'tiny-invariant';

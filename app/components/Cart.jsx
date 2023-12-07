@@ -6,9 +6,11 @@ import masestro from '../img/masestro.png';
 import dinersClub from '../img/diners-club.png';
 import {CartForm, Image, Money, flattenConnection} from '@shopify/hydrogen';
 import {Link} from './Link';
+import {useEffect} from 'react';
 
 export function Cart({cart}) {
   const linesCount = Boolean(cart?.lines?.edges?.length || 0);
+  useEffect(() => {}, [cart]);
 
   return (
     <div className="cart-page bg-grey ">
@@ -165,8 +167,8 @@ function CartLineQuantityAdjust({line}) {
         </button>
       </UpdateCartButton>
       <input
-        type="number"
-        name=""
+        type="text"
+        name="value"
         className="qty-input"
         value={quantity}
         readOnly
@@ -205,7 +207,7 @@ function CartSummary({
   const discountAmountNumber = parseFloat(discountAmount);
   const discountPrice = {
     amount: discountAmountNumber.toString(),
-    currencyCode: 'USD',
+    currencyCode: 'INR',
   };
 
   let discountPercentage = 0;

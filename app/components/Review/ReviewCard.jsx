@@ -255,7 +255,7 @@ export function ReviewCard({product, reviewType}) {
                   >
                     <path
                       fill-rule="evenodd"
-                      clip-rule="evenodd"
+                      clipRule="evenodd"
                       d="M9.354.646a.5.5 0 00-.708 0L5 4.293 1.354.646a.5.5 0 00-.708.708l4 4a.5.5 0 00.708 0l4-4a.5.5 0 000-.708z"
                       fill="currentColor"
                     ></path>
@@ -290,7 +290,7 @@ export function ReviewCard({product, reviewType}) {
                   >
                     <path
                       fill-rule="evenodd"
-                      clip-rule="evenodd"
+                      clipRule="evenodd"
                       d="M9.354.646a.5.5 0 00-.708 0L5 4.293 1.354.646a.5.5 0 00-.708.708l4 4a.5.5 0 00.708 0l4-4a.5.5 0 000-.708z"
                       fill="currentColor"
                     ></path>
@@ -317,7 +317,7 @@ export function ReviewCard({product, reviewType}) {
                 >
                   <path
                     fill-rule="evenodd"
-                    clip-rule="evenodd"
+                    clipRule="evenodd"
                     d="M9.354.646a.5.5 0 00-.708 0L5 4.293 1.354.646a.5.5 0 00-.708.708l4 4a.5.5 0 00.708 0l4-4a.5.5 0 000-.708z"
                     fill="currentColor"
                   ></path>

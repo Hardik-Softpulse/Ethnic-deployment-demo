@@ -473,12 +473,12 @@ export function ProductForm({variants}) {
           </div>
         </form>
       </div>
-      <div class={`size-chart-popup ${isSizeChartOpen ? 'open' : ''}`}>
-        <div class="size-chart-content">
+      <div className={`size-chart-popup ${isSizeChartOpen ? 'open' : ''}`}>
+        <div className="size-chart-content">
           <div className="popoup_hdr">
             <h4 className="text-center mb-0">Size Chart</h4>
             <span
-              class="close_icon"
+              className="close_icon"
               onClick={() => setIsSizeChartOpen(!isSizeChartOpen)}
             >
               <svg
@@ -495,7 +495,7 @@ export function ProductForm({variants}) {
               </svg>
             </span>
           </div>
-          <div class="size_chart_tabel">
+          <div className="size_chart_tabel">
             <h6>Clothes Pant and Dress Size</h6>
             <table>
               <thead>
@@ -725,12 +725,6 @@ export function ProductForm({variants}) {
               </tbody>
             </table>
           </div>
-          {/* {isSizeChartOpen && (
-            <img
-              src={sizeChart}
-              onClick={() => setIsSizeChartOpen(isSizeChartOpen)}
-            />
-          )} */}
         </div>
       </div>
     </>

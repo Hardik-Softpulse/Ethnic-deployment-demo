@@ -1,4 +1,3 @@
-import {Link} from './Link';
 
 export function AccountDetails({activeTab, customer}) {
   return (

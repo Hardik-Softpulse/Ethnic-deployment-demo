@@ -54,7 +54,8 @@ export async function loader({request, context, params}) {
 
 export default function OrderRoute() {
   const {order, lineItems, discountValue, discountPercentage} = useLoaderData();
-
+  console.log('order', order);
+  console.log(' lineItems', lineItems);
   return (
     <div className="cust-account-page clearfix">
       <div className="breadcrumb">
@@ -76,8 +77,8 @@ export default function OrderRoute() {
                 <th>Order No</th>
                 <th>Placed on</th>
                 <th>Product</th>
-                <th>Price</th>
                 <th>Quantity</th>
+                <th>Price</th>
                 <th>Discounts</th>
                 <th>Subtotal</th>
                 <th>Tax</th>
@@ -112,8 +113,10 @@ export default function OrderRoute() {
                         <span>{lineItem.variant?.title}</span>
                       </div>
                     </td>
-                    <td>{/* <Money data={lineItem.variant?.price} /> */}</td>
                     <td>{lineItem.quantity}</td>
+                    <td>
+                      <Money data={lineItem.originalTotalPrice} />
+                    </td>
                     <td>
                       <span>
                         <Money data={lineItem.discountedTotalPrice} />

@@ -44,7 +44,7 @@ export function ResentlyView({product}) {
 
   useEffect(() => {
     resentProduct();
-  }, [product]);
+  }, []);
 
   return (
     <div className="collection-products">
@@ -61,7 +61,7 @@ export function ResentlyView({product}) {
               modules={[Navigation]}
               navigation={true}
               breakpoints={{
-                375:{
+                375: {
                   slidesPerView: 1,
                   spaceBetween: 10,
                 },
@@ -112,5 +112,3 @@ export function ResentlyView({product}) {
     </div>
   );
 }
-
-
