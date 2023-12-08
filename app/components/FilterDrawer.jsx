@@ -98,33 +98,7 @@ export function FilterDrawer({
           >
             Remove All
           </a>
-          {/* <button
-            className="btn"
-            onClick={() => {
-              const data = filters.map(
-                (filter) => (
-                  console.log('filter', filter),
-                  filter.values.length > 0 && (
-                    <>
-                      {filter.values?.map((option) => {
-                        console.log('option', option);
-                        const to = getFilterLink(
-                          filter,
-                          option.input,
-                          params,
-                          location,
-                        );
-                        return navigate(to);
-                      })}
-                    </>
-                  )
-                ),
-              );
-              setFilterDrawerOpen(!filterDrawerOpen);
-            }}
-          >
-            Apply
-          </button> */}
+
           <button
             className="btn"
             onClick={() => {
@@ -134,7 +108,7 @@ export function FilterDrawer({
                   .map((option) => (
                     <>
                       {selectedOptions.map((selectOption) => {
-                     
+                        console.log(' optionInput', selectOption.optionInput);
                         navigate(
                           getFilterLink(
                             filter,
@@ -154,29 +128,6 @@ export function FilterDrawer({
           >
             Apply
           </button>
-          {/* <button
-            className="btn"
-            onClick={() => {
-              const navigationPromises = selectedOptions.map(
-                (selectedOption) => {
-                  console.log('selectedOption', selectedOption);
-                  const to = getFilterLink(
-                    selectedOption.filterId,
-                    selectedOption.input,
-                    params,
-                    location,
-                  );
-                  return navigate(to);
-                },
-              );
-
-              Promise.all(navigationPromises).then(() => {
-                setFilterDrawerOpen(!filterDrawerOpen);
-              });
-            }}
-          >
-            Apply
-          </button> */}
         </div>
       </div>
     </div>
@@ -230,8 +181,8 @@ function filterInputToParams(type, rawInput, params) {
   const input = typeof rawInput === 'string' ? JSON.parse(rawInput) : rawInput;
   switch (type) {
     case 'PRICE_RANGE':
-      if (input.price.min) params.set('minPrice', input.price.min);
-      if (input.price.max) params.set('maxPrice', input.price.max);
+      if (input.price?.min) params.set('minPrice', input.price.min);
+      if (input.price?.max) params.set('maxPrice', input.price.max);
       break;
     case 'LIST':
       Object.entries(input).forEach(([key, value]) => {

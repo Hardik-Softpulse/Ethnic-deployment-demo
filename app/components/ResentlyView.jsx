@@ -30,8 +30,9 @@ export function ResentlyView({product}) {
       );
 
       if (!isProductInList) {
-        const updatedItems = [productData, ...info.slice(0, 4)];
+        const updatedItems = [productData, ...info.slice(0, 5)];
         setItems(updatedItems);
+
         localStorage.setItem('recentlyViewed', JSON.stringify(updatedItems));
       }
     }
@@ -48,54 +49,58 @@ export function ResentlyView({product}) {
           <h2 className="h2 text-up">RECENTLY VIEWED PRODUCTS</h2>
         </div>
         <div className="product-slider">
-          <Swiper
-            spaceBetween={15}
-            draggable={true}
-            slidesPerView={1.3}
-            modules={[Navigation]}
-            navigation={true}
-            breakpoints={{
-              640: {
-                slidesPerView: 2.4,
-                spaceBetween: 15,
-              },
-              768: {
-                slidesPerView: 3,
-                spaceBetween: 20,
-              },
-              1024: {
-                slidesPerView: 4,
-                spaceBetween: 30,
-              },
-            }}
-          >
-            {items?.slice(1).map((item, index) => (
-              <SwiperSlide key={item.id}>
-                <div className="product-item">
-                  <Link
-                    className="product-img"
-                    to={`/products/${item.productHandle}`}
-                  >
-                    <Image
-                      src={item.productImg}
-                      alt={`Picture of ${item.productTitle}`}
-                    />
-                  </Link>
-
-                  <h5>
-                    <Link to={`/products/${item.productHandle}`}>
-                      {item.productTitle}
+          {(items.length === 0 || items.length === 1) ? (
+            <p className="sctn-title text-center">No recently viewed products.</p>
+          ) : (
+            <Swiper
+              spaceBetween={15}
+              draggable={true}
+              slidesPerView={1.3}
+              modules={[Navigation]}
+              navigation={true}
+              breakpoints={{
+                640: {
+                  slidesPerView: 2.4,
+                  spaceBetween: 15,
+                },
+                768: {
+                  slidesPerView: 3,
+                  spaceBetween: 20,
+                },
+                1024: {
+                  slidesPerView: 4,
+                  spaceBetween: 30,
+                },
+              }}
+            >
+              {items?.slice(1).map((item, index) => (
+                <SwiperSlide key={item.id}>
+                  <div className="product-item">
+                    <Link
+                      className="product-img"
+                      to={`/products/${item.productHandle}`}
+                    >
+                      <Image
+                        src={item.productImg}
+                        alt={`Picture of ${item.productTitle}`}
+                      />
                     </Link>
-                  </h5>
-                  <div className="product-price">
-                    <span className="s-price">
-                      <Money withoutTrailingZeros data={item?.productPrice} />
-                    </span>
+
+                    <h5>
+                      <Link to={`/products/${item.productHandle}`}>
+                        {item.productTitle}
+                      </Link>
+                    </h5>
+                    <div className="product-price">
+                      <span className="s-price">
+                        <Money withoutTrailingZeros data={item?.productPrice} />
+                      </span>
+                    </div>
                   </div>
-                </div>
-              </SwiperSlide>
-            ))}
-          </Swiper>
+                </SwiperSlide>
+              ))}
+            </Swiper>
+          )}
         </div>
       </div>
     </div>
