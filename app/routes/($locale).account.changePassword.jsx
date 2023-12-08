@@ -9,6 +9,32 @@ export async function loader({context, params}) {
   }
   return new Response(null);
 }
+export async function action({request, context}) {
+  const {storefront} = context;
+  const form = await request.formData();
+  const email = form.has('email') ? String(form.get('email')) : null;
+
+  if (request.method !== 'POST') {
+    return json({error: 'Method not allowed'}, {status: 405});
+  }
+
+  try {
+    if (!email) {
+      throw new Error('Please provide an email.');
+    }
+    await storefront.mutate(CUSTOMER_RECOVER_MUTATION, {
+      variables: {email},
+    });
+
+    return json({resetRequested: true});
+  } catch (error) {
+    const resetRequested = false;
+    if (error instanceof Error) {
+      return json({error: error.message, resetRequested}, {status: 400});
+    }
+    return json({error, resetRequested}, {status: 400});
+  }
+}
 
 export const meta = () => {
   return [{title: 'Recover Password'}];
