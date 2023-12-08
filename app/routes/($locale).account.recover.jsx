@@ -14,32 +14,28 @@ export async function loader({context, params}) {
 
 const badRequest = (data) => json(data, {status: 400});
 
-export async function action({request, context}) {
-  const {storefront} = context;
-  const form = await request.formData();
-  const email = form.has('email') ? String(form.get('email')) : null;
+export const action = async ({request, context}) => {
+  const formData = await request.formData();
+  const email = formData.get('email');
 
-  if (request.method !== 'POST') {
-    return json({error: 'Method not allowed'}, {status: 405});
+  if (!email || typeof email !== 'string') {
+    return badRequest({
+      formError: 'Please provide an email.',
+    });
   }
 
   try {
-    if (!email) {
-      throw new Error('Please provide an email.');
-    }
-    await storefront.mutate(CUSTOMER_RECOVER_MUTATION, {
+    await context.storefront.mutate(CUSTOMER_RECOVER_MUTATION, {
       variables: {email},
     });
 
     return json({resetRequested: true});
   } catch (error) {
-    const resetRequested = false;
-    if (error instanceof Error) {
-      return json({error: error.message, resetRequested}, {status: 400});
-    }
-    return json({error, resetRequested}, {status: 400});
+    return badRequest({
+      formError: 'Something went wrong. Please try again later.',
+    });
   }
-}
+};
 
 export const meta = () => {
   return [{title: 'Recover Password'}];
@@ -49,7 +45,8 @@ export default function Recover() {
   const actionData = useActionData();
   const [nativeEmailError, setNativeEmailError] = useState(null);
   const isSubmitted = actionData?.resetRequested;
-
+  console.log('isSubmitted', isSubmitted);
+  console.log(' actionData', actionData);
   return (
     <div className="cust-sign-page bg-grey clearfix">
       <div className="breadcrumb">
@@ -132,3 +129,19 @@ export default function Recover() {
     </div>
   );
 }
+
+
+
+
+
+const CUSTOMER_RECOVER_MUTATION = `#graphql
+  mutation customerRecover($email: String!) {
+    customerRecover(email: $email) {
+      customerUserErrors {
+        code
+        field
+        message
+      }
+    }
+  }
+`;
