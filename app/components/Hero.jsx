@@ -2,14 +2,20 @@ import banner from '../img/banner2.jpg';
 import home from '../img/home.png';
 import Carousel from 'react-multi-carousel';
 import 'react-multi-carousel/lib/styles.css';
-import { Pagination } from 'swiper/modules';
+import {Pagination} from 'swiper/modules';
 import {Swiper, SwiperSlide} from 'swiper/react';
 
 export function Hero() {
- 
   return (
     <div className="slideshow-slider mb-96">
-      <Swiper pagination={true} modules={[Pagination]}  draggable={true} className="carousel">
+      <Swiper
+        pagination={{
+          clickable: true,
+        }}
+        modules={[Pagination]}
+        draggable={true}
+        className="carousel"
+      >
         <SwiperSlide>
           <div className="slideshow-item dfx flxancntr">
             <img src={home} />

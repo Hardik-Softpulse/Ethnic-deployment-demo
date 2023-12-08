@@ -1,4 +1,4 @@
-import  {useEffect, useState} from 'react';
+import {useEffect, useState} from 'react';
 import {Swiper, SwiperSlide} from 'swiper/react';
 import {Navigation} from 'swiper/modules';
 import {SectionProductCard} from '~/components';
@@ -29,10 +29,6 @@ export function NewArrival({product, title}) {
               modules={[Navigation]}
               navigation={true}
               breakpoints={{
-                375:{
-                  slidesPerView: 1,
-                  spaceBetween: 10,
-                },
                 640: {
                   slidesPerView: 2.4,
                   spaceBetween: 15,

@@ -501,7 +501,6 @@ function FooterMenu({menu}) {
 
         <div className="stft-col col site-ext-info ">
           <Newsletter />
-
           <div className="social-icons dfx flxwrp ">
             <a href="#">
               <svg

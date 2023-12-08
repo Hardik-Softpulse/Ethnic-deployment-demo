@@ -3,8 +3,6 @@ import {Link} from './Link';
 
 export function CartDrawer({isCartOpen, cart, setCartOpen}) {
   const linesCount = Boolean(cart?.lines?.edges?.length || 0);
-
-  
  
   return (
     <>

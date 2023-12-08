@@ -214,7 +214,9 @@ export function ReviewCard({product, reviewType}) {
   };
 
   return (
-    <Suspense fallback={<div>Loading...</div>}>
+    <Suspense
+      fallback={<p className="sctn-title text-center">Loading...</p>}
+    >
       {isLoading ? (
         <div>Loading...</div>
       ) : (
@@ -297,7 +299,7 @@ export function ReviewCard({product, reviewType}) {
                   </svg>
                 </div>
               )}
-              <div className="select">
+              {/* <div className="select">
                 <select
                   className="review-select"
                   onChange={(e) => setStar(e.target.value)}
@@ -322,7 +324,7 @@ export function ReviewCard({product, reviewType}) {
                     fill="currentColor"
                   ></path>
                 </svg>
-              </div>
+              </div> */}
             </div>
           </div>
           <form
@@ -477,7 +479,7 @@ export function ReviewCard({product, reviewType}) {
                 </div> */}
               </>
             ) : (
-              <p> Write a review....</p>
+              <p className="sctn-title text-center"> Write a review....</p>
             )}
           </div>
         </div>

@@ -98,7 +98,7 @@ export function FilterDrawer({
           >
             Remove All
           </a>
-
+      
           <button
             className="btn"
             onClick={() => {
@@ -108,7 +108,7 @@ export function FilterDrawer({
                   .map((option) => (
                     <>
                       {selectedOptions.map((selectOption) => {
-                        console.log(' optionInput', selectOption.optionInput);
+                     
                         navigate(
                           getFilterLink(
                             filter,
@@ -128,6 +128,7 @@ export function FilterDrawer({
           >
             Apply
           </button>
+       
         </div>
       </div>
     </div>
@@ -181,8 +182,8 @@ function filterInputToParams(type, rawInput, params) {
   const input = typeof rawInput === 'string' ? JSON.parse(rawInput) : rawInput;
   switch (type) {
     case 'PRICE_RANGE':
-      if (input.price?.min) params.set('minPrice', input.price.min);
-      if (input.price?.max) params.set('maxPrice', input.price.max);
+      if (input.price.min) params.set('minPrice', input.price.min);
+      if (input.price.max) params.set('maxPrice', input.price.max);
       break;
     case 'LIST':
       Object.entries(input).forEach(([key, value]) => {
