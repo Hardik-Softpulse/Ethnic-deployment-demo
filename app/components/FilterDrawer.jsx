@@ -108,7 +108,6 @@ export function FilterDrawer({
                   .map((option) => (
                     <>
                       {selectedOptions.map((selectOption) => {
-                     
                         navigate(
                           getFilterLink(
                             filter,
@@ -202,6 +201,5 @@ function filterInputToParams(type, rawInput, params) {
       });
       break;
   }
-
   return params;
 }

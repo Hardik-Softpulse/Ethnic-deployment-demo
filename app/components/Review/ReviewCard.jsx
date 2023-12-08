@@ -131,8 +131,8 @@ export function ReviewCard({product, reviewType}) {
       const reviews = await fetchYotpoReviewData(
         apiKey,
         productId,
-        // perPage,
-        // page,
+        perPage,
+        page,
         direction,
         sorting,
         star,
@@ -214,11 +214,9 @@ export function ReviewCard({product, reviewType}) {
   };
 
   return (
-    <Suspense
-      fallback={<p className="sctn-title text-center">Loading...</p>}
-    >
+    <Suspense fallback={<p>Loading...</p>}>
       {isLoading ? (
-        <div>Loading...</div>
+        <div className="sctn-title text-center">Loading...</div>
       ) : (
         <div className="review">
           <div className="review-title">
@@ -386,12 +384,7 @@ export function ReviewCard({product, reviewType}) {
             </div>
             <button
               type="submit"
-              onClick={() => {
-                console.log('createReview', createReviews);
-                if (createReviews.message === 'ok') {
-                  setReviewFormOpen(!reviewFormOpen);
-                }
-              }}
+              onClick={() => setReviewFormOpen(!reviewFormOpen)}
             >
               Submit Review
             </button>
@@ -401,6 +394,7 @@ export function ReviewCard({product, reviewType}) {
             {reviewData.length > 0 ? (
               <>
                 {reviewData.map((review, id) => {
+                  console.log('review', review);
                   const date = moment(review.created_at).format('DD/MM/YYYY');
                   return (
                     <div className="ratingGrp" key={id}>
