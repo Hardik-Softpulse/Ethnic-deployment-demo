@@ -10,7 +10,7 @@ import invariant from 'tiny-invariant';
 import {seoPayload} from '~/lib/seo.server';
 import {routeHeaders} from '~/data/cache';
 import {MEDIA_FRAGMENT, PRODUCT_CARD_FRAGMENT} from '~/data/fragments';
-import {Suspense,  useEffect,  useState} from 'react';
+import {Suspense, useEffect, useState} from 'react';
 import {AddToCartButton, ProductGallery, NewArrival} from '~/components';
 import {getExcerpt} from '~/lib/utils';
 import Swiper from 'swiper';
@@ -198,7 +198,6 @@ export default function Product() {
           </div>
         </div>
       </div>
-
       <Suspense>
         <Await
           errorElement="There was a problem loading related products"

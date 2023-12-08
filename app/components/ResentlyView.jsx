@@ -1,11 +1,15 @@
-import React, {useEffect, useState} from 'react';
+import {useEffect, useState} from 'react';
 import {Image, Money} from '@shopify/hydrogen';
 import {Swiper, SwiperSlide} from 'swiper/react';
 import {Link} from './Link';
 import {Navigation} from 'swiper/modules';
+import {useLocation} from 'react-use';
 
 export function ResentlyView({product}) {
+  console.log('product', product);
   const [items, setItems] = useState([]);
+  const location = useLocation();
+  console.log('location', location);
 
   const productData = {
     productHandle: product[0].product.handle,
@@ -35,7 +39,7 @@ export function ResentlyView({product}) {
 
   useEffect(() => {
     resentProduct();
-  }, [product, productData]);
+  }, [product]);
 
   return (
     <div className="collection-products">
@@ -65,7 +69,7 @@ export function ResentlyView({product}) {
               },
             }}
           >
-            {items?.map((item, index) => (
+            {items?.slice(1).map((item, index) => (
               <SwiperSlide key={item.id}>
                 <div className="product-item">
                   <Link
@@ -98,4 +102,4 @@ export function ResentlyView({product}) {
   );
 }
 
-// above this code product add localstorage but after get product and map reshesh page after show how to solve
+// items state in set array in this array in 0-4 object i have map only 1-4 how to set

@@ -3959,6 +3959,7 @@ p.no_product {
 }
 .size-chart-link > div {
   cursor: pointer;
+  color: #000;
 }
 .size-chart-content .close_icon svg {
   width: 16px;
