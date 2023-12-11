@@ -159,7 +159,6 @@ export default function Collection() {
     return `${location.pathname}?${params.toString()}`;
   };
 
-
   return (
     <div className="collection-page">
       <div className="breadcrumb">

@@ -137,9 +137,7 @@ export function ReviewCard({product, reviewType}) {
         sorting,
         star,
       );
-      setReviewData(reviews);
-      console.log('reviewData', reviewData);
-      console.log('reviews', reviews);
+      setReviewData(reviews)
     }
     setIsLoading(false);
   };
@@ -394,7 +392,6 @@ export function ReviewCard({product, reviewType}) {
             {reviewData.length > 0 ? (
               <>
                 {reviewData.map((review, id) => {
-                  console.log('review', review);
                   const date = moment(review.created_at).format('DD/MM/YYYY');
                   return (
                     <div className="ratingGrp" key={id}>

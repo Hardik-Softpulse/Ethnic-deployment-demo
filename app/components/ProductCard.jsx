@@ -18,7 +18,7 @@ export function ProductCard({
   const firstVariant = flattenConnection(cardProduct.variants)[0];
 
   if (!firstVariant) return null;
-  const {image, price, compareAtPrice} = firstVariant;
+  const {image, price, compareAtPrice, availableForSale} = firstVariant;
 
   if (label) {
     cardLabel = label;
@@ -27,6 +27,7 @@ export function ProductCard({
   } else if (isNewArrival(product.publishedAt)) {
     cardLabel = 'New';
   }
+
 
   return (
     <div className={`product-item ${className}`}>
@@ -38,10 +39,8 @@ export function ProductCard({
       >
         <Image src={image?.url} alt={image?.altText} loading={loading} />
 
-        {product.variants?.onSale && (
-          <div className="product-tag sale-tag">
-            Sale {item.salePercentage}%
-          </div>
+        {availableForSale == true && (
+          <div className="product-tag sale-tag">{`Sale %`}</div>
         )}
       </Link>
       <h5>
@@ -67,6 +66,7 @@ export function ProductCard({
           )}
         </span>
       </div>
+      <span>{availableForSale == true ? 'In stock' : 'Out stock'}</span>
     </div>
   );
 }

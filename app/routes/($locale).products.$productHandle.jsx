@@ -231,6 +231,8 @@ export function ProductForm({variants}) {
     quantity: 1,
   };
 
+
+
   const isOptionSelected = (optionName, optionValue) => {
     return (
       selectedVariant &&
@@ -244,28 +246,28 @@ export function ProductForm({variants}) {
     const isChecked = event.target.checked;
   };
 
-  // const calculatePercentageDifference = (compareAtPrice, price) => {
-  //   if (
-  //     compareAtPrice !== null &&
-  //     price !== null &&
-  //     !isNaN(compareAtPrice) &&
-  //     !isNaN(price)
-  //   ) {
-  //     const percentageDifference =
-  //       ((compareAtPrice - price) / compareAtPrice) * 100;
-  //     return percentageDifference;
-  //   } else {
-  //     return null;
-  //   }
-  // };
+  const calculatePercentageDifference = (compareAtPrice, price) => {
+    if (
+      compareAtPrice !== null &&
+      price !== null &&
+      !isNaN(compareAtPrice) &&
+      !isNaN(price)
+    ) {
+      const percentageDifference =
+        ((compareAtPrice - price) / compareAtPrice) * 100;
+      return percentageDifference.toFixed(0);
+    } else {
+      return null;
+    }
+  };
 
-  // const compareAtPrice = selectedVariant?.compareAtPrice?.amount;
-  // const price = selectedVariant?.price?.amount;
+  const compareAtPrice = selectedVariant?.compareAtPrice?.amount;
+  const price = selectedVariant?.price?.amount;
 
-  // const percentageDifference = calculatePercentageDifference(
-  //   compareAtPrice,
-  //   price,
-  // ).toFixed(0);
+  const percentageDifferenceResult = calculatePercentageDifference(
+    compareAtPrice,
+    price,
+  );
 
   return (
     <>
@@ -295,13 +297,13 @@ export function ProductForm({variants}) {
               />
             )}
           </span>
-          {/* <span>
-          {selectedVariant?.compareAtPrice === null ? (
-            ''
-          ) : (
-            <span>{`(${percentageDifference}% OFF)`}</span>
-          )}
-        </span> */}
+          <span>
+            {selectedVariant?.compareAtPrice === null ? (
+              ''
+            ) : (
+              <span>{`(${percentageDifferenceResult}% OFF)`}</span>
+            )}
+          </span>
         </div>
         <form>
           <VariantSelector
@@ -714,7 +716,7 @@ export function ProductForm({variants}) {
 }
 
 function ProductDetail({title, content, learnMore}) {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(true);
 
   const toggleDropdown = () => {
     setIsOpen(!isOpen);

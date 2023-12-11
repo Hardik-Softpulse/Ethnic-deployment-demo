@@ -29,7 +29,6 @@ export async function fetchYotpoReviewData(
     options,
   );
   const result = await response.json();
-  console.log('result', result);
   return result.response.reviews;
 }
 
@@ -63,6 +62,5 @@ export async function YotpoCreateReview(
     options,
   );
   const result = await response.json();
-  console.log('response', result);
   return result;
 }

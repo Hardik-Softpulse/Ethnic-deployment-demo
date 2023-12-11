@@ -6,10 +6,8 @@ import {Navigation} from 'swiper/modules';
 import {useLocation} from 'react-use';
 
 export function ResentlyView({product}) {
-  console.log('product', product);
   const [items, setItems] = useState([]);
   const location = useLocation();
-  console.log('location', location);
 
   const productData = {
     productHandle: product[0].product.handle,
@@ -49,8 +47,10 @@ export function ResentlyView({product}) {
           <h2 className="h2 text-up">RECENTLY VIEWED PRODUCTS</h2>
         </div>
         <div className="product-slider">
-          {(items.length === 0 || items.length === 1) ? (
-            <p className="sctn-title text-center">No recently viewed products.</p>
+          {items.length === 0 || items.length === 1 ? (
+            <p className="sctn-title text-center">
+              No recently viewed products.
+            </p>
           ) : (
             <Swiper
               spaceBetween={15}
