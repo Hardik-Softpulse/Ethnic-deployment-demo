@@ -7,7 +7,6 @@ import {CartForm} from '@shopify/hydrogen';
 import {Await, Form, Link, useMatches, useParams} from '@remix-run/react';
 import {CartLoading} from './CartLoading';
 import {CartDrawer} from './CartDrawer';
-import {Newsletter} from './Newsletter';
 import {useLocation} from 'react-use';
 import SimpleForm from '../components/Newslatter/SimpleForm';
 
