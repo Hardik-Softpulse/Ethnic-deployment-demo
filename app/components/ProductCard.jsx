@@ -28,7 +28,6 @@ export function ProductCard({
     cardLabel = 'New';
   }
 
-
   return (
     <div className={`product-item ${className}`}>
       <Link
@@ -40,7 +39,7 @@ export function ProductCard({
         <Image src={image?.url} alt={image?.altText} loading={loading} />
 
         {availableForSale == true && (
-          <div className="product-tag sale-tag">{`Sale %`}</div>
+          <div className="product-tag sale-tag">{`Sale`}</div>
         )}
       </Link>
       <h5>
@@ -57,16 +56,21 @@ export function ProductCard({
         <span className="s-price">
           <Money withoutTrailingZeros data={price} />
         </span>
-
-        <span className="o-price">
-          {compareAtPrice === null ? (
-            ''
-          ) : (
+        {compareAtPrice === null ? (
+          ''
+        ) : (
+          <span className="o-price">
             <Money withoutTrailingZeros data={compareAtPrice} />
+          </span>
+        )}
+        <span className="item-stocks">
+          {availableForSale == true ? (
+            <span style={{color: 'green'}}>In stock</span>
+          ) : (
+            <span style={{color: 'red'}}>Out stock</span>
           )}
         </span>
       </div>
-      <span>{availableForSale == true ? 'In stock' : 'Out stock'}</span>
     </div>
   );
 }

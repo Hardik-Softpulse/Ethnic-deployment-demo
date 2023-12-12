@@ -1,15 +1,45 @@
-import {useMemo, useState} from 'react';
 import {
   Link,
   useLocation,
   useSearchParams,
   useNavigate,
 } from '@remix-run/react';
+import {useMemo, useState} from 'react';
+import {useDebounce} from 'react-use';
+import {Disclosure} from '@headlessui/react';
 
 export function SortFilter({filters, appliedFilters = [], filterDrawerOpen}) {
   const [params] = useSearchParams();
   const location = useLocation();
   const navigate = useNavigate();
+  const filterMarkup = (filter, option) => {
+    switch (filter.type) {
+      case 'PRICE_RANGE':
+        const min =
+          params.has('minPrice') && !isNaN(Number(params.get('minPrice')))
+            ? Number(params.get('minPrice'))
+            : undefined;
+
+        const max =
+          params.has('maxPrice') && !isNaN(Number(params.get('maxPrice')))
+            ? Number(params.get('maxPrice'))
+            : undefined;
+
+        return <PriceRangeFilter min={min} max={max} />;
+
+      default:
+        const to = getFilterLink(filter, option.input, params, location);
+        return (
+          <Link
+            className="focus:underline hover:underline"
+            prefetch="intent"
+            to={to}
+          >
+            {option.label}
+          </Link>
+        );
+    }
+  };
 
   return (
     <div className="cllctn-sidebar">
@@ -21,7 +51,9 @@ export function SortFilter({filters, appliedFilters = [], filterDrawerOpen}) {
       </div>
       {filters.map(
         (filter) =>
-          filter.values.length > 0 && (
+          filter.values.length > 0 &&
+          filter.label !== 'Price' && (
+            console.log('filter', filter),
             <div className="filter-option" key={filter.id}>
               <h6 className="filter-title">{filter.label}</h6>
               <div className="filter-list clearfix">
@@ -48,7 +80,10 @@ export function SortFilter({filters, appliedFilters = [], filterDrawerOpen}) {
                           id={option.id}
                           onChange={() => navigate(to)}
                         />
-                        <label htmlFor={option.id}>{option.label}</label>
+                        <label htmlFor={option.id}>
+                          {' '}
+                          {filterMarkup(filter, option)}
+                        </label>
                       </div>
                     );
                   })}
@@ -130,4 +165,75 @@ function filterInputToParams(type, rawInput, params) {
   }
 
   return params;
+}
+
+const PRICE_RANGE_FILTER_DEBOUNCE = 500;
+
+function PriceRangeFilter({max, min}) {
+  const location = useLocation();
+  const params = useMemo(
+    () => new URLSearchParams(location.search),
+    [location.search],
+  );
+  const navigate = useNavigate();
+
+  const [minPrice, setMinPrice] = useState(min ? String(min) : '');
+  const [maxPrice, setMaxPrice] = useState(max ? String(max) : '');
+
+  useDebounce(
+    () => {
+      if (
+        (minPrice === '' || minPrice === String(min)) &&
+        (maxPrice === '' || maxPrice === String(max))
+      )
+        return;
+
+      const price = {};
+      if (minPrice !== '') price.min = minPrice;
+      if (maxPrice !== '') price.max = maxPrice;
+
+      const newParams = filterInputToParams('PRICE_RANGE', {price}, params);
+      navigate(`${location.pathname}?${newParams.toString()}`);
+    },
+    PRICE_RANGE_FILTER_DEBOUNCE,
+    [minPrice, maxPrice],
+  );
+
+  const onChangeMax = (event) => {
+    const newMaxPrice = event.target.value;
+    setMaxPrice(newMaxPrice);
+  };
+
+  const onChangeMin = (event) => {
+    const newMinPrice = event.target.value;
+    setMinPrice(newMinPrice);
+  };
+
+  return (
+    <></>
+    // <div className="flex flex-col">
+    //   <label className="mb-4">
+    //     <span>from</span>
+    //     <input
+    //       name="maxPrice"
+    //       className="text-black"
+    //       type="text"
+    //       defaultValue={min}
+    //       placeholder={'$'}
+    //       onChange={onChangeMin}
+    //     />
+    //   </label>
+    //   <label>
+    //     <span>to</span>
+    //     <input
+    //       name="minPrice"
+    //       className="text-black"
+    //       type="number"
+    //       defaultValue={max}
+    //       placeholder={'$'}
+    //       onChange={onChangeMax}
+    //     />
+    //   </label>
+    // </div>
+  );
 }

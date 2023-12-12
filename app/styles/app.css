@@ -794,18 +794,21 @@ table {
 
 .product-item .product-tag {
   position: absolute;
-  top: 16px;
-  left: 15px;
+  top: 10px;
+  left: 10px;
   font-size: 13px;
   letter-spacing: normal;
   background: #000;
   color: #fff;
-  padding: 6px 12px 5px;
+  padding: 6px 8px 4px;
   text-transform: uppercase;
+  line-height: 1;
+  font-weight: 600;
 }
 
 .product-item .product-tag.sale-tag {
   background: red;
+
 }
 
 .product-item .product-tag.new-tag {
@@ -833,17 +836,29 @@ table {
   color: #424242;
   font-size: 14px;
   display: flex;
+  align-items: center;
+  line-height: 1;
 }
-
+.product-item .product-price span {
+  display: flex;
+  align-items: center;
+  line-height: 1;
+}
 .product-item .s-price {
-  margin-right: 12px;
+  margin-right: 10px;
 }
 
 .product-item .o-price {
   opacity: 0.5;
   text-decoration: line-through;
+  margin-right: 10px;
 }
-
+.product-item .product-price span.item-stocks{
+  border-left: 1px solid #000;
+  padding-left: 10px;
+  font-weight: 600;
+ 
+}
 .product-slider {
   width: 100%;
   margin: 0;
@@ -1504,6 +1519,11 @@ p.footer-item-des {
 .product-i1price .o-price {
   opacity: 0.5;
   text-decoration: line-through;
+}
+
+span.offer-price {
+  padding: 0 10px;
+  color: red;
 }
 
 .size-chart-link a svg {
@@ -5212,6 +5232,7 @@ p.no_product {
   input.address_btn {
     font-size: 12px;
     padding: 7px 12px;
+
   }
   input#recover-email {
     padding: 8px 12px;
@@ -5233,6 +5254,12 @@ p.no_product {
   }
   .srvc-item:first-child {
     padding-top: 0;
+  }
+  .product-item .product-tag{
+    font-size: 11px;
+  }
+  .product-item .product-price span{
+    font-size: 13px;
   }
 }
 
@@ -5469,6 +5496,9 @@ p.no_product {
   }
   .input-chckbox label {
     font-size: 14px;
+  }
+  span.offer-price {
+  font-size: 14px;
   }
 }
 

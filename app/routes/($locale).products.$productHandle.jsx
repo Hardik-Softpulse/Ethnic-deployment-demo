@@ -297,7 +297,7 @@ export function ProductForm({variants}) {
               />
             )}
           </span>
-          <span>
+          <span className='offer-price'>
             {selectedVariant?.compareAtPrice === null ? (
               ''
             ) : (
