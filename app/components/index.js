@@ -33,3 +33,4 @@ export * from './Icon';
 export {FilterDrawer} from './FilterDrawer';
 export {ReviewCard} from './Review/ReviewCard';
 export {ResentlyView} from './ResentlyView';
+export {Index} from './ContactForm';

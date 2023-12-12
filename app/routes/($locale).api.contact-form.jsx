@@ -1,8 +1,9 @@
 import React from 'react';
 import {useFetcher} from 'react-router-dom';
 import invariant from 'tiny-invariant';
-import ContactUs from '../components/ContactUS';
+
 import {json} from '@shopify/remix-oxygen';
+import ContactForm from '../components/ContactForm';
 // import createAdminClient from '../lib/createAdminClient';
 
 export async function action({request, context}) {
@@ -122,7 +123,7 @@ export default function Index({seo}) {
                 </p>
               </div>
             ) : (
-              <ContactUs Form={Form} />
+              <ContactForm Form={Form} />
             )}
           </div>
         </div>

@@ -1,20 +1,16 @@
 import logoImg from '../img/logo2.jpg';
 import footerLogo from '../img/footer-logo.jpg';
-import {Suspense, useEffect,useState} from 'react';
+import {Suspense, useEffect, useState} from 'react';
 import {useIsHomePath} from '~/lib/utils';
 import {useCartFetchers} from '~/hooks/useCartFetchers';
 import {CartForm} from '@shopify/hydrogen';
-import {
-  Await,
-  Form,
-  Link,
-  useMatches,
-  useParams,
-} from '@remix-run/react';
+import {Await, Form, Link, useMatches, useParams} from '@remix-run/react';
 import {CartLoading} from './CartLoading';
 import {CartDrawer} from './CartDrawer';
 import {Newsletter} from './Newsletter';
 import {useLocation} from 'react-use';
+import SimpleForm from '../components/Newslatter/SimpleForm';
+
 export function Layout({
   children,
   layout,
@@ -500,7 +496,7 @@ function FooterMenu({menu}) {
         ))}
 
         <div className="stft-col col site-ext-info ">
-          <Newsletter />
+          <SimpleForm />
           <div className="social-icons dfx flxwrp ">
             <a href="#">
               <svg
