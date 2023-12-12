@@ -28,6 +28,29 @@ export function ProductCard({
     cardLabel = 'New';
   }
 
+  const calculatePercentageDifference = (defcompareAtPrice, defprice) => {
+    if (
+      defcompareAtPrice !== null &&
+      defprice !== null &&
+      !isNaN(defcompareAtPrice) &&
+      !isNaN(defprice)
+    ) {
+      const percentageDifference =
+        ((defcompareAtPrice - defprice) / defcompareAtPrice) * 100;
+      return percentageDifference.toFixed(0);
+    } else {
+      return null;
+    }
+  };
+
+  const defcompareAtPrice = compareAtPrice?.amount;
+  const defprice = price?.amount;
+
+  const percentageDifferenceResult = calculatePercentageDifference(
+    defcompareAtPrice,
+    defprice,
+  );
+
   return (
     <div className={`product-item ${className}`}>
       <Link
@@ -39,7 +62,7 @@ export function ProductCard({
         <Image src={image?.url} alt={image?.altText} loading={loading} />
 
         {availableForSale == true && (
-          <div className="product-tag sale-tag">{`Sale`}</div>
+          <div className="product-tag sale-tag">{`Sale ${percentageDifferenceResult}%`}</div>
         )}
       </Link>
       <h5>
