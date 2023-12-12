@@ -14,7 +14,7 @@ import {
 
 import {HydrogenSession} from '~/lib/session.server';
 import {getLocaleFromRequest} from '~/lib/utils';
-import { createAdminClient } from '~/lib/createAdminClient';
+
 
 
 /**
@@ -51,11 +51,7 @@ export default {
         requestGroupId: request.headers.get('request-id'),
       });
 
-      const {admin} = createAdminClient({
-        privateAdminToken: env.PRIVATE_ADMIN_API_TOKEN,
-        storeDomain: `https://${env.PUBLIC_STORE_DOMAIN}`,
-        adminApiVersion: env.PRIVATE_ADMIN_API_VERSION || '2023-10',
-      });
+  
 
       const cart = createCartHandler({
         storefront,
@@ -76,7 +72,6 @@ export default {
           storefront,
           cart,
           env,
-          admin
         }),
       });
 
