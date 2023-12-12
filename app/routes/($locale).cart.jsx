@@ -4,6 +4,7 @@ import {json} from '@shopify/remix-oxygen';
 import {CartForm} from '@shopify/hydrogen';
 import {isLocalPath} from '~/lib/utils';
 import {Cart} from '~/components';
+import { useEffect } from 'react';
 
 export async function action({request, context}) {
   const {session, cart} = context;
@@ -86,6 +87,9 @@ export async function loader({context}) {
 export default function CartRoute() {
   const [root] = useMatches();
   // @todo: finish on a separate PR
+  useEffect(() => {
+
+  },[root])
 
   return (
     <div className="grid w-full gap-8 p-6 py-8 md:p-8 lg:p-12 justify-items-start">

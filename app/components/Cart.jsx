@@ -9,8 +9,9 @@ import {Link} from './Link';
 import {useEffect} from 'react';
 
 export function Cart({cart}) {
-  const linesCount = Boolean(cart?.lines?.edges?.length || 0);
   useEffect(() => {}, [cart]);
+  const linesCount = Boolean(cart?.lines?.edges?.length || 0);
+  
 
   return (
     <div className="cart-page bg-grey ">
