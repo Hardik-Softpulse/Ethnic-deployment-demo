@@ -1,6 +1,7 @@
 import {CartForm} from '@shopify/hydrogen';
 
 export function AddToCartButton({
+  title,
   lines,
   className = '',
   variant = 'primary',
@@ -30,7 +31,7 @@ export function AddToCartButton({
             disabled={disabled ?? fetcher.state !== 'idle'}
             {...props}
           >
-            Add to cart
+            {title}
           </button>
         </>
       )}

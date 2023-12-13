@@ -402,6 +402,7 @@ export function ProductForm({variants}) {
                 </button>
               ) : (
                 <AddToCartButton
+                title='Add to cart'
                   lines={[
                     {
                       merchandiseId: selectedVariant.id,
@@ -438,6 +439,7 @@ export function ProductForm({variants}) {
               <ProductDetail
                 title="Product Details"
                 content={descriptionHtml}
+                defaultopen
               />
             )}
             {shippingPolicy?.body && (
@@ -715,8 +717,8 @@ export function ProductForm({variants}) {
   );
 }
 
-function ProductDetail({title, content, learnMore}) {
-  const [isOpen, setIsOpen] = useState(true);
+function ProductDetail({title, content, learnMore , defaultopen = false }) {
+  const [isOpen, setIsOpen] = useState(defaultopen);
 
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
@@ -726,10 +728,11 @@ function ProductDetail({title, content, learnMore}) {
       <div
         className={`cllps-title lp-05 ${isOpen ? 'active' : ''}`}
         onClick={toggleDropdown}
+        defaultopen={defaultopen}
       >
         <strong>{title}</strong> <span></span>
       </div>
-      {isOpen && (
+      {isOpen &&  (
         <div className="cllps-content" style={{display: 'block'}}>
           <p dangerouslySetInnerHTML={{__html: content}}></p>
         </div>
@@ -885,3 +888,5 @@ async function getRecommendedProducts(storefront, productId) {
 
   return {nodes: mergedProducts};
 }
+
+

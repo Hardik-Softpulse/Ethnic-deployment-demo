@@ -52,7 +52,8 @@ export function FilterDrawer({
               </div>
               {filters.map(
                 (filter) =>
-                  filter.values.length > 0 && (
+                filter.values.length > 0 &&
+                filter.label !== 'Price' && (
                     <div className="filter-option" key={filter.id}>
                       <h6 className="filter-title">{filter.label}</h6>
                       <div className="filter-list clearfix">

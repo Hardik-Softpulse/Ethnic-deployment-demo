@@ -5509,3 +5509,9 @@ p.no_product {
 .featuredSection {
   padding-top: 50px;
 }
+
+button.quickAdd {
+  margin: 10px 0;
+  padding: 6px;
+  font-size: 12px;
+}

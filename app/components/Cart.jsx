@@ -9,7 +9,11 @@ import {Link} from './Link';
 import {useEffect} from 'react';
 
 export function Cart({cart}) {
-  useEffect(() => {}, [cart]);
+  useEffect(() => {
+    
+  }, [cart]); 
+ 
+  
   const linesCount = Boolean(cart?.lines?.edges?.length || 0);
   
 

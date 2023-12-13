@@ -50,6 +50,7 @@ export async function loader({request, context}) {
     session.get('customerAccessToken'),
     getLayoutData(context),
   ]);
+  
 
   const seo = seoPayload.root({shop: layout.shop, url: request.url});
 

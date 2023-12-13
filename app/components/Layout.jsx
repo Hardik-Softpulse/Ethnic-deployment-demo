@@ -325,7 +325,7 @@ function CartCount({isHome, isCartOpen, setCartOpen}) {
 
   useEffect(() => {
     if (isCartOpen || !addToCartFetchers.length) return;
-    openCart();
+  
   }, [addToCartFetchers, isCartOpen]);
 
   return (
