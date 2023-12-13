@@ -3,15 +3,21 @@ import MailchimpSubscribe from 'react-mailchimp-subscribe';
 const url =
   'https://dev.us21.list-manage.com/subscribe/post?u=945f970b3cd9b345dcb4b1a4b&amp;id=c57f035bdf';
 
-const SimpleForm = () => <MailchimpSubscribe url={url} />;
+const SimpleForm = () => (
+  <MailchimpSubscribe url={url} className="MailchimpStyle" />
+);
 
 const Waiting = () => (
+  <>
+  <h6 className="stft-cl-title text-up ">Newsletter</h6>
   <MailchimpSubscribe
     url={url}
     render={({subscribe, status, message}) => (
-      <div>
-        <h6 className="stft-cl-title text-up ">Newsletter</h6>
-        <SimpleForm onSubmitted={(formData) => subscribe(formData)} />
+      <SimpleForm
+        onSubmitted={(formData) => subscribe(formData)}
+        className="MailchimpStyle"
+      >
+     
         {status === 'sending' && (
           <span className="statusMsg" style={{color: 'blue'}}>
             sending...
@@ -32,9 +38,10 @@ const Waiting = () => (
             Subscribed !
           </span>
         )}
-      </div>
+      </SimpleForm>
     )}
   />
+  </>
 );
 
 export default Waiting;

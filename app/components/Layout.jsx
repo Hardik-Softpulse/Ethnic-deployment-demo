@@ -325,7 +325,6 @@ function CartCount({isHome, isCartOpen, setCartOpen}) {
 
   useEffect(() => {
     if (isCartOpen || !addToCartFetchers.length) return;
-  
   }, [addToCartFetchers, isCartOpen]);
 
   return (
@@ -495,7 +494,9 @@ function FooterMenu({menu}) {
         ))}
 
         <div className="stft-col col site-ext-info ">
-          <SimpleForm />
+          <div className="newslatter-form">
+            <SimpleForm />
+          </div>
           <div className="social-icons dfx flxwrp ">
             <a href="#">
               <svg

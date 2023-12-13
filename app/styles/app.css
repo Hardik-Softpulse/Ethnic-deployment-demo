@@ -4031,6 +4031,41 @@ p.no_product {
 .address-formpop-box .row.m-15 {
   margin: 0 -15px;
 }
+
+.swiper-pagination-bullet-active {
+  background: #000000;
+}
+
+.featuredSection {
+  padding-top: 50px;
+}
+
+button.quickAdd {
+  margin: 10px 0;
+  padding: 6px;
+  font-size: 12px;
+}
+
+.newslatter-form div input {
+  padding: 17px;
+}
+
+.newslatter-form div {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  height: 35px;
+  margin-bottom:25px;
+}
+.newslatter-form div button {
+  border: 1px solid;
+  padding: 0px 21px;
+  font-size: 12px;
+}
+.newslatter-form div button :hover{
+  background: #ffff;
+    color: #000;
+}
 /* responsive  */
 
 @media only screen and (max-width: 1199px) {
@@ -5500,18 +5535,4 @@ p.no_product {
   span.offer-price {
   font-size: 14px;
   }
-}
-
-.swiper-pagination-bullet-active {
-  background: #000000;
-}
-
-.featuredSection {
-  padding-top: 50px;
-}
-
-button.quickAdd {
-  margin: 10px 0;
-  padding: 6px;
-  font-size: 12px;
 }

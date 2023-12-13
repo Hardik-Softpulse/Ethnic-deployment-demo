@@ -27,7 +27,7 @@ export function AddToCartButton({
           <button
             type="submit"
             variant={variant}
-            className="btn btn-full add-cart-btn lp-0"
+            className={className}
             disabled={disabled ?? fetcher.state !== 'idle'}
             {...props}
           >

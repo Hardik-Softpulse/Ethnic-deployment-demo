@@ -415,6 +415,7 @@ export function ProductForm({variants}) {
                     products: [productAnalytics],
                     totalValue: parseFloat(productAnalytics.price),
                   }}
+                  className="btn btn-full add-cart-btn lp-0"
                 />
               )}
             </>

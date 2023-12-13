@@ -124,6 +124,7 @@ export function ProductCard({
             products: [productAnalytics],
             totalValue: parseFloat(productAnalytics.price),
           }}
+          className="btn add-cart-btn lp-0"
         />
       )}
     </div>
