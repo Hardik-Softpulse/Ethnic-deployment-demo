@@ -2,6 +2,7 @@ import {flattenConnection, Image, Money, useMoney} from '@shopify/hydrogen';
 import {isDiscounted, isNewArrival} from '~/lib/utils';
 import {getProductPlaceholder} from '~/lib/placeholders';
 import {Link} from './Link';
+import {AddToCartButton} from './AddToCartButton';
 
 export function ProductCard({
   product,
@@ -9,9 +10,9 @@ export function ProductCard({
   className = 'all-collection-item',
   loading,
   onClick,
+  quickAdd,
 }) {
   let cardLabel;
-
   const cardProduct = product?.variants ? product : getProductPlaceholder();
   if (!cardProduct?.variants?.nodes?.length) return null;
 
@@ -51,6 +52,16 @@ export function ProductCard({
     defprice,
   );
 
+  const productAnalytics = {
+    productGid: product.id,
+    variantGid: firstVariant.id,
+    name: product.title,
+    variantName: firstVariant.title,
+    brand: product.vendor,
+    price: firstVariant.price.amount,
+    quantity: 1,
+  };
+
   return (
     <div className={`product-item ${className}`}>
       <Link
@@ -60,10 +71,11 @@ export function ProductCard({
         prefetch="intent"
       >
         <Image src={image?.url} alt={image?.altText} loading={loading} />
-
-        {availableForSale == true && (
-          <div className="product-tag sale-tag">{`Sale ${percentageDifferenceResult}%`}</div>
-        )}
+        {compareAtPrice === null
+          ? ''
+          : availableForSale == true && (
+              <div className="product-tag sale-tag">{`Sale ${percentageDifferenceResult}%`}</div>
+            )}
       </Link>
       <h5>
         <Link
@@ -94,6 +106,26 @@ export function ProductCard({
           )}
         </span>
       </div>
+      {/* {availableForSale == true && <button class="quickAdd">Quick Buy</button>}
+      {console.log('availableForSale', availableForSale)}
+      {console.log('quickAdd', quickAdd)} */}
+      {availableForSale == true && (
+        <AddToCartButton
+          title="Quick Buy"
+          lines={[
+            {
+              merchandiseId: firstVariant.id,
+              quantity: 1,
+            },
+          ]}
+          variant="primary"
+          data-test="add-to-cart"
+          analytics={{
+            products: [productAnalytics],
+            totalValue: parseFloat(productAnalytics.price),
+          }}
+        />
+      )}
     </div>
   );
 }
@@ -101,8 +133,6 @@ export function ProductCard({
 function CompareAtPrice({data, className}) {
   const {currencyNarrowSymbol, withoutTrailingZerosAndCurrency} =
     useMoney(data);
-
-  console.log('currencyNarrowSymbol', currencyNarrowSymbol);
 
   const styles = ('strike', className);
 
