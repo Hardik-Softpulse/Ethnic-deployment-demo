@@ -6,6 +6,8 @@ import {
   useNavigate,
 } from '@remix-run/react';
 
+export const FILTER_URL_PREFIX = 'filter.';
+
 export function FilterDrawer({
   filters,
   collection,
@@ -17,6 +19,8 @@ export function FilterDrawer({
   const location = useLocation();
   const navigate = useNavigate();
   const [selectedOptions, setSelectedOptions] = useState([]);
+
+  console.log('selectedOptions', selectedOptions);
 
   return (
     <div className={`filter-drawer  ${filterDrawerOpen ? 'open' : ''}`}>
@@ -52,17 +56,33 @@ export function FilterDrawer({
               </div>
               {filters.map(
                 (filter) =>
-                filter.values.length > 0 &&
-                filter.label !== 'Price' && (
+                  filter.values.length > 0 &&
+                  filter.label !== 'Price' && (
                     <div className="filter-option" key={filter.id}>
                       <h6 className="filter-title">{filter.label}</h6>
                       <div className="filter-list clearfix">
                         <form>
                           {filter.values?.map((option) => {
+                             const to = getFilterLink(
+                              filter,
+                              option.input,
+                              params,
+                              location,
+                            );
                             return (
                               <div className="filter-item" key={option.id}>
                                 <input
-                                  type="radio"
+                                  type="checkbox"
+                                  // checked={
+                                  //   appliedFilters?.some(
+                                  //     (obj) => obj.label === option.label,
+                                  //   )
+                                  //     ? true
+                                  //     : false
+                                  // }
+                                  name={filter.id}
+                                  id={option.id}
+                                  // onChange={() => navigate(to)}
                                   onChange={() =>
                                     setSelectedOptions(
                                       (prevSelectedOptions) => [
@@ -74,8 +94,7 @@ export function FilterDrawer({
                                       ],
                                     )
                                   }
-                                  name={filter.id}
-                                  id={option.id}
+                                 
                                 />
                                 <label htmlFor={option.id}>
                                   {option.label}
@@ -99,7 +118,7 @@ export function FilterDrawer({
           >
             Remove All
           </a>
-      
+
           <button
             className="btn"
             onClick={() => {
@@ -109,26 +128,25 @@ export function FilterDrawer({
                   .map((option) => (
                     <>
                       {selectedOptions.map((selectOption) => {
-                        navigate(
-                          getFilterLink(
-                            filter,
-                            selectOption.optionInput,
-                            params,
-                            location,
-                          ),
+                        const objectInput = selectOption.optionInput;
+                        const to = getFilterLink(
+                          filter,
+                          objectInput,
+                          params,
+                          location,
                         );
+                        navigate(to);
                       })}
                     </>
                   )),
               );
-              Promise.all(navigationPromises).then(() => {
+             
                 setFilterDrawerOpen(!filterDrawerOpen);
-              });
+             
             }}
           >
             Apply
           </button>
-       
         </div>
       </div>
     </div>
@@ -157,18 +175,10 @@ function AppliedFilters({filters = []}) {
 
 function getAppliedFilterLink(filter, params, location) {
   const paramsClone = new URLSearchParams(params);
-  if (filter.urlParam.key === 'variantOption') {
-    const variantOptions = paramsClone.getAll('variantOption');
-    const filteredVariantOptions = variantOptions.filter(
-      (options) => !options.includes(filter.urlParam.value),
-    );
-    paramsClone.delete(filter.urlParam.key);
-    for (const filteredVariantOption of filteredVariantOptions) {
-      paramsClone.append(filter.urlParam.key, filteredVariantOption);
-    }
-  } else {
-    paramsClone.delete(filter.urlParam.key);
-  }
+  Object.entries(filter.filter).forEach(([key, value]) => {
+    const fullKey = FILTER_URL_PREFIX + key;
+    paramsClone.delete(fullKey, JSON.stringify(value));
+  });
   return `${location.pathname}?${paramsClone.toString()}`;
 }
 
@@ -180,27 +190,18 @@ function getFilterLink(filter, rawInput, params, location) {
 
 function filterInputToParams(type, rawInput, params) {
   const input = typeof rawInput === 'string' ? JSON.parse(rawInput) : rawInput;
-  switch (type) {
-    case 'PRICE_RANGE':
-      if (input.price.min) params.set('minPrice', input.price.min);
-      if (input.price.max) params.set('maxPrice', input.price.max);
-      break;
-    case 'LIST':
-      Object.entries(input).forEach(([key, value]) => {
-        if (typeof value === 'string') {
-          params.set(key, value);
-        } else if (typeof value === 'boolean') {
-          params.set(key, value.toString());
-        } else {
-          const {name, value: val} = value;
-          const allVariants = params.getAll(`variantOption`);
-          const newVariant = `${name}:${val}`;
-          if (!allVariants.includes(newVariant)) {
-            params.append('variantOption', newVariant);
-          }
-        }
-      });
-      break;
-  }
+
+  Object.entries(input).forEach(([key, value]) => {
+    if (params.has(`${FILTER_URL_PREFIX}${key}`, JSON.stringify(value))) {
+      return;
+    }
+    if (key === 'price') {
+      // For price, we want to overwrite
+      params.set(`${FILTER_URL_PREFIX}${key}`, JSON.stringify(value));
+    } else {
+      params.append(`${FILTER_URL_PREFIX}${key}`, JSON.stringify(value));
+    }
+  });
+
   return params;
 }

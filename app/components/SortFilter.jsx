@@ -4,12 +4,11 @@ import {
   useSearchParams,
   useNavigate,
 } from '@remix-run/react';
-import {useMemo, useState} from 'react';
-import {useDebounce} from 'react-use';
+
 
 export const FILTER_URL_PREFIX = 'filter.';
 
-export function SortFilter({filters, appliedFilters = [], filterDrawerOpen}) {
+export function SortFilter({filters, appliedFilters = []}) {
   const [params] = useSearchParams();
   const location = useLocation();
   const navigate = useNavigate();
@@ -94,90 +93,10 @@ function getAppliedFilterLink(filter, params, location) {
   return `${location.pathname}?${paramsClone.toString()}`;
 }
 
-function getSortLink(sort, params, location) {
-  params.set('sort', sort);
-  return `${location.pathname}?${params.toString()}`;
-}
-
 function getFilterLink(filter, rawInput, params, location) {
   const paramsClone = new URLSearchParams(params);
   const newParams = filterInputToParams(filter.type, rawInput, paramsClone);
   return `${location.pathname}?${newParams.toString()}`;
-}
-
-const PRICE_RANGE_FILTER_DEBOUNCE = 500;
-
-function PriceRangeFilter({max, min}) {
-  const location = useLocation();
-  const params = useMemo(
-    () => new URLSearchParams(location.search),
-    [location.search],
-  );
-  const navigate = useNavigate();
-
-  const [minPrice, setMinPrice] = useState(min);
-  const [maxPrice, setMaxPrice] = useState(max);
-
-  useDebounce(
-    () => {
-      if (minPrice === undefined && maxPrice === undefined) {
-        params.delete(`${FILTER_URL_PREFIX}price`);
-        navigate(`${location.pathname}?${params.toString()}`);
-        return;
-      }
-      const price = {
-        ...(minPrice === undefined ? {} : {min: minPrice}),
-        ...(maxPrice === undefined ? {} : {max: maxPrice}),
-      };
-      const newParams = filterInputToParams({price}, params);
-      navigate(`${location.pathname}?${newParams.toString()}`);
-    },
-    PRICE_RANGE_FILTER_DEBOUNCE,
-    [minPrice, maxPrice],
-  );
-
-  const onChangeMax = (event) => {
-    const value = event.target.value;
-    const newMaxPrice = Number.isNaN(parseFloat(value))
-      ? undefined
-      : parseFloat(value);
-    setMaxPrice(newMaxPrice);
-  };
-
-  const onChangeMin = (event) => {
-    const value = event.target.value;
-    const newMinPrice = Number.isNaN(parseFloat(value))
-      ? undefined
-      : parseFloat(value);
-    setMinPrice(newMinPrice);
-  };
-
-  return (
-    <div className="flex flex-col">
-      <label className="mb-4">
-        <span>from</span>
-        <input
-          name="minPrice"
-          className="text-black"
-          type="number"
-          value={minPrice ?? ''}
-          placeholder={'$'}
-          onChange={onChangeMin}
-        />
-      </label>
-      <label>
-        <span>to</span>
-        <input
-          name="maxPrice"
-          className="text-black"
-          type="number"
-          value={maxPrice ?? ''}
-          placeholder={'$'}
-          onChange={onChangeMax}
-        />
-      </label>
-    </div>
-  );
 }
 
 function filterInputToParams(type,rawInput, params) {
@@ -198,59 +117,3 @@ function filterInputToParams(type,rawInput, params) {
   return params;
 }
 
-export default function SortMenu() {
-  const items = [
-    {label: 'Featured', key: 'featured'},
-    {
-      label: 'Price: Low - High',
-      key: 'price-low-high',
-    },
-    {
-      label: 'Price: High - Low',
-      key: 'price-high-low',
-    },
-    {
-      label: 'Best Selling',
-      key: 'best-selling',
-    },
-    {
-      label: 'Newest',
-      key: 'newest',
-    },
-  ];
-  const [params] = useSearchParams();
-  const location = useLocation();
-  const activeItem = items.find((item) => item.key === params.get('sort'));
-
-  return (
-    <Menu as="div" className="relative z-40">
-      <Menu.Button className="flex items-center">
-        <span className="px-2">
-          <span className="px-2 font-medium">Sort by:</span>
-          <span>{(activeItem || items[0]).label}</span>
-        </span>
-        <IconCaret />
-      </Menu.Button>
-
-      <Menu.Items
-        as="nav"
-        className="absolute right-0 flex flex-col p-4 text-right rounded-sm bg-contrast"
-      >
-        {items.map((item) => (
-          <Menu.Item key={item.label}>
-            {() => (
-              <Link
-                className={`block text-sm pb-2 px-3 ${
-                  activeItem?.key === item.key ? 'font-bold' : 'font-normal'
-                }`}
-                to={getSortLink(item.key, params, location)}
-              >
-                {item.label}
-              </Link>
-            )}
-          </Menu.Item>
-        ))}
-      </Menu.Items>
-    </Menu>
-  );
-}
