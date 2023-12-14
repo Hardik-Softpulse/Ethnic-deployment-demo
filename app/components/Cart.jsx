@@ -9,6 +9,7 @@ import {Link} from './Link';
 import {useEffect} from 'react';
 
 export function Cart({cart}) {
+  console.log('cart', cart)
   const linesCount = Boolean(cart?.lines?.edges?.length || 0);
 
   return (
