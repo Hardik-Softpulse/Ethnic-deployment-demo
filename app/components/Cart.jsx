@@ -9,13 +9,7 @@ import {Link} from './Link';
 import {useEffect} from 'react';
 
 export function Cart({cart}) {
-  useEffect(() => {
-    
-  }, [cart]); 
- 
-  
   const linesCount = Boolean(cart?.lines?.edges?.length || 0);
-  
 
   return (
     <div className="cart-page bg-grey ">
@@ -80,10 +74,13 @@ function CartLines({lines: cartLines}) {
 
 function CartLineItem({line}) {
   if (!line?.id) return null;
-
   const {id, quantity, merchandise} = line;
-
   if (typeof quantity === 'undefined' || !merchandise?.product) return null;
+
+  useEffect(() => {
+
+  },[line])
+
 
   return (
     <div className="cart-item dfx">

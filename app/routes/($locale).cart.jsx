@@ -4,7 +4,6 @@ import {json} from '@shopify/remix-oxygen';
 import {CartForm} from '@shopify/hydrogen';
 import {isLocalPath} from '~/lib/utils';
 import {Cart} from '~/components';
-import { useEffect } from 'react';
 
 export async function action({request, context}) {
   const {session, cart} = context;
@@ -26,12 +25,10 @@ export async function action({request, context}) {
       break;
     case CartForm.ACTIONS.LinesUpdate:
       result = await cart.updateLines(inputs.lines);
-      'result', result;
       break;
     case CartForm.ACTIONS.LinesRemove:
       result = await cart.removeLines(inputs.lineIds);
       break;
-
     case CartForm.ACTIONS.DiscountCodesUpdate:
       const formDiscountCode = inputs.discountCode;
 
@@ -56,9 +53,8 @@ export async function action({request, context}) {
   /**
    * The Cart ID may change after each mutation. We need to update it each time in the session.
    */
-  const cartId = result?.cart?.id;
-
-  const headers = cart.setCartId(result?.cart?.id);
+  const cartId = result.cart.id;
+  const headers = cart.setCartId(result.cart.id);
 
   const redirectTo = formData.get('redirectTo') ?? null;
   if (typeof redirectTo === 'string' && isLocalPath(redirectTo)) {
@@ -87,10 +83,6 @@ export async function loader({context}) {
 export default function CartRoute() {
   const [root] = useMatches();
   // @todo: finish on a separate PR
-  useEffect(() => {
-
-  },[root])
-
   return (
     <div className="grid w-full gap-8 p-6 py-8 md:p-8 lg:p-12 justify-items-start">
       <Await resolve={root.data?.cart}>
