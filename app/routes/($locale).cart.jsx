@@ -83,6 +83,7 @@ export async function loader({context}) {
 
 export default function CartRoute() {
   const [root] = useMatches();
+ console.log('root', root)
   useEffect(() => {},[root.data])
   // @todo: finish on a separate PR
   return (
