@@ -77,10 +77,11 @@ export async function action({request, context}) {
 }
 
 export async function loader({context}) {
-  const {cart} = context;
-  await new Promise(resolve => setTimeout(resolve, 500));
-  return json(await cart.get());
-}
+    const {cart} = context;
+    const cartData = await cart.get();
+    console.log('Cart data in loader:', cartData);
+    return json(cartData);
+  }
 
 export default function CartRoute() {
   const [root] = useMatches();
