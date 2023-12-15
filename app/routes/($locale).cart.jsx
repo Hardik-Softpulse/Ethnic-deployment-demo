@@ -78,6 +78,7 @@ export async function action({request, context}) {
 
 export async function loader({context}) {
   const {cart} = context;
+  await new Promise(resolve => setTimeout(resolve, 500));
   return json(await cart.get());
 }
 
