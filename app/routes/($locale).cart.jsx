@@ -84,7 +84,7 @@ export async function loader({context}) {
 export default function CartRoute() {
   const [root] = useMatches();
  console.log('root', root)
-  useEffect(() => {},[root.data])
+  useEffect(() => {},[root.data?.cart])
   // @todo: finish on a separate PR
   return (
     <div className="grid w-full gap-8 p-6 py-8 md:p-8 lg:p-12 justify-items-start">
