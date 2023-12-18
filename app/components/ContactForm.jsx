@@ -1,6 +1,5 @@
 import { useMutation } from '@apollo/client';
 import gql from 'graphql-tag';
-// import client from '../data/apollo';
 import { useState } from 'react';
 
 const CREATE_FORM_SUBMISSION = gql`
