@@ -79,7 +79,6 @@ export async function action({request, context}) {
 export async function loader({context}) {
     const {cart} = context;
     const cartData = await cart.get();
-    console.log('Cart data in loader:', cartData);
     return json(cartData);
   }
 
