@@ -9,7 +9,17 @@ import {Link} from './Link';
 import {useEffect} from 'react';
 
 export function Cart({cart}) {
-  
+  const [hasReloaded, setHasReloaded] = useState(false);
+
+  useEffect(() => {
+    if (!hasReloaded) {
+      setHasReloaded(true);
+      setTimeout(() => {
+        window.location.reload();
+      }, 0);
+    }
+  }, [hasReloaded]);
+
   const linesCount = Boolean(cart?.lines?.edges?.length || 0);
 
   return (
