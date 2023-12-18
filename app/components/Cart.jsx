@@ -18,7 +18,7 @@ export function Cart({cart}) {
         window.location.reload();
       }, 0);
     }
-  }, [hasReloaded]);
+  }, []);
 
   const linesCount = Boolean(cart?.lines?.edges?.length || 0);
 
