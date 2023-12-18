@@ -6,7 +6,7 @@ import masestro from '../img/masestro.png';
 import dinersClub from '../img/diners-club.png';
 import {CartForm, Image, Money, flattenConnection} from '@shopify/hydrogen';
 import {Link} from './Link';
-import {useEffect} from 'react';
+import {useEffect , useState} from 'react';
 
 export function Cart({cart}) {
   const [hasReloaded, setHasReloaded] = useState(false);
