@@ -33,7 +33,7 @@ export default function Page() {
   const {page, seo} = useLoaderData();
 
   if (page.id === 'gid://shopify/Page/30708353') {
-    return page.body && <ContactForm />;
+    return page.body && <ContactForm title={seo}/>;
   }
 
   return (
