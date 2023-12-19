@@ -1,5 +1,4 @@
 import {CartForm} from '@shopify/hydrogen';
-import { useEffect } from 'react';
 
 export function AddToCartButton({
   title,
@@ -11,10 +10,10 @@ export function AddToCartButton({
   ...props
 }) {
 
-  console.log('lines', lines)
-  console.log('analytics', analytics)
+  const handleSubmit = () => {
+    window.location.reload();
+  };
 
-  useEffect(() => {},[lines , analytics])
   return (
     <CartForm
       route="/cart"
@@ -22,6 +21,7 @@ export function AddToCartButton({
         lines,
       }}
       action={CartForm.ACTIONS.LinesAdd}
+      onSubmit={handleSubmit}
     >
       {(fetcher) => (
         <>
