@@ -6,18 +6,21 @@ import masestro from '../img/masestro.png';
 import dinersClub from '../img/diners-club.png';
 import {CartForm, Image, Money, flattenConnection} from '@shopify/hydrogen';
 import {Link} from './Link';
-import { useEffect, useState } from 'react';
+import {useEffect, useState} from 'react';
 
-
-export function Cart({cart }) {
+export function Cart({cart}) {
   const linesCount = Boolean(cart?.lines?.edges?.length || 0);
-  const [reload , setReload] = useState(false)
+  const [reload, setReload] = useState(false);
 
   useEffect(() => {
-    setReload(false)
-    window.location.reload()
-    setReload(true)
-  },[cart])
+    if (reload) {
+      window.location.reload();
+    }
+  }, [reload]);
+
+  const handleReload = () => {
+    setReload((prevReload) => !prevReload);
+  };
 
   return (
     <div className="cart-page bg-grey ">
@@ -32,7 +35,7 @@ export function Cart({cart }) {
       <div className="container cart-container">
         <h2 className="page-title text-up text-center">Your Bag</h2>
         <CartEmpty hidden={linesCount} />
-        <CartDetails cart={cart} />
+        <CartDetails cart={cart} onReload={handleReload}/>
       </div>
     </div>
   );
