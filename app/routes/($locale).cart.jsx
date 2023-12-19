@@ -1,4 +1,4 @@
-import {Await, useMatches} from '@remix-run/react';
+import {Await, useMatches, useNavigate} from '@remix-run/react';
 import invariant from 'tiny-invariant';
 import {json} from '@shopify/remix-oxygen';
 import {CartForm} from '@shopify/hydrogen';
@@ -87,10 +87,16 @@ export async function loader({context}) {
 
 export default function CartRoute() {
   const [root] = useMatches();
+  const navigate = useNavigate();
+
+  const handleCartUpdate = () => {
+    
+    window.location.reload(true)
+  };
 
   return (
     <div>
-      <Await resolve={root.data?.cart}>{(cart) => <Cart cart={cart} />}</Await>
+      <Await resolve={root.data?.cart}>{(cart) => <Cart cart={cart} onUpdate={handleCartUpdate}/>}</Await>
     </div>
   );
 }
