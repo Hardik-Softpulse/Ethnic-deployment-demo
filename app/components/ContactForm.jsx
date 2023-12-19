@@ -1,74 +1,67 @@
+import { useState } from "react";
 
-import gql from 'graphql-tag';
-import { useState } from 'react';
-
-const CREATE_FORM_SUBMISSION = gql`
-  mutation CreateFormSubmission($input: CreateFormSubmissionInput!) {
-    createFormSubmission(data: $input) {
-      _id
-      name
-      email
-      phone
-      message
-    }
-  }
-`;
 
 export function ContactForm({seo}) {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
-    phone:'',
-    message:''
+    phone: '',
+    message: '',
   });
-
-  const [createFormSubmission] = useMutation(CREATE_FORM_SUBMISSION, { client });
+  const API_KEY = 'a02393343e1e4de4b1eefb686324ca46'
 
   const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
+    const {name, value} = e.target;
+    setFormData((prevData) => ({...prevData, [name]: value}));
   };
 
-  useEffect(() => {
-  
-    fetch('https://api.takeshape.io/project/446b627e-049d-4bd3-9e27-738aaafebed9/production/graphql', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: 'Bearer 6f663d35e8cb42b7a78d03eea8a2ab45',
-      },
-      body: JSON.stringify({
-        query: `
-          query {
-            yourContentType {
-              field1
-              field2
-              
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await fetch(
+        'https://api.takeshape.io/project/446b627e-049d-4bd3-9e27-738aaafebed9/production/graphql',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${API_KEY}`,
+          },
+          body: JSON.stringify({
+            query: `
+            mutation ($input: CreateCustomerInput!) {
+              createCustomer(input: $input) {
+                result {
+                  _id
+                  email
+                  message
+                  name
+                  phone
+                }
+              }
             }
-          }
-        `,
-      }),
-    })
-      .then((response) => response.json())
-      .then((result) => setData(result.data.yourContentType))
-      .catch((error) => console.error('Error fetching data:', error));
-  }, []);
+            `,
+            variables: {
+              input: {
+                name: formData.name,
+                email: formData.email,
+                phone: formData.phone,
+                message: formData.message,
+              },
+            },
+          }),
+        }
+      );
+  
+      const data = await response.json();
+      console.log('result', data);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  };
+  
 
-  // const handleSubmit = async (e) => {
-  //   e.preventDefault();
+  
 
-  //   try {
-  //     const { data } = await createFormSubmission({
-  //       variables: { input: formData },
-  //     });
-
-  //     console.log('Form submission success:', data.createFormSubmission);
-  //   } catch (error) {
-  //     console.error('Form submission error:', error);
-  //   }
-  // };
   return (
     <div className="cust-sign-page bg-grey clearfix">
       <div className="breadcrumb">
@@ -155,7 +148,7 @@ export function ContactForm({seo}) {
             </div>
           </div>
           <div className="cust-sign-form flx-cover">
-            <form onSubmit={ handleSubmit()}>
+            <form onSubmit={handleSubmit}>
               <div className="input-field">
                 <label>
                   <strong>Your Name</strong>
@@ -166,6 +159,7 @@ export function ContactForm({seo}) {
                   name="name"
                   autoComplete="name"
                   placeholder="Enter your name"
+                  value={formData.name}
                   onChange={handleChange}
                 />
               </div>
@@ -179,6 +173,7 @@ export function ContactForm({seo}) {
                   id="email"
                   autoComplete="email"
                   placeholder="Enter your email address..."
+                  value={formData.email}
                   onChange={handleChange}
                 />
               </div>
@@ -188,10 +183,11 @@ export function ContactForm({seo}) {
                 </label>
                 <input
                   type="text"
-                  name="phoneNo"
-                  id="phoneno"
-                  autoComplete="phoneno"
+                  name="phone"
+                  id="phone"
+                  autoComplete="phone"
                   placeholder="Enter your phone number"
+                  value={formData.phone}
                   onChange={handleChange}
                 />
               </div>
@@ -204,6 +200,7 @@ export function ContactForm({seo}) {
                   id="message"
                   autoComplete="message"
                   placeholder="Your Message"
+                  value={formData.message}
                   onChange={handleChange}
                 ></textarea>
               </div>
@@ -217,28 +214,3 @@ export function ContactForm({seo}) {
     </div>
   );
 }
-
-export const ADD_TODO = gql`
-  mutation AddTodo(
-    $name: String!
-    $email: String!
-    $phoneNo: String!
-    $message: String!
-  ) {
-    addTodo(
-      todoInput: {
-        name: $name
-        email: $email
-        phoneNo: $phoneNo
-        message: $message
-      }
-    ) {
-      id
-      name
-      email
-      phoneNo
-      message
-      status
-    }
-  }
-`;

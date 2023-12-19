@@ -3,11 +3,11 @@ import {Image, Money} from '@shopify/hydrogen';
 import {Swiper, SwiperSlide} from 'swiper/react';
 import {Link} from './Link';
 import {Navigation} from 'swiper/modules';
-import {useLocation} from 'react-use';
+
 
 export function ResentlyView({product}) {
   const [items, setItems] = useState([]);
-  const location = useLocation();
+
 
   const productData = {
     productHandle: product[0].product.handle,

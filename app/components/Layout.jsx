@@ -7,7 +7,6 @@ import {CartForm} from '@shopify/hydrogen';
 import {Await, Form, Link, useMatches, useParams} from '@remix-run/react';
 import {CartLoading} from './CartLoading';
 import {CartDrawer} from './CartDrawer';
-import {useLocation} from 'react-use';
 import SimpleForm from '../components/Newslatter/SimpleForm';
 
 export function Layout({
@@ -373,7 +372,7 @@ function Badge({isCartOpen, count, setCartOpen}) {
 
 function MiniCart({isCartOpen, onClose, setCartOpen}) {
   const [root] = useMatches();
-  const location = useLocation();
+
 
   return (
     <Suspense fallback={<CartLoading />}>

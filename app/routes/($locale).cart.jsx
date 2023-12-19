@@ -4,7 +4,8 @@ import {json} from '@shopify/remix-oxygen';
 import {CartForm} from '@shopify/hydrogen';
 import {isLocalPath} from '~/lib/utils';
 import {Cart} from '~/components';
-import { useEffect } from 'react';
+import {useEffect} from 'react';
+import {useState} from 'react';
 
 export async function action({request, context}) {
   const {session, cart} = context;
@@ -77,21 +78,19 @@ export async function action({request, context}) {
 }
 
 export async function loader({context}) {
-    const {cart} = context;
-    const cartData = await cart.get();
-    return json(cartData);
-  }
+  const {cart} = context;
+
+  const cartData =  await cart.get() ;
+
+  return json(cartData);
+}
 
 export default function CartRoute() {
   const [root] = useMatches();
- console.log('root', root)
-  useEffect(() => {},[root.data?.cart])
-  // @todo: finish on a separate PR
+
   return (
-    <div className="grid w-full gap-8 p-6 py-8 md:p-8 lg:p-12 justify-items-start">
-      <Await resolve={root.data?.cart}>
-        {(cart) => <Cart layout="page" cart={cart} />}
-      </Await>
+    <div>
+      <Await resolve={root.data?.cart}>{(cart) => <Cart cart={cart} />}</Await>
     </div>
   );
 }

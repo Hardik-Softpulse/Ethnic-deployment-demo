@@ -10,13 +10,6 @@ export function AddToCartButton({
   ...props
 }) {
 
-  const handleSubmit = async () => {
-    history.push('/cart');
-    setTimeout(() => {
-      window.location.reload();
-    }, 0);
-  };
-
   return (
     <CartForm
       route="/cart"
@@ -24,7 +17,7 @@ export function AddToCartButton({
         lines,
       }}
       action={CartForm.ACTIONS.LinesAdd}
-      onSubmit={handleSubmit()}
+      
     >
       {(fetcher) => (
         <>
