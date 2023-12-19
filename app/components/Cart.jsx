@@ -78,9 +78,6 @@ function CartLineItem({line}) {
   const {id, quantity, merchandise} = line;
   if (typeof quantity === 'undefined' || !merchandise?.product) return null;
 
-  useEffect(() => {
-
-  },[line])
 
 
   return (
