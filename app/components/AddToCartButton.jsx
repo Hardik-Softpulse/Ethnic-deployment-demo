@@ -10,8 +10,11 @@ export function AddToCartButton({
   ...props
 }) {
 
-  const handleSubmit = () => {
-    window.location.reload();
+  const handleSubmit = async () => {
+    history.push('/cart');
+    setTimeout(() => {
+      window.location.reload();
+    }, 0);
   };
 
   return (
@@ -21,7 +24,7 @@ export function AddToCartButton({
         lines,
       }}
       action={CartForm.ACTIONS.LinesAdd}
-      onSubmit={handleSubmit}
+      onSubmit={handleSubmit()}
     >
       {(fetcher) => (
         <>
@@ -36,6 +39,7 @@ export function AddToCartButton({
             className={className}
             disabled={disabled ?? fetcher.state !== 'idle'}
             {...props}
+            
           >
             {title}
           </button>
