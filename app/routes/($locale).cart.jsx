@@ -87,10 +87,8 @@ export async function loader({context}) {
 
 export default function CartRoute() {
   const [root] = useMatches();
-  const navigate = useNavigate();
 
   const handleCartUpdate = () => {
-    
     window.location.reload(true)
   };
 

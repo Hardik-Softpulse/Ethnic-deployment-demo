@@ -6,10 +6,12 @@ import masestro from '../img/masestro.png';
 import dinersClub from '../img/diners-club.png';
 import {CartForm, Image, Money, flattenConnection} from '@shopify/hydrogen';
 import {Link} from './Link';
+import { useEffect } from 'react';
 
 
-export function Cart({cart}) {
+export function Cart({cart , onUpdate}) {
   const linesCount = Boolean(cart?.lines?.edges?.length || 0);
+  useEffect(() => {},[cart , onUpdate])
 
   return (
     <div className="cart-page bg-grey ">
@@ -76,7 +78,7 @@ function CartLineItem({line}) {
   if (!line?.id) return null;
   const {id, quantity, merchandise} = line;
   if (typeof quantity === 'undefined' || !merchandise?.product) return null;
-  
+
   return (
     <div className="cart-item dfx">
       <Link
