@@ -9,9 +9,11 @@ import {Link} from './Link';
 import { useEffect } from 'react';
 
 
-export function Cart({cart , onUpdate}) {
+export function Cart({cart }) {
   const linesCount = Boolean(cart?.lines?.edges?.length || 0);
-  useEffect(() => {},[cart , onUpdate])
+  useEffect(() => {
+    window.location.reload()
+  },[cart ])
 
   return (
     <div className="cart-page bg-grey ">
