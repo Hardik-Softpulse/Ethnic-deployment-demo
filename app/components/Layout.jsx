@@ -101,7 +101,8 @@ function DesktopHeader({
       <div className="promotion-bar text-center ">
         <div className="container">Free shipping on order above $20.</div>
       </div>
-      <header className={`site-header ${isSticky ? 'sticky' : ''}`}>
+      <header className='site-header' >
+      {/* className={`site-header ${isSticky ? 'sticky' : ''}`} */}
         <div className="site-logo-nav">
           <div className="container">
             <div className="row flxnwrp">

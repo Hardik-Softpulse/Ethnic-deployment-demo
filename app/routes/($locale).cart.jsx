@@ -88,8 +88,6 @@ export async function loader({context}) {
 export default function CartRoute() {
   const [root] = useMatches();
 
-  c
-
   return (
     <div>
       <Await resolve={root.data?.cart}>{(cart) => <Cart cart={cart} />}</Await>

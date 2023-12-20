@@ -2,6 +2,7 @@ import {flattenConnection, Image, Money, useMoney} from '@shopify/hydrogen';
 import {isDiscounted, isNewArrival} from '~/lib/utils';
 import {getProductPlaceholder} from '~/lib/placeholders';
 import {Link} from './Link';
+import {useState} from 'react';
 import {AddToCartButton} from './AddToCartButton';
 
 export function ProductCard({
@@ -10,9 +11,11 @@ export function ProductCard({
   className = 'all-collection-item',
   loading,
   onClick,
-  quickAdd,
 }) {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [index, setIndex] = useState();
   let cardLabel;
+
   const cardProduct = product?.variants ? product : getProductPlaceholder();
   if (!cardProduct?.variants?.nodes?.length) return null;
 
@@ -62,6 +65,17 @@ export function ProductCard({
     quantity: 1,
   };
 
+  const openModal = (productId) => {
+    setIndex(productId);
+    setIsModalOpen(!isModalOpen);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
+
+  console.log('product', product);
+
   return (
     <div className={`product-item ${className}`}>
       <Link
@@ -106,12 +120,17 @@ export function ProductCard({
           )}
         </span>
       </div>
-      {/* {availableForSale == true && <button class="quickAdd">Quick Buy</button>}
-      {console.log('availableForSale', availableForSale)}
-      {console.log('quickAdd', quickAdd)} */}
-      {availableForSale == true && (
+
+      {/* <button className="btn btn-full quickAdd" onClick={() => openModal(product.id)}>
+        Quick View
+      </button>
+      <Modal isOpen={isModalOpen} ariaHideApp={false}>
+        <QuickView onClose={closeModal} product={product} />
+      </Modal> */}
+
+      {firstVariant.availableForSale && (
         <AddToCartButton
-          title="Quick Buy"
+          title="Quick Add"
           lines={[
             {
               merchandiseId: firstVariant.id,
@@ -124,8 +143,13 @@ export function ProductCard({
             products: [productAnalytics],
             totalValue: parseFloat(productAnalytics.price),
           }}
-          className="btn add-cart-btn lp-0"
+          className="btn btn-full add-cart-btn lp-0"
         />
+      )}
+      {!firstVariant.availableForSale && (
+        <button variant="secondary" className="btn btn-full soldOut">
+          <span>Sold out</span>
+        </button>
       )}
     </div>
   );
@@ -134,7 +158,6 @@ export function ProductCard({
 function CompareAtPrice({data, className}) {
   const {currencyNarrowSymbol, withoutTrailingZerosAndCurrency} =
     useMoney(data);
-
   const styles = ('strike', className);
 
   return (
