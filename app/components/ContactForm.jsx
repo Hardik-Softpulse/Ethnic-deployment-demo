@@ -1,5 +1,4 @@
-import { useState } from "react";
-
+import {useState} from 'react';
 
 export function ContactForm({seo}) {
   const [formData, setFormData] = useState({
@@ -8,7 +7,7 @@ export function ContactForm({seo}) {
     phone: '',
     message: '',
   });
-  const API_KEY = 'a02393343e1e4de4b1eefb686324ca46'
+  const API_KEY = '596f858e194d4de0a29123e697839be6';
 
   const handleChange = (e) => {
     const {name, value} = e.target;
@@ -24,7 +23,7 @@ export function ContactForm({seo}) {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${API_KEY}`,
+            Authorization: `Bearer ${API_KEY}`,
           },
           body: JSON.stringify({
             query: `
@@ -49,18 +48,23 @@ export function ContactForm({seo}) {
               },
             },
           }),
-        }
+        },
       );
-  
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
       const data = await response.json();
-      console.log('result', data);
+      setFormData({
+        name: '',
+        email: '',
+        phone: '',
+        message: '',
+      });
     } catch (error) {
       console.error('Error fetching data:', error);
     }
   };
-  
-
-  
 
   return (
     <div className="cust-sign-page bg-grey clearfix">

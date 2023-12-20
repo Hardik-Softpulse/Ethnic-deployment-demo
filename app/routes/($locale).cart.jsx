@@ -88,13 +88,11 @@ export async function loader({context}) {
 export default function CartRoute() {
   const [root] = useMatches();
 
-  const handleCartUpdate = () => {
-    window.location.reload(true)
-  };
+  c
 
   return (
     <div>
-      <Await resolve={root.data?.cart}>{(cart) => <Cart cart={cart} onUpdate={handleCartUpdate}/>}</Await>
+      <Await resolve={root.data?.cart}>{(cart) => <Cart cart={cart} />}</Await>
     </div>
   );
 }
