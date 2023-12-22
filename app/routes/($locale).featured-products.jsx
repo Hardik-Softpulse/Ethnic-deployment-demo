@@ -1,3 +1,4 @@
+import {getSelectedProductOptions} from '@shopify/hydrogen';
 import {json} from '@shopify/remix-oxygen';
 import invariant from 'tiny-invariant';
 
@@ -10,7 +11,8 @@ export async function loader({context: {storefront}}) {
   return json(await getFeaturedData(storefront));
 }
 
-export async function getFeaturedData(storefront, variables = {}) {
+export async function getFeaturedData(storefront, variables = {} ) {
+
   const data = await storefront.query(FEATURED_ITEMS_QUERY, {
     variables: {
       pageBy: 12,
@@ -41,6 +43,6 @@ export const FEATURED_ITEMS_QUERY = `#graphql
     }
   }
 
-  ${PRODUCT_CARD_FRAGMENT}
+
   ${FEATURED_COLLECTION_FRAGMENT}
 `;

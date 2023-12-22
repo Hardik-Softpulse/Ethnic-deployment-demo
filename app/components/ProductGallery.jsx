@@ -7,9 +7,9 @@ export function ProductGallery({media}) {
     <div className="swiper-wrapper">
       {media.map((med) => (
         <div className="swiper-slide product-i1slide" key={med.id}>
-          <a href="#" className="slide-product-img">
+          <div className="slide-product-img">
             <img src={med.image.url} />
-          </a>
+          </div>
         </div>
       ))}
     </div>

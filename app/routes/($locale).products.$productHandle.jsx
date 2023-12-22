@@ -105,6 +105,8 @@ export default function Product() {
   const {media} = product;
   const [selectedReviewType, setSelectedReviewType] = useState('Yotpo');
 
+  console.log('product 2', product )
+
   useEffect(() => {
     const thumbSlider = new Swiper('.thumb-i1slider', {
       slidesPerView: 'auto',
@@ -237,8 +239,6 @@ export function ProductForm({variants}) {
     quantity: 1,
   };
 
-
-
   const isOptionSelected = (optionName, optionValue) => {
     return (
       selectedVariant &&
@@ -303,7 +303,7 @@ export function ProductForm({variants}) {
               />
             )}
           </span>
-          <span className='offer-price'>
+          <span className="offer-price">
             {selectedVariant?.compareAtPrice === null ? (
               ''
             ) : (
@@ -408,7 +408,7 @@ export function ProductForm({variants}) {
                 </button>
               ) : (
                 <AddToCartButton
-                title='Add to cart'
+                  title="Add to cart"
                   lines={[
                     {
                       merchandiseId: selectedVariant.id,
@@ -724,7 +724,7 @@ export function ProductForm({variants}) {
   );
 }
 
-function ProductDetail({title, content, learnMore , defaultopen = false }) {
+function ProductDetail({title, content, learnMore, defaultopen = false}) {
   const [isOpen, setIsOpen] = useState(defaultopen);
 
   const toggleDropdown = () => {
@@ -739,7 +739,7 @@ function ProductDetail({title, content, learnMore , defaultopen = false }) {
       >
         <strong>{title}</strong> <span></span>
       </div>
-      {isOpen &&  (
+      {isOpen && (
         <div className="cllps-content" style={{display: 'block'}}>
           <p dangerouslySetInnerHTML={{__html: content}}></p>
         </div>
@@ -895,5 +895,3 @@ async function getRecommendedProducts(storefront, productId) {
 
   return {nodes: mergedProducts};
 }
-
-

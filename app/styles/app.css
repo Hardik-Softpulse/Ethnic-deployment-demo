@@ -491,6 +491,10 @@ table {
   float: left;
 }
 
+.f-left svg {
+  margin: 0 5px 0 0;
+}
+
 .f-right {
   float: right;
 }
@@ -4037,11 +4041,6 @@ p.no_product {
   padding-top: 50px;
 }
 
-button.quickAdd {
-  margin: 10px 0;
-  font-size: 12px;
-}
-
 .newslatter-form div input {
   padding: 17px;
 }
@@ -4062,33 +4061,129 @@ button.quickAdd {
   background: #ffff;
   color: #000;
 }
-.product-item .add-cart-btn {
-  display: none;
+
+.quick-modal {
+  max-width: 60%;
+  width: 100%;
+  margin: auto;
+  background-color: #fff;
+  min-height: 500px;
+  overflow: scroll;
 }
 
-.product-item:hover .add-cart-btn {
-  display: block;
-  padding: 10px 
+.ts-popup-modal {
+  opacity: 0;
 }
 
-.product-item .soldOut {
-  display: none;
+.ts-popup-modal.show {
+  opacity: 1;
 }
 
-.product-item:hover .soldOut {
-  display: block;
-  padding: 10px ;
-  margin: 10px 0;
-  font-size: 12px;
+#ts-quickshop-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  overflow-x: hidden;
+  z-index: -1;
+}
+
+#ts-quickshop-modal.show {
+  z-index: 99990;
+}
+
+.ts-popup-modal .popup-container {
+  position: fixed;
+  padding: 0;
+  top: 50%;
+  left: 50%;
+  z-index: 99991;
+  visibility: hidden;
+  opacity: 0;
+  transform: translate(-50%, -50%);
+  width: 1020px;
+  height: auto;
+  transition: opacity 0.2s ease, visibility 0.2s ease;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  background-color: #fff !important;
+}
+
+.ts-popup-modal.show .overlay,
+.ts-popup-modal.show .popup-container {
+  visibility: visible;
+  opacity: 1;
+}
+
+.quickshop-container span.close_icon {
+  direction: rtl;
+  padding: 10px;
+}
+
+#ts-quickshop-modal .overlay {
+  position: absolute;
+}
+
+.ts-popup-modal.loading .overlay:before, .ts-popup-modal.show .overlay, .ts-popup-modal.loading .overlay, .ts-popup-modal.show .popup-container {
+  visibility: visible;
+  opacity: 1;
+}
+
+#ts-quickshop-modal .popup-container {
+  width: 900px;
+}
+
+.ts-popup-modal .overlay, #cboxOverlay {
+  background: rgba(0,0,0,0.8);
+  transition: all 200ms linear 0s;
+}
+
+.ts-popup-modal .overlay {
+  position: fixed;
+  visibility: hidden;
+  opacity: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  top: 0;
+  content: "";
+  z-index: 99990;
 }
 
 
+.ts-popup-modal .quickshop-content {
+  max-height: 100%;
+  overflow: hidden;
+  padding: 30px;
+  display: flex;
+}
 
+.quickshop-content .product-dscrptn {
+  width: 50%;
+  background: #fff;
+  padding: 9px 36px;
+  position: sticky;
+}
 
+.quickshop-content .product-dscrptn h4 {
+  margin-bottom: 15px;
+  font-size: 25px;
+  font-weight: 600;
+}
 
+.quickshop-content .product-dscrptn .dscrptn-xs {
+  font-size: 13px;
+  line-height: 1.5;
+  max-width: 90%;
+  margin-bottom: 15px;
+}
 
-
-
+.quicksoldOut {
+  margin: 15px 0;
+  pointer-events: none;
+  opacity: 0.5;
+}
 
 /* responsive  */
 

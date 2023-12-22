@@ -30,34 +30,6 @@ export function ShopCollection({collections, title = 'Collections', ...props}) {
               </div>
             );
           })}
-
-          {/* <div className="collection-item col">
-            <a href="javascript:void(0)" className="collection-img">
-              <img src={climg2} />
-            </a>
-            <h4>Women collection</h4>
-            <a href="javascript:void(0)" className="btn btn-sm">
-              Shop Now
-            </a>
-          </div>
-          <div className="collection-item col">
-            <a href="javascript:void(0)" className="collection-img">
-              <img src={climg3} />
-            </a>
-            <h4>New Arrivals</h4>
-            <a href="javascript:void(0)" className="btn btn-sm">
-              Shop Now
-            </a>
-          </div>
-          <div className="collection-item col">
-            <a href="javascript:void(0)" className="collection-img">
-              <img src={climg4} />
-            </a>
-            <h4>Best Seller</h4>
-            <a href="javascript:void(0)" className="btn btn-sm">
-              Shop Now
-            </a>
-          </div> */}
         </div>
       </div>
     </div>

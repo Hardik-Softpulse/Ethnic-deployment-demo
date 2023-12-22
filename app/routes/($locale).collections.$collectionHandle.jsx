@@ -20,10 +20,54 @@ import {getImageLoadingPriority} from '~/lib/const';
 import colPageImg from '../img/women-coll.jpg';
 import filterIcn from '../img/filter-icon-11.png';
 import {useState} from 'react';
-import { FILTER_URL_PREFIX } from '../components/SortFilter'
+import {FILTER_URL_PREFIX} from '../components/SortFilter';
 
 export const headers = routeHeaders;
 
+export async function action({request, context}) {
+  const {session, cart} = context;
+
+  const [formData] = await Promise.all([
+    request.formData(),
+  ]);
+
+  const {action, inputs} = CartForm.getFormInput(formData);
+  invariant(action, 'No cartAction defined');
+
+  let status = 200;
+  let result;
+
+  switch (action) {
+    case CartForm.ACTIONS.LinesUpdate:
+      result = await cart.updateLines(inputs.lines);
+      break;
+
+    default:
+      invariant(false, `${action} cart action is not defined`);
+  }
+
+  
+  const cartId = result.cart.id;
+  const headers = cart.setCartId(result.cart.id);
+
+  const redirectTo = formData.get('redirectTo') ?? null;
+  if (typeof redirectTo === 'string' && isLocalPath(redirectTo)) {
+    status = 303;
+    headers.set('Location', redirectTo);
+  }
+
+  const {cart: cartResult, errors} = result;
+  return json(
+    {
+      cart: cartResult,
+      errors,
+      analytics: {
+        cartId,
+      },
+    },
+    {status, headers},
+  );
+}
 
 export async function loader({params, request, context}) {
   const paginationVariables = getPaginationVariables(request, {
@@ -75,13 +119,11 @@ export async function loader({params, request, context}) {
   const appliedFilters = filters
     .map((filter) => {
       const foundValue = allFilterValues.find((value) => {
-        const valueInput = JSON.parse(value.input ) ;
+        const valueInput = JSON.parse(value.input);
         if (valueInput.price && filter.price) {
           return true;
         }
-        return (
-          JSON.stringify(valueInput) === JSON.stringify(filter)
-        );
+        return JSON.stringify(valueInput) === JSON.stringify(filter);
       });
       if (!foundValue) {
         console.error('Could not find filter value for filter', filter);
@@ -89,7 +131,7 @@ export async function loader({params, request, context}) {
       }
 
       if (foundValue.id === 'filter.v.price') {
-        const input = JSON.parse(foundValue.input );
+        const input = JSON.parse(foundValue.input);
         const min = parseAsCurrency(input.price?.min ?? 0, locale);
         const max = input.price?.max
           ? parseAsCurrency(input.price.max, locale)
@@ -106,7 +148,6 @@ export async function loader({params, request, context}) {
       };
     })
     .filter((filter) => filter !== null);
-
 
   return json({
     collection,
