@@ -4125,7 +4125,10 @@ p.no_product {
   position: absolute;
 }
 
-.ts-popup-modal.loading .overlay:before, .ts-popup-modal.show .overlay, .ts-popup-modal.loading .overlay, .ts-popup-modal.show .popup-container {
+.ts-popup-modal.loading .overlay:before,
+.ts-popup-modal.show .overlay,
+.ts-popup-modal.loading .overlay,
+.ts-popup-modal.show .popup-container {
   visibility: visible;
   opacity: 1;
 }
@@ -4134,8 +4137,9 @@ p.no_product {
   width: 900px;
 }
 
-.ts-popup-modal .overlay, #cboxOverlay {
-  background: rgba(0,0,0,0.8);
+.ts-popup-modal .overlay,
+#cboxOverlay {
+  background: rgba(0, 0, 0, 0.8);
   transition: all 200ms linear 0s;
 }
 
@@ -4147,10 +4151,14 @@ p.no_product {
   right: 0;
   bottom: 0;
   top: 0;
-  content: "";
+  content: '';
   z-index: 99990;
 }
-
+.ts-tooltip {
+  cursor: pointer;
+  border-left: 1px solid #000;
+  padding-left: 10px;
+}
 
 .ts-popup-modal .quickshop-content {
   max-height: 100%;
