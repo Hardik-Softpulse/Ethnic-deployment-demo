@@ -135,6 +135,7 @@ export function ProductCard({
         id="ts-quickshop-modal"
         className={`ts-popup-modal ${isModalOpen ? 'show' : ''}`}
       >
+        <div className="overlay" onClick={closeModal}></div>
         <QuickView onClose={closeModal} product={product} />
       </div>
       {/* {firstVariant.availableForSale && (
