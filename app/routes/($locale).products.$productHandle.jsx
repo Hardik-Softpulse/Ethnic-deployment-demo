@@ -105,8 +105,6 @@ export default function Product() {
   const {media} = product;
   const [selectedReviewType, setSelectedReviewType] = useState('Yotpo');
 
-  console.log('product 2', product )
-
   useEffect(() => {
     const thumbSlider = new Swiper('.thumb-i1slider', {
       slidesPerView: 'auto',

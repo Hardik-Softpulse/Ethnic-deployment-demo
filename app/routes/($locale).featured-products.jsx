@@ -28,9 +28,8 @@ export async function getFeaturedData(storefront, variables = {} ) {
 
 export const FEATURED_ITEMS_QUERY = `#graphql
   query FeaturedItems(
-    $language: LanguageCode
     $pageBy: Int = 12
-  ) @inContext(language: $language) {
+  )  {
     featuredCollections: collections(first: 3, sortKey: UPDATED_AT) {
       nodes {
         ...FeaturedCollectionDetails
@@ -43,6 +42,6 @@ export const FEATURED_ITEMS_QUERY = `#graphql
     }
   }
 
-
+  ${PRODUCT_CARD_FRAGMENT}
   ${FEATURED_COLLECTION_FRAGMENT}
 `;

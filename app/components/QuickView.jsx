@@ -1,53 +1,48 @@
 import {
   AnalyticsPageType,
-  CartForm,
   Money,
   VariantSelector,
   flattenConnection,
 } from '@shopify/hydrogen';
-import React, {useEffect, useState} from 'react';
-import Swiper from 'swiper';
-import {getProductPlaceholder} from '~/lib/placeholders';
-import {ProductGallery} from './ProductGallery';
-import {Rating} from '@mui/material';
-import {AddToCartButton} from './AddToCartButton';
+import { useEffect, useRef, useState } from 'react';
+import { getProductPlaceholder } from '~/lib/placeholders';
+import { Rating } from '@mui/material';
+import { AddToCartButton } from './AddToCartButton';
+import { Swiper } from 'swiper/react';
+import { ProductGallery } from './ProductGallery';
+import SwiperCore from 'swiper';
+import { Thumbs } from 'swiper/modules';
 
-export default function QuickViewTest({onClose, product}) {
-  console.log('product', product);
+SwiperCore.use([Thumbs]);
+
+export default function QuickView({ onClose, product }) {
   const cardProduct = product?.variants ? product : getProductPlaceholder();
-  const [selectedVariant, setSelectedVariant] = useState({name: '', value: ''});
-  const [quntity, setQuntity] = useState(1);
-  const {media} = product;
+  const [selectedVariant, setSelectedVariant] = useState({});
+  const [quantity, setQuantity] = useState(1);
+  const { media } = product;
   const variants = product?.variants.nodes;
 
   if (!cardProduct?.variants?.nodes?.length) return null;
   const firstVariant = flattenConnection(cardProduct.variants)[0];
 
   if (!firstVariant) return null;
-  const {price, compareAtPrice} = firstVariant;
-
-  const isOptionSelected = (name, value) => {
-    return selectedVariant[value] === value && selectedVariant[name] === name;
-  };
-
-  console.log('selec', selectedVariant);
+  const { price, compareAtPrice } = firstVariant;
 
   const handleCheckboxChange = (event, name, value) => {
-    const isChecked = event.target.checked;
     setSelectedVariant((prevSelectedVariant) => {
       return {
         ...prevSelectedVariant,
-        name: name,
-        value: value,
+        [name]: value,
       };
     });
   };
 
   const selectedCartVariant = variants.find((variant) => {
-    const selectedOption = variant.selectedOptions.find(
+    const selectedOption = variant.selectedOptions.every(
       (option) =>
-        option.name === selectedVariant.name &&
-        option.value === selectedVariant.value,
+
+        selectedVariant[option.name] !== undefined &&
+        selectedVariant[option.name] === option.value
     );
     return selectedOption;
   });
@@ -63,21 +58,20 @@ export default function QuickViewTest({onClose, product}) {
     variantName: selectedOptionVariant?.title,
     brand: product.vendor,
     price: selectedOptionVariant?.price.amount,
-    quantity: quntity,
+    quantity: quantity,
   };
 
   const data = {
     analytics: {
       pageType: AnalyticsPageType.product,
       resourceId: product.id,
-      products: [productAnalytics],
-      totalValue: parseFloat(selectedOptionVariant?.price.amount),
+      products: productAnalytics,
+      totalValue: selectedOptionVariant?.price.amount,
     },
   };
 
   const productAnalytic = {
-    ...data.products,
-    quantity: quntity,
+    ...data.analytics.products
   };
 
   const calculatePercentageDifference = (compareAtPrice, price) => {
@@ -106,23 +100,42 @@ export default function QuickViewTest({onClose, product}) {
   const isOutOfStock = selectedCartVariant?.availableForSale;
 
   useEffect(() => {
-    const thumbSlider = new Swiper('.thumb-i1slider', {
-      slidesPerView: 'auto',
-    });
-
+    // Initialize the main product slider
     const productSlider = new Swiper('.product-i1slider', {
       thumbs: {
-        swiper: thumbSlider,
+        swiper: new Swiper('.thumb-i1slider', {
+          slidesPerView: 'auto',
+        }),
       },
     });
 
+    // Get thumb slides and add click event listeners
     const thumbSlides = document.querySelectorAll('.thumb-i1slide');
     thumbSlides.forEach((thumbSlide, index) => {
       thumbSlide.addEventListener('click', () => {
-        productSlider?.slideTo(index);
+        productSlider.slideTo(index);
       });
     });
+
+    // Cleanup function to destroy Swiper instances when component unmounts
+    return () => {
+      // Use the `destroy` method from the Swiper instance
+      productSlider.destroy();
+    };
   }, []);
+
+
+  const handleIncrement = (e) => {
+    e.preventDefault();
+    setQuantity(quantity + 1);
+  };
+
+  const handleDecrement = (e) => {
+    e.preventDefault();
+    if (quantity > 1) {
+      setQuantity(quantity - 1);
+    }
+  };
 
   return (
     <div className="quickshop-container popup-container">
@@ -153,6 +166,7 @@ export default function QuickViewTest({onClose, product}) {
                   <img src={img.image.url} alt={img.image.alt} />
                 </div>
               ))}
+
             </div>
           </div>
         </div>
@@ -189,45 +203,42 @@ export default function QuickViewTest({onClose, product}) {
               options={product.options}
               variants={variants}
             >
-              {({option, id}) => {
+              {({ option }) => {
+
                 return (
                   <div
                     className="swatch clearfix"
-                    data-option-index={id}
-                    key={id}
+                    data-option-index={option.name}
+                    key={option}
                   >
                     <div className="swatch-title">
                       <strong>{option.name}</strong>
                     </div>
                     {option.values.length > 7 ? (
                       <div
-                        key={id}
-                        data-value={value}
-                        className={`swatch-element ${
-                          selectedVariant[name] === value ? 'available' : ''
-                        }`}
-                        title={value}
+                        key={option}
+                        className={`swatch-element ${selectedVariant[option.name] === value ? 'available' : ''}`}
+                        title={option.values[0]}
                       >
                         <input
                           type="checkbox"
                           name={`option-${option.name}`}
-                          value={value}
-                          id={`swatch-${id}-${value}`}
-                          checked={isOptionSelected(option.name, value)}
+                          value={option.values[0]}
+                          id={`swatch-${option.name}-${option.values[0]}`}
+                          checked={selectedVariant[option.name] === value}
                           onChange={(event) =>
                             handleCheckboxChange(event, option.name, value)
                           }
                         />
-                        <label htmlFor="swatch-1-size">{value}</label>
+                        <label htmlFor={`swatch-${option.name}-${option.values[0]}`}>
+                          {option.values[0]}
+                        </label>
                       </div>
                     ) : (
-                      option.values.map(({value, index, to}) => (
+                      option.values.map(({ value, index }) => (
                         <div
                           key={index}
-                          data-value={value}
-                          className={`swatch-element ${
-                            isOptionSelected ? 'available' : ''
-                          }`}
+                          className={`swatch-element ${selectedVariant[option.name] === value ? 'available' : ''}`}
                           title={value}
                         >
                           <input
@@ -235,7 +246,7 @@ export default function QuickViewTest({onClose, product}) {
                             name={`option-${option.name}`}
                             value={value}
                             id={`swatch-${index}-${value}`}
-                            checked={isOptionSelected(option.name, value)}
+                            checked={selectedVariant[option.name] === value}
                             onChange={(event) =>
                               handleCheckboxChange(event, option.name, value)
                             }
@@ -251,52 +262,11 @@ export default function QuickViewTest({onClose, product}) {
               }}
             </VariantSelector>
 
-            {/* <div className="qty-box">
-              <UpdateCartButton
-                lines={[{id: selectedOptionVariant.id, quantity: prevQuantity}]}
-              >
-                <button
-                  className="qty-minus qty-btn"
-                  name="decrease-quantity"
-                  value={prevQuantity}
-                  disabled={quntity <= 1}
-                >
-                  -
-                </button>
-              </UpdateCartButton>
-              <input
-                type="text"
-                name="value"
-                className="qty-input"
-                value={quntity}
-                readOnly
-              />
-              <UpdateCartButton
-                lines={[{id: selectedOptionVariant.id, quantity: nextQuantity}]}
-              >
-                <button
-                  className="qty-plus qty-btn"
-                  name="increase-quantity"
-                  value={nextQuantity}
-                  aria-label="Increase quantity"
-                >
-                  +
-                </button>
-              </UpdateCartButton>
-            </div> */}
-            <UpdateCartButton
-              lines={[{id: selectedOptionVariant.id, quantity: quntity}]}
-            >
-              <div className="qty-box">
-                <input
-                  type="number"
-                  name=""
-                  className="qty-input"
-                  value={quntity}
-                  onChange={(e) => setQuntity(e.target.value)}
-                />
-              </div>
-            </UpdateCartButton>
+            <div className="quantity-box">
+              <button onClick={(e) => handleDecrement(e)}>-</button>
+              <span>{quantity}</span>
+              <button onClick={(e) => handleIncrement(e)}>+</button>
+            </div>
 
             <>
               {selectedOptionVariant?.availableForSale === false ? (
@@ -313,7 +283,8 @@ export default function QuickViewTest({onClose, product}) {
                   lines={[
                     {
                       merchandiseId: selectedOptionVariant?.id,
-                      quantity: 1,
+                      quantity: parseInt(quantity, 10)
+
                     },
                   ]}
                   variant="primary"
@@ -344,19 +315,7 @@ export default function QuickViewTest({onClose, product}) {
           </form>
         </div>
       </div>
-    </div>
+    </div >
   );
 }
 
-function UpdateCartButton({children, lines}) {
-  console.log('lines', lines);
-  return (
-    <CartForm
-      inputs={{
-        lines,
-      }}
-    >
-      {children}
-    </CartForm>
-  );
-}
