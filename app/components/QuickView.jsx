@@ -99,30 +99,30 @@ export default function QuickView({ onClose, product }) {
 
   const isOutOfStock = selectedCartVariant?.availableForSale;
 
-  useEffect(() => {
-    // Initialize the main product slider
-    const productSlider = new Swiper('.product-i1slider', {
-      thumbs: {
-        swiper: new Swiper('.thumb-i1slider', {
-          slidesPerView: 'auto',
-        }),
-      },
-    });
+  // useEffect(() => {
+  //   // Initialize the main product slider
+  //   const productSlider = new Swiper('.product-i1slider', {
+  //     thumbs: {
+  //       swiper: new Swiper('.thumb-i1slider', {
+  //         slidesPerView: 'auto',
+  //       }),
+  //     },
+  //   });
 
-    // Get thumb slides and add click event listeners
-    const thumbSlides = document.querySelectorAll('.thumb-i1slide');
-    thumbSlides.forEach((thumbSlide, index) => {
-      thumbSlide.addEventListener('click', () => {
-        productSlider.slideTo(index);
-      });
-    });
+  //   // Get thumb slides and add click event listeners
+  //   const thumbSlides = document.querySelectorAll('.thumb-i1slide');
+  //   thumbSlides.forEach((thumbSlide, index) => {
+  //     thumbSlide.addEventListener('click', () => {
+  //       productSlider.slideTo(index);
+  //     });
+  //   });
 
-    // Cleanup function to destroy Swiper instances when component unmounts
-    return () => {
-      // Use the `destroy` method from the Swiper instance
-      productSlider.destroy();
-    };
-  }, []);
+  //   // Cleanup function to destroy Swiper instances when component unmounts
+  //   return () => {
+  //     // Use the `destroy` method from the Swiper instance
+  //     productSlider.destroy();
+  //   };
+  // }, []);
 
 
   const handleIncrement = (e) => {
