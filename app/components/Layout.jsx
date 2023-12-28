@@ -74,7 +74,7 @@ function DesktopHeader({
 
   const handleClick = (e) => {
     e.preventDefault();
-    setToggle(!toggle);
+    setToggle(true);
   };
 
   const handleMenu = (title) => {
@@ -110,7 +110,7 @@ function DesktopHeader({
                 <a
                   href="/"
                   className="st-nav-ic st-nav-trigger"
-                  onClick={handleClick}
+                  onClick={(e) => handleClick(e)}
                 >
                   <span></span>
                   <span></span>
