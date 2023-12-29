@@ -4,15 +4,17 @@ import {
   VariantSelector,
   flattenConnection,
 } from '@shopify/hydrogen';
-import {useEffect, useRef, useState} from 'react';
+import {useEffect, useState} from 'react';
 import {getProductPlaceholder} from '~/lib/placeholders';
 import {Rating} from '@mui/material';
 import {AddToCartButton} from './AddToCartButton';
 import {Swiper, SwiperSlide} from 'swiper/react';
-import {ProductGallery} from './ProductGallery';
 import {Navigation, Thumbs} from 'swiper/modules';
 
-export default function QuickView({onClose, product}) {
+export default function QuickView({onClose, product, index}) {
+  const datas = index === product.id;
+  console.log('data', datas);
+
   const cardProduct = product?.variants ? product : getProductPlaceholder();
   const [selectedVariant, setSelectedVariant] = useState({});
   const [quantity, setQuantity] = useState(1);
@@ -22,6 +24,7 @@ export default function QuickView({onClose, product}) {
 
   if (!cardProduct?.variants?.nodes?.length) return null;
   const firstVariant = flattenConnection(cardProduct.variants)[0];
+  console.log('firstVariant', firstVariant);
 
   if (!firstVariant) return null;
   const {price, compareAtPrice} = firstVariant;

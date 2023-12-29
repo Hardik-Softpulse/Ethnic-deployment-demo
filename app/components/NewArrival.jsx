@@ -25,7 +25,7 @@ export function NewArrival({product, title}) {
             <Swiper
               spaceBetween={15}
               draggable={true}
-              slidesPerView={1.3}
+              slidesPerView={1}
               modules={[Navigation]}
               navigation={true}
               breakpoints={{

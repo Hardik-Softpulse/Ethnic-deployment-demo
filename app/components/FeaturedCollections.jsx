@@ -3,11 +3,7 @@ import {Navigation} from 'swiper/modules';
 import {Swiper, SwiperSlide} from 'swiper/react';
 import {SectionProductCard} from '~/components';
 
-export function FeaturedCollections({
-  title = 'SHOP NEW ARRIVALS',
-  products,
-
-}) {
+export function FeaturedCollections({title = 'SHOP NEW ARRIVALS', products}) {
   const [showSwiper, setShowSwiper] = useState(false);
 
   useEffect(() => {
@@ -29,11 +25,11 @@ export function FeaturedCollections({
             <Swiper
               spaceBetween={15}
               draggable={true}
-              slidesPerView={1.3}
+              slidesPerView={1}
               modules={[Navigation]}
               navigation={true}
               breakpoints={{
-                375:{
+                375: {
                   slidesPerView: 1,
                   spaceBetween: 10,
                 },
