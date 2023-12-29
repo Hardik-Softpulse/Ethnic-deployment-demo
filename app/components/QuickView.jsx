@@ -10,18 +10,11 @@ import {Rating} from '@mui/material';
 import {AddToCartButton} from './AddToCartButton';
 
 import {Swiper, SwiperSlide} from 'swiper/react';
-import {
-  Controller,
-  FreeMode,
-  Navigation,
-  Pagination,
-  Thumbs,
-} from 'swiper/modules';
-import {useEffect} from 'react';
+import {Navigation, Thumbs} from 'swiper/modules';
 
 export default function QuickView({onClose, product}) {
   const cardProduct = product?.variants ? product : getProductPlaceholder();
-  const [thumbs, setThumbs] = useState(null) 
+  const [thumbs, setThumbs] = useState(null);
   const [selectedVariant, setSelectedVariant] = useState({});
   const [quantity, setQuantity] = useState(1);
   const {media} = product;
@@ -139,8 +132,8 @@ export default function QuickView({onClose, product}) {
             loop={true}
             spaceBetween={10}
             navigation={true}
-            thumbs={{swiper: thumbs && !thumbs.destroyed ? thumbs : null}} 
-            modules={[ Navigation, Thumbs]}
+            thumbs={{swiper: thumbs && !thumbs.destroyed ? thumbs : null}}
+            modules={[Navigation, Thumbs]}
             className="product-i1slider"
           >
             {slide.map((med) => (
@@ -201,14 +194,15 @@ export default function QuickView({onClose, product}) {
                 <div
                   className="swatch clearfix"
                   data-option-index={option.name}
-                  key={option}
+                  key={option.name}
                 >
                   <div className="swatch-title">
                     <strong>{option.name}</strong>
                   </div>
+
                   {option.values.length > 7 ? (
+                    console.log('option', option),
                     <div
-                      key={option}
                       className={`swatch-element ${
                         selectedVariant[option.name] === value
                           ? 'available'
@@ -233,9 +227,10 @@ export default function QuickView({onClose, product}) {
                       </label>
                     </div>
                   ) : (
-                    option.values.map(({value, index}) => (
+                    option.values.map(({value}) => (
+                      console.log('value', value),
                       <div
-                        key={index}
+                        key={option.name}
                         className={`swatch-element ${
                           selectedVariant[option.name] === value
                             ? 'available'
@@ -247,13 +242,13 @@ export default function QuickView({onClose, product}) {
                           type="checkbox"
                           name={`option-${option.name}`}
                           value={value}
-                          id={`swatch-${index}-${value}`}
+                          id={`swatch-${option.name}-${value}`}
                           checked={selectedVariant[option.name] === value}
                           onChange={(event) =>
                             handleCheckboxChange(event, option.name, value)
                           }
                         />
-                        <label htmlFor={`swatch-${index}-${value}`}>
+                        <label htmlFor={`swatch-${option.name}-${value}`}>
                           {value}
                         </label>
                       </div>
@@ -295,6 +290,7 @@ export default function QuickView({onClose, product}) {
                   totalValue: parseFloat(productAnalytic.price),
                 }}
                 className="btn btn-full add-cart-btn lp-0"
+                route="/cart"
               />
             )}
           </>

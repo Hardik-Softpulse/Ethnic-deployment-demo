@@ -1437,7 +1437,7 @@ p.footer-item-des {
 .thumb-i1slider {
   left: 0;
   right: 0;
-  bottom: 15px;
+  bottom: 5px;
   max-width: 420px;
   width: calc(100% - 30px);
   margin: auto;
