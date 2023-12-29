@@ -36,8 +36,8 @@ export async function action({request, context}) {
   let result;
 
   switch (action) {
-    case CartForm.ACTIONS.LinesUpdate:
-      result = await cart.updateLines(inputs.lines);
+    case CartForm.ACTIONS.LinesAdd:
+      result = await cart.addLines(inputs.lines);
       break;
 
     default:
@@ -276,7 +276,7 @@ export default function Collection() {
             />
 
             <Pagination connection={collection.products}>
-              {({nodes, isLoading, PreviousLink, NextLink, pageInfo}) => (
+              {({nodes, isLoading, PreviousLink, NextLink}) => (
                 <div className="cllctn-list">
                   <div className="row m-15">
                     {isLoading ? (

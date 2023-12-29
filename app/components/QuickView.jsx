@@ -4,22 +4,21 @@ import {
   VariantSelector,
   flattenConnection,
 } from '@shopify/hydrogen';
-import {useState} from 'react';
+import {useEffect, useRef, useState} from 'react';
 import {getProductPlaceholder} from '~/lib/placeholders';
 import {Rating} from '@mui/material';
 import {AddToCartButton} from './AddToCartButton';
-
 import {Swiper, SwiperSlide} from 'swiper/react';
+import {ProductGallery} from './ProductGallery';
 import {Navigation, Thumbs} from 'swiper/modules';
 
 export default function QuickView({onClose, product}) {
   const cardProduct = product?.variants ? product : getProductPlaceholder();
-  const [thumbs, setThumbs] = useState(null);
   const [selectedVariant, setSelectedVariant] = useState({});
   const [quantity, setQuantity] = useState(1);
   const {media} = product;
-  const slide = media.nodes;
   const variants = product?.variants.nodes;
+  const [thumbs, setThumbs] = useState(null);
 
   if (!cardProduct?.variants?.nodes?.length) return null;
   const firstVariant = flattenConnection(cardProduct.variants)[0];
@@ -136,7 +135,7 @@ export default function QuickView({onClose, product}) {
             modules={[Navigation, Thumbs]}
             className="product-i1slider"
           >
-            {slide.map((med) => (
+            {media.nodes.map((med) => (
               <SwiperSlide key={med.id}>
                 <div className="slide-product-img">
                   <img src={med.image.url} alt={`Product ${med.id}`} />
@@ -150,7 +149,7 @@ export default function QuickView({onClose, product}) {
             slidesPerView={3}
             className="thumb-i1slider"
           >
-            {slide.map((img) => (
+            {media.nodes.map((img) => (
               <SwiperSlide key={img.id} className="thumb-i1slide">
                 <img src={img.image.url} alt={img.image.alt} />
               </SwiperSlide>
@@ -184,131 +183,130 @@ export default function QuickView({onClose, product}) {
               )}
             </span>
           </div>
-          <VariantSelector
-            handle={product.handle}
-            options={product.options}
-            variants={variants}
-          >
-            {({option}) => {
-              return (
-                <div
-                  className="swatch clearfix"
-                  data-option-index={option.name}
-                  key={option.name}
-                >
-                  <div className="swatch-title">
-                    <strong>{option.name}</strong>
-                  </div>
-
-                  {option.values.length > 7 ? (
-                    console.log('option', option),
-                    <div
-                      className={`swatch-element ${
-                        selectedVariant[option.name] === value
-                          ? 'available'
-                          : ''
-                      }`}
-                      title={option.values[0]}
-                    >
-                      <input
-                        type="checkbox"
-                        name={`option-${option.name}`}
-                        value={option.values[0]}
-                        id={`swatch-${option.name}-${option.values[0]}`}
-                        checked={selectedVariant[option.name] === value}
-                        onChange={(event) =>
-                          handleCheckboxChange(event, option.name, value)
-                        }
-                      />
-                      <label
-                        htmlFor={`swatch-${option.name}-${option.values[0]}`}
-                      >
-                        {option.values[0]}
-                      </label>
+          <form>
+            <VariantSelector
+              handle={product.handle}
+              options={product.options}
+              variants={variants}
+            >
+              {({option}) => {
+                return (
+                  <div
+                    className="swatch clearfix"
+                    data-option-index={option.name}
+                    key={option}
+                  >
+                    <div className="swatch-title">
+                      <strong>{option.name}</strong>
                     </div>
-                  ) : (
-                    option.values.map(({value}) => (
-                      console.log('value', value),
+                    {option.values.length > 7 ? (
                       <div
-                        key={option.name}
+                        key={option}
                         className={`swatch-element ${
                           selectedVariant[option.name] === value
                             ? 'available'
                             : ''
                         }`}
-                        title={value}
+                        title={option.values[0]}
                       >
                         <input
                           type="checkbox"
                           name={`option-${option.name}`}
-                          value={value}
-                          id={`swatch-${option.name}-${value}`}
+                          value={option.values[0]}
+                          id={`swatch-${option.name}-${option.values[0]}`}
                           checked={selectedVariant[option.name] === value}
                           onChange={(event) =>
                             handleCheckboxChange(event, option.name, value)
                           }
                         />
-                        <label htmlFor={`swatch-${option.name}-${value}`}>
-                          {value}
+                        <label
+                          htmlFor={`swatch-${option.name}-${option.values[0]}`}
+                        >
+                          {option.values[0]}
                         </label>
                       </div>
-                    ))
-                  )}
-                </div>
-              );
-            }}
-          </VariantSelector>
+                    ) : (
+                      option.values.map(({value, index}) => (
+                        <div
+                          key={index}
+                          className={`swatch-element ${
+                            selectedVariant[option.name] === value
+                              ? 'available'
+                              : ''
+                          }`}
+                          title={value}
+                        >
+                          <input
+                            type="checkbox"
+                            name={`option-${option.name}`}
+                            value={value}
+                            id={`swatch-${index}-${value}`}
+                            checked={selectedVariant[option.name] === value}
+                            onChange={(event) =>
+                              handleCheckboxChange(event, option.name, value)
+                            }
+                          />
+                          <label htmlFor={`swatch-${index}-${value}`}>
+                            {value}
+                          </label>
+                        </div>
+                      ))
+                    )}
+                  </div>
+                );
+              }}
+            </VariantSelector>
 
-          <div className="quantity-box">
-            <button onClick={(e) => handleDecrement(e)}>-</button>
-            <span>{quantity}</span>
-            <button onClick={(e) => handleIncrement(e)}>+</button>
-          </div>
+            <div className="quantity-box">
+              <button onClick={(e) => handleDecrement(e)}>-</button>
+              <span>{quantity}</span>
+              <button onClick={(e) => handleIncrement(e)}>+</button>
+            </div>
 
-          <>
-            {selectedOptionVariant?.availableForSale === false ? (
-              <button
-                variant="secondary"
-                disabled={isOutOfStock}
-                className="btn btn-full quicksoldOut"
+            <>
+              {selectedOptionVariant?.availableForSale === false ? (
+                <button
+                  variant="secondary"
+                  disabled={isOutOfStock}
+                  className="btn btn-full quicksoldOut"
+                >
+                  <span>Sold out</span>
+                </button>
+              ) : (
+                <AddToCartButton
+                  title="Add to cart"
+                  lines={[
+                    {
+                      merchandiseId: selectedOptionVariant?.id,
+                      quantity: parseInt(quantity, 10),
+                    },
+                  ]}
+                  variant="primary"
+                  data-test="add-to-cart"
+                  analytics={{
+                    products: [productAnalytic],
+                    totalValue: parseFloat(productAnalytic.price),
+                  }}
+                  className="btn btn-full add-cart-btn lp-0"
+                />
+              )}
+            </>
+
+            <div className="shipping-text lp-05 text-center">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 18"
+                width="24"
+                height="18"
               >
-                <span>Sold out</span>
-              </button>
-            ) : (
-              <AddToCartButton
-                title="Add to cart"
-                lines={[
-                  {
-                    merchandiseId: selectedOptionVariant?.id,
-                    quantity: parseInt(quantity, 10),
-                  },
-                ]}
-                variant="primary"
-                data-test="add-to-cart"
-                analytics={{
-                  products: [productAnalytic],
-                  totalValue: parseFloat(productAnalytic.price),
-                }}
-                className="btn btn-full add-cart-btn lp-0"
-                route="/cart"
-              />
-            )}
-          </>
-
-          <div className="shipping-text lp-05 text-center">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 18"
-              width="24"
-              height="18"
-            >
-              <path
-                fillRule="evenodd"
-                d="M5 8L5 9L13 9L13 2L3 2L3 1C3 0.45 3.45 0 4 0C6.58 0 11.42 0 14 0C14.55 0 15 0.45 15 1L15 3L19.67 3C20.78 3 21.27 3.58 21.6 4.11C22.2 5.05 23.14 6.54 23.71 7.48C23.9 7.8 24 8.15 24 8.52C24 9.71 24 11.5 24 13C24 14.09 23.26 15 22 15L21 15C21 16.66 19.66 18 18 18C16.34 18 15 16.66 15 15L11 15C11 16.66 9.66 18 8 18C6.34 18 5 16.66 5 15L4 15C3.45 15 3 14.55 3 14L3 8L1 8L1 6L8 6L8 8L5 8ZM6.8 15C6.8 15.66 7.34 16.2 8 16.2C8.66 16.2 9.2 15.66 9.2 15C9.2 14.34 8.66 13.8 8 13.8C7.34 13.8 6.8 14.34 6.8 15ZM16.8 15C16.8 15.66 17.34 16.2 18 16.2C18.66 16.2 19.2 15.66 19.2 15C19.2 14.34 18.66 13.8 18 13.8C17.34 13.8 16.8 14.34 16.8 15ZM15 11L5 11L5 13L5.76 13C6.31 12.39 7.11 12 8 12C8.89 12 9.69 12.39 10.24 13L15.76 13C16.31 12.39 17.11 12 18 12C18.89 12 19.69 12.39 20.24 13L22 13L22 8.43C22 8.43 20.84 6.44 20.29 5.5C20.11 5.19 19.78 5 19.43 5L15 5L15 11ZM18.7 6C19.06 6 19.4 6.19 19.57 6.5C20.06 7.36 21 9 21 9L16 9L16 6C16 6 17.83 6 18.7 6ZM0 3L8 3L8 5L0 5L0 3Z"
-              />
-            </svg>
-            Free shipping on order above $20
-          </div>
+                <path
+                  fillRule="evenodd"
+                  d="M5 8L5 9L13 9L13 2L3 2L3 1C3 0.45 3.45 0 4 0C6.58 0 11.42 0 14 0C14.55 0 15 0.45 15 1L15 3L19.67 3C20.78 3 21.27 3.58 21.6 4.11C22.2 5.05 23.14 6.54 23.71 7.48C23.9 7.8 24 8.15 24 8.52C24 9.71 24 11.5 24 13C24 14.09 23.26 15 22 15L21 15C21 16.66 19.66 18 18 18C16.34 18 15 16.66 15 15L11 15C11 16.66 9.66 18 8 18C6.34 18 5 16.66 5 15L4 15C3.45 15 3 14.55 3 14L3 8L1 8L1 6L8 6L8 8L5 8ZM6.8 15C6.8 15.66 7.34 16.2 8 16.2C8.66 16.2 9.2 15.66 9.2 15C9.2 14.34 8.66 13.8 8 13.8C7.34 13.8 6.8 14.34 6.8 15ZM16.8 15C16.8 15.66 17.34 16.2 18 16.2C18.66 16.2 19.2 15.66 19.2 15C19.2 14.34 18.66 13.8 18 13.8C17.34 13.8 16.8 14.34 16.8 15ZM15 11L5 11L5 13L5.76 13C6.31 12.39 7.11 12 8 12C8.89 12 9.69 12.39 10.24 13L15.76 13C16.31 12.39 17.11 12 18 12C18.89 12 19.69 12.39 20.24 13L22 13L22 8.43C22 8.43 20.84 6.44 20.29 5.5C20.11 5.19 19.78 5 19.43 5L15 5L15 11ZM18.7 6C19.06 6 19.4 6.19 19.57 6.5C20.06 7.36 21 9 21 9L16 9L16 6C16 6 17.83 6 18.7 6ZM0 3L8 3L8 5L0 5L0 3Z"
+                />
+              </svg>
+              Free shipping on order above $20
+            </div>
+          </form>
         </div>
       </div>
     </div>

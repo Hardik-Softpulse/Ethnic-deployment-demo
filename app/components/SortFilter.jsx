@@ -5,7 +5,6 @@ import {
   useNavigate,
 } from '@remix-run/react';
 
-
 export const FILTER_URL_PREFIX = 'filter.';
 
 export function SortFilter({filters, appliedFilters = []}) {
@@ -36,6 +35,8 @@ export function SortFilter({filters, appliedFilters = []}) {
                       params,
                       location,
                     );
+                    console.log('filter', filter);
+
                     return (
                       <div className="filter-item" key={option.id}>
                         <input
@@ -99,7 +100,7 @@ function getFilterLink(filter, rawInput, params, location) {
   return `${location.pathname}?${newParams.toString()}`;
 }
 
-function filterInputToParams(type,rawInput, params) {
+function filterInputToParams(type, rawInput, params) {
   const input = typeof rawInput === 'string' ? JSON.parse(rawInput) : rawInput;
 
   Object.entries(input).forEach(([key, value]) => {
@@ -116,4 +117,3 @@ function filterInputToParams(type,rawInput, params) {
 
   return params;
 }
-

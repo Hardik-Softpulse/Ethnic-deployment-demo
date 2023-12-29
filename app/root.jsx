@@ -25,14 +25,14 @@ import { useState } from 'react';
 import swipercss from 'swiper/css';
 import swipernavigation from 'swiper/css/navigation';
 import swiperPagination from 'swiper/css/pagination';
-// import swiperThumb from 'swiper/css/thumbs';
+import swiperThumb from 'swiper/css/thumbs';
 
 export const links = () => {
   return [
     { rel: 'stylesheet', href: swipercss },
     { rel: 'stylesheet', href: swipernavigation },
     { rel: 'stylesheet', href: swiperPagination },
-    // { rel: 'stylesheet', href: swiperThumb },
+    { rel: 'stylesheet', href: swiperThumb },
     { rel: 'stylesheet', href: styles },
     {
       rel: 'preconnect',
