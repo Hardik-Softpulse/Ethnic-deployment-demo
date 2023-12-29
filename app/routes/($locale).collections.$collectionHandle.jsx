@@ -27,9 +27,7 @@ export const headers = routeHeaders;
 export async function action({request, context}) {
   const {session, cart} = context;
 
-  const [formData] = await Promise.all([
-    request.formData(),
-  ]);
+  const [formData] = await Promise.all([request.formData()]);
 
   const {action, inputs} = CartForm.getFormInput(formData);
   invariant(action, 'No cartAction defined');
@@ -46,7 +44,6 @@ export async function action({request, context}) {
       invariant(false, `${action} cart action is not defined`);
   }
 
-  
   const cartId = result.cart.id;
   const headers = cart.setCartId(result.cart.id);
 
@@ -282,7 +279,9 @@ export default function Collection() {
               {({nodes, isLoading, PreviousLink, NextLink, pageInfo}) => (
                 <div className="cllctn-list">
                   <div className="row m-15">
-                    {nodes.length > 0 ? (
+                    {isLoading ? (
+                      <span className="loader"></span>
+                    ) : nodes.length > 0 ? (
                       nodes.map((product, i) => (
                         <ProductCard
                           key={product.id}
@@ -296,19 +295,20 @@ export default function Collection() {
                       </p>
                     )}
                   </div>
-                  <div className="pagination dfx flxcntr flxwrp">
-                    <span className="pager-prev">
-                      <PreviousLink>
-                        <button className="btn">Previous</button>
-                      </PreviousLink>
-                    </span>
-
-                    <span className="pager-next">
-                      <NextLink>
-                        <button className="btn">Load More</button>
-                      </NextLink>
-                    </span>
-                  </div>
+                  {!isLoading && (
+                    <div className="pagination dfx flxcntr flxwrp">
+                      <span className="pager-prev">
+                        <PreviousLink>
+                          <button className="btn">Previous</button>
+                        </PreviousLink>
+                      </span>
+                      <span className="pager-next">
+                        <NextLink>
+                          <button className="btn">Load More</button>
+                        </NextLink>
+                      </span>
+                    </div>
+                  )}
                 </div>
               )}
             </Pagination>

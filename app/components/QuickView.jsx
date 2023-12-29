@@ -4,31 +4,35 @@ import {
   VariantSelector,
   flattenConnection,
 } from '@shopify/hydrogen';
-import { useState } from 'react';
-import { getProductPlaceholder } from '~/lib/placeholders';
-import { Rating } from '@mui/material';
-import { AddToCartButton } from './AddToCartButton';
+import {useState} from 'react';
+import {getProductPlaceholder} from '~/lib/placeholders';
+import {Rating} from '@mui/material';
+import {AddToCartButton} from './AddToCartButton';
 
-import { Swiper, SwiperSlide } from 'swiper/react';
-import { FreeMode, Navigation, Thumbs } from 'swiper/modules';
-// import { Swiper, SwiperSlide } from 'swiper/react';
-// import { FreeMode, Navigation, Thumbs } from 'swiper/modules';
+import {Swiper, SwiperSlide} from 'swiper/react';
+import {
+  Controller,
+  FreeMode,
+  Navigation,
+  Pagination,
+  Thumbs,
+} from 'swiper/modules';
+import {useEffect} from 'react';
 
-
-export default function QuickView({ onClose, product }) {
+export default function QuickView({onClose, product}) {
   const cardProduct = product?.variants ? product : getProductPlaceholder();
-  const [thumbsSwiper, setThumbsSwiper] = useState(null);
+  const [thumbs, setThumbs] = useState(null) 
   const [selectedVariant, setSelectedVariant] = useState({});
   const [quantity, setQuantity] = useState(1);
-  const { media } = product;
-  const slide = media.nodes
+  const {media} = product;
+  const slide = media.nodes;
   const variants = product?.variants.nodes;
 
   if (!cardProduct?.variants?.nodes?.length) return null;
   const firstVariant = flattenConnection(cardProduct.variants)[0];
 
   if (!firstVariant) return null;
-  const { price, compareAtPrice } = firstVariant;
+  const {price, compareAtPrice} = firstVariant;
 
   const handleCheckboxChange = (event, name, value) => {
     setSelectedVariant((prevSelectedVariant) => {
@@ -42,9 +46,8 @@ export default function QuickView({ onClose, product }) {
   const selectedCartVariant = variants.find((variant) => {
     const selectedOption = variant.selectedOptions.every(
       (option) =>
-
         selectedVariant[option.name] !== undefined &&
-        selectedVariant[option.name] === option.value
+        selectedVariant[option.name] === option.value,
     );
     return selectedOption;
   });
@@ -73,7 +76,7 @@ export default function QuickView({ onClose, product }) {
   };
 
   const productAnalytic = {
-    ...data.analytics.products
+    ...data.analytics.products,
   };
 
   const calculatePercentageDifference = (compareAtPrice, price) => {
@@ -132,14 +135,14 @@ export default function QuickView({ onClose, product }) {
       </span>
       <div className="quickshop-content">
         <div className="product-images flx-auto">
-           {slide.length > 0 && (
           <Swiper
+            loop={true}
             spaceBetween={10}
             navigation={true}
-            thumbs={{ swiper: thumbsSwiper }}
-            modules={[FreeMode, Navigation, Thumbs]}
+            thumbs={{swiper: thumbs && !thumbs.destroyed ? thumbs : null}} 
+            modules={[ Navigation, Thumbs]}
+            className="product-i1slider"
           >
-
             {slide.map((med) => (
               <SwiperSlide key={med.id}>
                 <div className="slide-product-img">
@@ -148,23 +151,18 @@ export default function QuickView({ onClose, product }) {
               </SwiperSlide>
             ))}
           </Swiper>
-        )}
-        {/* {slide.length > 0 && (
+
           <Swiper
-            onSwiper={setThumbsSwiper}
-            spaceBetween={10}
-            slidesPerView={4}
-            freeMode={true}
-            watchSlidesProgress={true}
-            modules={[FreeMode, Navigation, Thumbs]}
+            onSwiper={setThumbs}
+            slidesPerView={3}
+            className="thumb-i1slider"
           >
             {slide.map((img) => (
-              <SwiperSlide key={img.id}>
+              <SwiperSlide key={img.id} className="thumb-i1slide">
                 <img src={img.image.url} alt={img.image.alt} />
               </SwiperSlide>
             ))}
           </Swiper>
-        )}  */}
         </div>
         <div className="product-dscrptn flx-cover">
           <h4>{product.title}</h4>
@@ -198,8 +196,7 @@ export default function QuickView({ onClose, product }) {
             options={product.options}
             variants={variants}
           >
-            {({ option }) => {
-
+            {({option}) => {
               return (
                 <div
                   className="swatch clearfix"
@@ -212,7 +209,11 @@ export default function QuickView({ onClose, product }) {
                   {option.values.length > 7 ? (
                     <div
                       key={option}
-                      className={`swatch-element ${selectedVariant[option.name] === value ? 'available' : ''}`}
+                      className={`swatch-element ${
+                        selectedVariant[option.name] === value
+                          ? 'available'
+                          : ''
+                      }`}
                       title={option.values[0]}
                     >
                       <input
@@ -225,15 +226,21 @@ export default function QuickView({ onClose, product }) {
                           handleCheckboxChange(event, option.name, value)
                         }
                       />
-                      <label htmlFor={`swatch-${option.name}-${option.values[0]}`}>
+                      <label
+                        htmlFor={`swatch-${option.name}-${option.values[0]}`}
+                      >
                         {option.values[0]}
                       </label>
                     </div>
                   ) : (
-                    option.values.map(({ value, index }) => (
+                    option.values.map(({value, index}) => (
                       <div
                         key={index}
-                        className={`swatch-element ${selectedVariant[option.name] === value ? 'available' : ''}`}
+                        className={`swatch-element ${
+                          selectedVariant[option.name] === value
+                            ? 'available'
+                            : ''
+                        }`}
                         title={value}
                       >
                         <input
@@ -278,8 +285,7 @@ export default function QuickView({ onClose, product }) {
                 lines={[
                   {
                     merchandiseId: selectedOptionVariant?.id,
-                    quantity: parseInt(quantity, 10)
-
+                    quantity: parseInt(quantity, 10),
                   },
                 ]}
                 variant="primary"
@@ -307,15 +313,8 @@ export default function QuickView({ onClose, product }) {
             </svg>
             Free shipping on order above $20
           </div>
-
         </div>
       </div>
-    </div >
+    </div>
   );
 }
-
-
-
-
-
-
