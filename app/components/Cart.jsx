@@ -7,7 +7,7 @@ import dinersClub from '../img/diners-club.png';
 import {CartForm, Image, Money, flattenConnection} from '@shopify/hydrogen';
 import {Link} from './Link';
 import {useEffect, useState} from 'react';
-import { useLocation } from '@remix-run/react';
+import {useLocation} from '@remix-run/react';
 
 export function Cart({cart}) {
   const location = useLocation();
@@ -19,7 +19,7 @@ export function Cart({cart}) {
     if (!hasReloaded) {
       const timeoutId = setTimeout(() => {
         localStorage.setItem('hasReloaded', 'true');
-        location.reload(true);
+        window.location.reload(true);
       }, 2000);
 
       return () => {

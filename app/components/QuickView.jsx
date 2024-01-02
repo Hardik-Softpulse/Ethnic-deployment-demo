@@ -37,9 +37,12 @@ export default function QuickView({onClose, product}) {
   console.log('selectedVariant', selectedVariant);
   useEffect(() => {
     const foundObject = variants?.find((obj) => {
-      const match = obj.selectedOptions.some((option) => {
-        const optionValue = selectedVariant[option.name];
-        return optionValue !== undefined && optionValue === option.value;
+      const match = obj.selectedOptions.every((option) => {
+        // const optionValue = selectedVariant[option.name];
+        return (
+          selectedVariant[option.name] !== undefined &&
+          selectedVariant[option.name] === option.value
+        );
       });
       console.log('Match:', match);
       return match;
