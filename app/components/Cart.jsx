@@ -14,15 +14,19 @@ export function Cart({cart}) {
   const linesCount = Boolean(cart?.lines?.edges?.length || 0);
 
   useEffect(() => {
-    const timeoutId = setTimeout(() => {
-      window.location.reload(true);
-    }, 2000);
+    const hasReloaded = localStorage.getItem('hasReloaded');
 
-   
-    return () => {
-      clearTimeout(timeoutId);
-    };
-  }, []); 
+    if (!hasReloaded) {
+      const timeoutId = setTimeout(() => {
+        window.location.reload(true);
+        localStorage.setItem('hasReloaded', 'true');
+      }, 2000);
+
+      return () => {
+        clearTimeout(timeoutId);
+      };
+    }
+  }, []);
 
   return (
     <div className="cart-page bg-grey ">
