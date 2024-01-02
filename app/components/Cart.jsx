@@ -7,20 +7,15 @@ import dinersClub from '../img/diners-club.png';
 import {CartForm, Image, Money, flattenConnection} from '@shopify/hydrogen';
 import {Link} from './Link';
 import {useEffect, useState} from 'react';
+import { useLocation } from '@remix-run/react';
 
 export function Cart({cart}) {
+  const location = useLocation();
   const linesCount = Boolean(cart?.lines?.edges?.length || 0);
-  const [reload, setReload] = useState(false);
-
-  useEffect(() => {
-    if (reload) {
-      window.location.reload();
-    }
-  }, [reload]);
-
-  const handleReload = () => {
-    setReload((prevReload) => !prevReload);
-  };
+  
+  setTimeout(function () {
+    location.pathname.reload(true);
+  }, 2000);
 
   return (
     <div className="cart-page bg-grey ">
@@ -35,7 +30,7 @@ export function Cart({cart}) {
       <div className="container cart-container">
         <h2 className="page-title text-up text-center">Your Bag</h2>
         <CartEmpty hidden={linesCount} />
-        <CartDetails cart={cart} onReload={handleReload}/>
+        <CartDetails cart={cart} />
       </div>
     </div>
   );
