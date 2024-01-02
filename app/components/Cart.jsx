@@ -7,14 +7,14 @@ import dinersClub from '../img/diners-club.png';
 import {CartForm, Image, Money, flattenConnection} from '@shopify/hydrogen';
 import {Link} from './Link';
 import {useEffect, useState} from 'react';
-import { useLocation } from '@remix-run/react';
+import {useLocation} from '@remix-run/react';
 
 export function Cart({cart}) {
   const location = useLocation();
   const linesCount = Boolean(cart?.lines?.edges?.length || 0);
-  
+
   setTimeout(function () {
-    location.pathname.reload(true);
+    window.location.reload(true);
   }, 2000);
 
   return (
