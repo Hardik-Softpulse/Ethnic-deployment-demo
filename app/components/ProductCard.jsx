@@ -15,7 +15,7 @@ export function ProductCard({
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [index, setIndex] = useState();
   const [modalData, setModalData] = useState();
-
+  let cardLabel;
   const cardProduct = product?.variants ? product : getProductPlaceholder();
   if (!cardProduct?.variants?.nodes?.length) return null;
 
