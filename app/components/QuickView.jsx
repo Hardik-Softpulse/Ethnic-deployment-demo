@@ -11,20 +11,16 @@ import {AddToCartButton} from './AddToCartButton';
 import {Swiper, SwiperSlide} from 'swiper/react';
 import {Navigation, Thumbs} from 'swiper/modules';
 
-export default function QuickView({onClose, product, index}) {
-  const datas = index === product.id;
-  console.log('data', datas);
-
+export default function QuickView({onClose, product}) {
   const cardProduct = product?.variants ? product : getProductPlaceholder();
   const [selectedVariant, setSelectedVariant] = useState({});
   const [quantity, setQuantity] = useState(1);
-  const {media} = product;
-  const variants = product?.variants.nodes;
   const [thumbs, setThumbs] = useState(null);
+  const [matchingObject, setMatchingObject] = useState(null);
 
+  const variants = product?.variants.nodes;
   if (!cardProduct?.variants?.nodes?.length) return null;
   const firstVariant = flattenConnection(cardProduct.variants)[0];
-  console.log('firstVariant', firstVariant);
 
   if (!firstVariant) return null;
   const {price, compareAtPrice} = firstVariant;
@@ -38,35 +34,40 @@ export default function QuickView({onClose, product, index}) {
     });
   };
 
-  const selectedCartVariant = variants.find((variant) => {
-    const selectedOption = variant.selectedOptions.every(
-      (option) =>
-        selectedVariant[option.name] !== undefined &&
-        selectedVariant[option.name] === option.value,
-    );
-    return selectedOption;
-  });
+  useEffect(() => {
+    const foundObject = variants?.find((obj) => {
+      const match = obj.selectedOptions.some((option) => {
+        const optionValue = selectedVariant[option.name];
+        return optionValue !== undefined && optionValue === option.value;
+      });
+      console.log('Match:', match);
+      return match;
+    });
+    setMatchingObject(foundObject);
+  }, [selectedVariant, variants, matchingObject]);
 
-  const selectedOptionVariant = selectedCartVariant
-    ? selectedCartVariant
-    : firstVariant;
+  console.log('matchingObject', matchingObject);
+
+  const selectedOptionVariant = matchingObject ? matchingObject : firstVariant;
+
+  console.log('selectedOptionVariant', selectedOptionVariant);
 
   const productAnalytics = {
-    productGid: product.id,
+    productGid: product?.id,
     variantGid: selectedOptionVariant?.id,
-    name: product.title,
+    name: product?.title,
     variantName: selectedOptionVariant?.title,
-    brand: product.vendor,
-    price: selectedOptionVariant?.price.amount,
+    brand: product?.vendor,
+    price: selectedOptionVariant?.price?.amount,
     quantity: quantity,
   };
 
   const data = {
     analytics: {
       pageType: AnalyticsPageType.product,
-      resourceId: product.id,
+      resourceId: product?.id,
       products: productAnalytics,
-      totalValue: selectedOptionVariant?.price.amount,
+      totalValue: selectedOptionVariant?.price?.amount,
     },
   };
 
@@ -97,7 +98,7 @@ export default function QuickView({onClose, product, index}) {
     defprice,
   );
 
-  const isOutOfStock = selectedCartVariant?.availableForSale;
+  const isOutOfStock = matchingObject?.availableForSale;
 
   const handleIncrement = (e) => {
     e.preventDefault();
@@ -138,7 +139,7 @@ export default function QuickView({onClose, product, index}) {
             modules={[Navigation, Thumbs]}
             className="product-i1slider"
           >
-            {media.nodes.map((med) => (
+            {product?.media.nodes.map((med) => (
               <SwiperSlide key={med.id}>
                 <div className="slide-product-img">
                   <img src={med.image.url} alt={`Product ${med.id}`} />
@@ -152,7 +153,7 @@ export default function QuickView({onClose, product, index}) {
             slidesPerView={3}
             className="thumb-i1slider"
           >
-            {media.nodes.map((img) => (
+            {product?.media.nodes.map((img) => (
               <SwiperSlide key={img.id} className="thumb-i1slide">
                 <img src={img.image.url} alt={img.image.alt} />
               </SwiperSlide>
@@ -160,8 +161,8 @@ export default function QuickView({onClose, product, index}) {
           </Swiper>
         </div>
         <div className="product-dscrptn flx-cover">
-          <h4>{product.title}</h4>
-          <div className="dscrptn-xs lp-05">{product.description}</div>
+          <h4>{product?.title}</h4>
+          <div className="dscrptn-xs lp-05">{product?.description}</div>
           <div className="product-review dfx lp-05">
             <Rating name="simple-controlled" readOnly />
             <span> Reviews</span>
@@ -188,16 +189,16 @@ export default function QuickView({onClose, product, index}) {
           </div>
           <form>
             <VariantSelector
-              handle={product.handle}
-              options={product.options}
-              variants={variants}
+              handle={product?.handle}
+              options={product?.options}
+              variants={product?.variants}
             >
               {({option}) => {
                 return (
                   <div
                     className="swatch clearfix"
                     data-option-index={option.name}
-                    key={option}
+                    key={variants.id}
                   >
                     <div className="swatch-title">
                       <strong>{option.name}</strong>
