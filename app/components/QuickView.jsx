@@ -34,6 +34,7 @@ export default function QuickView({onClose, product}) {
     });
   };
 
+  console.log('selectedVariant', selectedVariant);
   useEffect(() => {
     const foundObject = variants?.find((obj) => {
       const match = obj.selectedOptions.some((option) => {
