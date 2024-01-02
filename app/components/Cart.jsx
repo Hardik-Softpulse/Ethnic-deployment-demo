@@ -13,9 +13,16 @@ export function Cart({cart}) {
   const location = useLocation();
   const linesCount = Boolean(cart?.lines?.edges?.length || 0);
 
-  setTimeout(function () {
-    window.location.reload(true);
-  }, 2000);
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      window.location.reload(true);
+    }, 2000);
+
+   
+    return () => {
+      clearTimeout(timeoutId);
+    };
+  }, []); 
 
   return (
     <div className="cart-page bg-grey ">
