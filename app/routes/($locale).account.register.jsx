@@ -150,7 +150,7 @@ export default function Ragister() {
               </label>
               <input
                 type="email"
-                name=""
+                name="email"
                 placeholder="Enter your email address..."
                 className={`mb-1 ${getInputStyleClasses(nativeEmailError)}`}
                 autoComplete="email"
@@ -177,7 +177,7 @@ export default function Ragister() {
               </label>
               <input
                 type="password"
-                name=""
+                name="password"
                 placeholder="Enter your password"
                 className={`mb-1 ${getInputStyleClasses(
                   nativePasswordError,
@@ -236,6 +236,7 @@ const CUSTOMER_CREATE_MUTATION = `#graphql
     customerCreate(input: $input) {
       customer {
         id
+        email
       }
       customerUserErrors {
         code

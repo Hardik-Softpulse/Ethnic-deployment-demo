@@ -389,7 +389,7 @@ export function ProductForm({variants}) {
                 height="10"
               >
                 <path d="M28.3 0L28.3 4.29L26.96 4.29L26.96 0L24.26 0L24.26 2.86L22.91 2.86L22.91 0L20.22 0L20.22 2.86L18.87 2.86L18.87 0L16.17 0L16.17 4.29L14.83 4.29L14.83 0L12.13 0L12.13 2.86L10.78 2.86L10.78 0L8.09 0L8.09 2.86L6.74 2.86L6.74 0L4.04 0L4.04 4.29L2.7 4.29L2.7 0L0 0L0 10L31 10L31 0L28.3 0Z" />
-              </svg>{' '}
+              </svg>
               Size chart
             </div>
           </div>
@@ -464,7 +464,11 @@ export function ProductForm({variants}) {
           </div>
         </form>
       </div>
-      <div className={`size-chart-popup ${isSizeChartOpen ? 'open' : ''}`}>
+
+      <div
+        className={`size-chart-popup ${isSizeChartOpen ? 'open' : ''}`}
+        onClick={() => setIsSizeChartOpen(!isSizeChartOpen)}
+      >
         <div className="size-chart-content">
           <div className="popoup_hdr">
             <h4 className="text-center mb-0">Size Chart</h4>

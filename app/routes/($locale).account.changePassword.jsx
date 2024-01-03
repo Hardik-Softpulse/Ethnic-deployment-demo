@@ -46,8 +46,7 @@ function ChangePassword({
 }) {
   const actionData = useActionData();
   const [nativeEmailError, setNativeEmailError] = useState(null);
-  const [email, setEmail] = useState('');
-
+ 
   const isSubmitted = actionData?.resetRequested;
 
   return (
@@ -70,8 +69,6 @@ function ChangePassword({
           </label>
           <input
             type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
             name="email"
             id="recover-email"
             placeholder="Enter your email address..."
