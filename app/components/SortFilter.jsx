@@ -35,7 +35,6 @@ export function SortFilter({filters, appliedFilters = []}) {
                       params,
                       location,
                     );
-                    console.log('filter', filter);
 
                     return (
                       <div className="filter-item" key={option.id}>

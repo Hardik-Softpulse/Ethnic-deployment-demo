@@ -1,4 +1,4 @@
-import {useEffect, useMemo, useState} from 'react';
+import {useState} from 'react';
 import {
   Link,
   useLocation,
@@ -19,6 +19,45 @@ export function FilterDrawer({
   const location = useLocation();
   const navigate = useNavigate();
   const [selectedOptions, setSelectedOptions] = useState([]);
+
+  const handleCheckboxChange = (filterId, optionInput) => {
+    setSelectedOptions((prevSelectedOptions) => {
+      const existingIndex = prevSelectedOptions.findIndex(
+        (obj) => obj.filterId === filterId && obj.optionInput === optionInput,
+      );
+
+      if (existingIndex !== -1) {
+        const updatedOptions = [...prevSelectedOptions];
+        updatedOptions.splice(existingIndex, 1);
+        return updatedOptions;
+      } else {
+        return [
+          ...prevSelectedOptions,
+          {
+            filterId,
+            optionInput,
+          },
+        ];
+      }
+    });
+  };
+
+  const applyFilters = async () => {
+    const navigationPromises = selectedOptions.some((selectOption) => {
+      console.log('first', selectOption)
+      const {filterId, optionInput} = selectOption;
+      const to = getFilterLink(filterId, optionInput, params, location);
+      return navigate(to);
+    });
+
+    try {
+      const results = await Promise.allSettled(navigationPromises);
+      console.log(results);
+      setFilterDrawerOpen(!filterDrawerOpen);
+    } catch (error) {
+      console.error('Error during navigation:', error);
+    }
+  };
 
   console.log('selectedOptions', selectedOptions);
 
@@ -63,7 +102,7 @@ export function FilterDrawer({
                       <div className="filter-list clearfix">
                         <form>
                           {filter.values?.map((option) => {
-                             const to = getFilterLink(
+                            const to = getFilterLink(
                               filter,
                               option.input,
                               params,
@@ -73,28 +112,20 @@ export function FilterDrawer({
                               <div className="filter-item" key={option.id}>
                                 <input
                                   type="checkbox"
-                                  // checked={
-                                  //   appliedFilters?.some(
-                                  //     (obj) => obj.label === option.label,
-                                  //   )
-                                  //     ? true
-                                  //     : false
-                                  // }
+                                  checked={selectedOptions.some(
+                                    (obj) =>
+                                      obj.filterId === filter.id &&
+                                      obj.optionInput === option.input,
+                                  )}
                                   name={filter.id}
                                   id={option.id}
                                   // onChange={() => navigate(to)}
                                   onChange={() =>
-                                    setSelectedOptions(
-                                      (prevSelectedOptions) => [
-                                        ...prevSelectedOptions,
-                                        {
-                                          filterId: filter.id,
-                                          optionInput: option.input,
-                                        },
-                                      ],
+                                    handleCheckboxChange(
+                                      filter.id,
+                                      option.input,
                                     )
                                   }
-                                 
                                 />
                                 <label htmlFor={option.id}>
                                   {option.label}
@@ -122,27 +153,7 @@ export function FilterDrawer({
           <button
             className="btn"
             onClick={() => {
-              const navigationPromises = filters.flatMap((filter) =>
-                filter.values
-                  .filter((option) => option.input)
-                  .map((option) => (
-                    <>
-                      {selectedOptions.map((selectOption) => {
-                        const objectInput = selectOption.optionInput;
-                        const to = getFilterLink(
-                          filter,
-                          objectInput,
-                          params,
-                          location,
-                        );
-                        navigate(to);
-                      })}
-                    </>
-                  )),
-              );
-             
-                setFilterDrawerOpen(!filterDrawerOpen);
-             
+              applyFilters();
             }}
           >
             Apply
@@ -185,6 +196,7 @@ function getAppliedFilterLink(filter, params, location) {
 function getFilterLink(filter, rawInput, params, location) {
   const paramsClone = new URLSearchParams(params);
   const newParams = filterInputToParams(filter.type, rawInput, paramsClone);
+  console.log('newParams', newParams);
   return `${location.pathname}?${newParams.toString()}`;
 }
 
@@ -205,3 +217,4 @@ function filterInputToParams(type, rawInput, params) {
 
   return params;
 }
+//newParams in only 1 selectedoption set not multiple how to proper set
