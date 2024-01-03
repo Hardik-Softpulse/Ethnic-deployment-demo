@@ -321,57 +321,67 @@ export function ProductForm({variants}) {
                   <div className="swatch-title">
                     <strong>{option.name}</strong>
                   </div>
-                  {option.values.length > 7 ? (
-                    <div
-                      key={id}
-                      data-value={value}
-                      className={`swatch-element ${
-                        isOptionSelected(option.name, value) ? 'available' : ''
-                      }`}
-                      title={value}
-                    >
-                      <input
-                        type="checkbox"
-                        name={`option-${option.name}`}
-                        value={value}
-                        id={`swatch-${id}-${value}`}
-                        checked={isOptionSelected(option.name, value)}
-                        onChange={handleCheckboxChange}
-                      />
-                      <label htmlFor="swatch-1-size">{value}</label>
-                    </div>
-                  ) : (
-                    option.values.map(({value, index, to}) => (
-                      <div
-                        key={index}
-                        data-value={value}
-                        className={`swatch-element ${
-                          isOptionSelected(option.name, value)
-                            ? 'available'
-                            : ''
-                        }`}
-                        title={value}
-                      >
-                        <Link
-                          key={option.name + value}
-                          to={to}
-                          preventScrollReset
-                          prefetch="intent"
-                          replace
+                  {option.values.length > 7
+                    ? option.values.map(({value, index, to}) => (
+                        <div
+                          key={index}
+                          data-value={value}
+                          className={`swatch-element ${
+                            isOptionSelected(option.name, value)
+                              ? 'available'
+                              : ''
+                          }`}
+                          title={value}
                         >
-                          <input
-                            type="checkbox"
-                            name={`option-${option.name}`}
-                            value={value}
-                            id={`swatch-${index}-${value}`}
-                            checked={isOptionSelected(option.name, value)}
-                            onChange={handleCheckboxChange}
-                          />
-                          <label htmlFor="swatch-1-size">{value}</label>
-                        </Link>
-                      </div>
-                    ))
-                  )}
+                          <Link
+                            key={option.name + value}
+                            to={to}
+                            preventScrollReset
+                            prefetch="intent"
+                            replace
+                          >
+                            <input
+                              type="checkbox"
+                              name={`option-${option.name}`}
+                              value={value}
+                              id={`swatch-${index}-${value}`}
+                              checked={isOptionSelected(option.name, value)}
+                              onChange={handleCheckboxChange}
+                            />
+                            <label htmlFor="swatch-1-size">{value}</label>
+                          </Link>
+                        </div>
+                      ))
+                    : option.values.map(({value, index, to}) => (
+                        <div
+                          key={index}
+                          data-value={value}
+                          className={`swatch-element ${
+                            isOptionSelected(option.name, value)
+                              ? 'available'
+                              : ''
+                          }`}
+                          title={value}
+                        >
+                          <Link
+                            key={option.name + value}
+                            to={to}
+                            preventScrollReset
+                            prefetch="intent"
+                            replace
+                          >
+                            <input
+                              type="checkbox"
+                              name={`option-${option.name}`}
+                              value={value}
+                              id={`swatch-${index}-${value}`}
+                              checked={isOptionSelected(option.name, value)}
+                              onChange={handleCheckboxChange}
+                            />
+                            <label htmlFor="swatch-1-size">{value}</label>
+                          </Link>
+                        </div>
+                      ))}
                 </div>
               );
             }}
