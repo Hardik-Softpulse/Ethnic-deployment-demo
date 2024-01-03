@@ -6,27 +6,17 @@ import masestro from '../img/masestro.png';
 import dinersClub from '../img/diners-club.png';
 import {CartForm, Image, Money, flattenConnection} from '@shopify/hydrogen';
 import {Link} from './Link';
-import {useEffect, useState} from 'react';
-import {useLocation} from '@remix-run/react';
+import {useEffect} from 'react';
+import {useLocation, useNavigate} from '@remix-run/react';
 
 export function Cart({cart}) {
-  const location = useLocation();
   const linesCount = Boolean(cart?.lines?.edges?.length || 0);
+  const location = useLocation();
+  const navigate = useNavigate();
 
   useEffect(() => {
-    const hasReloaded = localStorage.getItem('hasReloaded');
-
-    if (!hasReloaded) {
-      const timeoutId = setTimeout(() => {
-        localStorage.setItem('hasReloaded', 'true');
-        window.location.reload(true);
-      }, 1000);
-
-      return () => {
-        clearTimeout(timeoutId);
-      };
-    }
-  });
+    navigate(location.pathname);
+  }, [navigate, location.pathname]);
 
   return (
     <div className="cart-page bg-grey ">
@@ -42,6 +32,7 @@ export function Cart({cart}) {
         <h2 className="page-title text-up text-center">Your Bag</h2>
         <CartEmpty hidden={linesCount} />
         <CartDetails cart={cart} />
+        {/* onload={reloadPage()}  */}
       </div>
     </div>
   );
