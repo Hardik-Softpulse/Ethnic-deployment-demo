@@ -20,7 +20,7 @@ export function Cart({cart}) {
       const timeoutId = setTimeout(() => {
         localStorage.setItem('hasReloaded', 'true');
         window.location.reload(true);
-      }, 2000);
+      }, 1000);
 
       return () => {
         clearTimeout(timeoutId);
