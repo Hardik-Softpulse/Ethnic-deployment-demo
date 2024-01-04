@@ -33,8 +33,6 @@ export default function QuickView({onClose, product}) {
       };
     });
   };
-
-  console.log('selectedVariant', selectedVariant);
   
   useEffect(() => {
     const foundObject = variants?.find((obj) => {
@@ -58,11 +56,7 @@ export default function QuickView({onClose, product}) {
     setMatchingObject(foundObject);
   }, [selectedVariant, variants]);
 
-  console.log('matchingObject', matchingObject);
-
   const selectedOptionVariant = matchingObject ? matchingObject : firstVariant;
-
-  console.log('selectedOptionVariant', selectedOptionVariant);
 
   const productAnalytics = {
     productGid: product?.id,

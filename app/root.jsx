@@ -87,8 +87,8 @@ export default function App() {
         <Meta />
         <Links />
       </head>
-      <body>
-        <div className={`${toggle || isCartOpen ? 'drawer ' : ''}`}>
+      <body >
+        <div className={`${toggle || isCartOpen ? 'drawer ' : ''}`} >
           <Layout
             key={`${locale.language}-${locale.country}`}
             layout={data.layout}
@@ -98,7 +98,7 @@ export default function App() {
             setCartOpen={setCartOpen}
             seo={seo}
           >
-            <Outlet context={[isCartOpen, setCartOpen]} />
+            <Outlet />
           </Layout>
         </div>
         <ScrollRestoration />

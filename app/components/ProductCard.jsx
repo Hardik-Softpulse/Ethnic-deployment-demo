@@ -2,7 +2,7 @@ import {flattenConnection, Image, Money, useMoney} from '@shopify/hydrogen';
 import {isDiscounted, isNewArrival} from '~/lib/utils';
 import {getProductPlaceholder} from '~/lib/placeholders';
 import {Link} from './Link';
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 import QuickView from './QuickView';
 
 export function ProductCard({
@@ -15,7 +15,6 @@ export function ProductCard({
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [index, setIndex] = useState();
   const [modalData, setModalData] = useState();
-  
   let cardLabel;
   const cardProduct = product?.variants ? product : getProductPlaceholder();
   if (!cardProduct?.variants?.nodes?.length) return null;
@@ -84,6 +83,9 @@ export function ProductCard({
       return !prevIsModalOpen;
     });
   };
+
+  useEffect(() => {
+  }, [modalData]);
 
   const closeModal = () => {
     setIsModalOpen(false);

@@ -422,7 +422,6 @@ function Footer({menu, seo}) {
 function FooterMenu({menu, seo}) {
   const [openMenuId, setOpenMenuId] = useState(null);
   const [isMobile, setIsMobile] = useState(false);
-  console.log('seo', seo);
 
   useEffect(() => {
     setIsMobile(window.innerWidth < 768);
