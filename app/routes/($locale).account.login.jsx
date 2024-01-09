@@ -79,6 +79,7 @@ export default function Login() {
   const actionData = useActionData();
   const [nativeEmailError, setNativeEmailError] = useState(null);
   const [nativePasswordError, setNativePasswordError] = useState(null);
+  const [showPassword, setShowPassword] = useState(false);
 
   return (
     <div className="cust-sign-page bg-grey clearfix">
@@ -142,7 +143,7 @@ export default function Login() {
                 className={`mb-1 ${getInputStyleClasses(nativePasswordError)}`}
                 id="password"
                 name="password"
-                type="password"
+                type={showPassword ? 'text' : 'password'}
                 autoComplete="current-password"
                 placeholder="Password"
                 aria-label="Password"
@@ -165,12 +166,22 @@ export default function Login() {
                   }
                 }}
               />
+
               {nativePasswordError && (
                 <p className="text-red-500 text-xs">
-                  {' '}
                   {nativePasswordError} &nbsp;
                 </p>
               )}
+              <div className='showPass'>
+                <input
+                  id="check"
+                  type="checkbox"
+                  className='passcheck'
+                  value={showPassword}
+                  onChange={() => setShowPassword((prev) => !prev)}
+                />
+                <label for="check">Show Password</label>
+              </div>
               <label>
                 <Link to="/account/recover" className="fgt-psw-link">
                   Forget ?

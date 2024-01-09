@@ -5,12 +5,11 @@ import {
   useNavigate,
 } from '@remix-run/react';
 
-
 export function SortFilter({filters, appliedFilters = []}) {
   const [params] = useSearchParams();
   const location = useLocation();
   const navigate = useNavigate();
-
+  console.log('appliedFilters', appliedFilters);
   return (
     <div className="cllctn-sidebar">
       <h3 className="text-up lp-05">Filter</h3>
@@ -100,10 +99,10 @@ function getAppliedFilterLink(filter, params, location) {
   return `${location.pathname}?${paramsClone.toString()}`;
 }
 
-
 function getFilterLink(filter, rawInput, params, location) {
   const paramsClone = new URLSearchParams(params);
   const newParams = filterInputToParams(filter.type, rawInput, paramsClone);
+  console.log('newParams', newParams.toString());
   return `${location.pathname}?${newParams.toString()}`;
 }
 
@@ -124,6 +123,7 @@ function filterInputToParams(type, rawInput, params) {
           const {name, value: val} = value;
           const allVariants = params.getAll(`variantOption`);
           const newVariant = `${name}:${val}`;
+
           if (!allVariants.includes(newVariant)) {
             params.append('variantOption', newVariant);
           }

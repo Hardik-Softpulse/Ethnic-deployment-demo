@@ -1,12 +1,10 @@
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 import {
   Link,
   useLocation,
   useSearchParams,
   useNavigate,
 } from '@remix-run/react';
-
-export const FILTER_URL_PREFIX = 'filter.';
 
 export function FilterDrawer({
   filters,
@@ -20,46 +18,7 @@ export function FilterDrawer({
   const navigate = useNavigate();
   const [selectedOptions, setSelectedOptions] = useState([]);
 
-  const handleCheckboxChange = (filterId, optionInput) => {
-    setSelectedOptions((prevSelectedOptions) => {
-      const existingIndex = prevSelectedOptions.findIndex(
-        (obj) => obj.filterId === filterId && obj.optionInput === optionInput,
-      );
 
-      if (existingIndex !== -1) {
-        const updatedOptions = [...prevSelectedOptions];
-        updatedOptions.splice(existingIndex, 1);
-        return updatedOptions;
-      } else {
-        return [
-          ...prevSelectedOptions,
-          {
-            filterId,
-            optionInput,
-          },
-        ];
-      }
-    });
-  };
-
-  const applyFilters = async () => {
-    const navigationPromises = selectedOptions.some((selectOption) => {
-      console.log('first', selectOption)
-      const {filterId, optionInput} = selectOption;
-      const to = getFilterLink(filterId, optionInput, params, location);
-      return navigate(to);
-    });
-
-    try {
-      const results = await Promise.allSettled(navigationPromises);
-      console.log(results);
-      setFilterDrawerOpen(!filterDrawerOpen);
-    } catch (error) {
-      console.error('Error during navigation:', error);
-    }
-  };
-
-  console.log('selectedOptions', selectedOptions);
 
   return (
     <div className={`filter-drawer  ${filterDrawerOpen ? 'open' : ''}`}>
@@ -102,7 +61,7 @@ export function FilterDrawer({
                       <div className="filter-list clearfix">
                         <form>
                           {filter.values?.map((option) => {
-                            const to = getFilterLink(
+                             const to = getFilterLink(
                               filter,
                               option.input,
                               params,
@@ -112,20 +71,28 @@ export function FilterDrawer({
                               <div className="filter-item" key={option.id}>
                                 <input
                                   type="checkbox"
-                                  checked={selectedOptions.some(
-                                    (obj) =>
-                                      obj.filterId === filter.id &&
-                                      obj.optionInput === option.input,
-                                  )}
+                                  // checked={
+                                  //   appliedFilters?.some(
+                                  //     (obj) => obj.label === option.label,
+                                  //   )
+                                  //     ? true
+                                  //     : false
+                                  // }
                                   name={filter.id}
                                   id={option.id}
-                                  // onChange={() => navigate(to)}
+                                 
                                   onChange={() =>
-                                    handleCheckboxChange(
-                                      filter.id,
-                                      option.input,
+                                    setSelectedOptions(
+                                      (prevSelectedOptions) => [
+                                        ...prevSelectedOptions,
+                                        {
+                                          filterId: filter.id,
+                                          optionInput: option.input,
+                                        },
+                                      ],
                                     )
                                   }
+                                 
                                 />
                                 <label htmlFor={option.id}>
                                   {option.label}
@@ -153,7 +120,27 @@ export function FilterDrawer({
           <button
             className="btn"
             onClick={() => {
-              applyFilters();
+              const navigationPromises = filters.flatMap((filter) =>
+                filter.values
+                  .filter((option) => option.input)
+                  .map((option) => (
+                    <>
+                      {selectedOptions.map((selectOption) => {
+                        const objectInput = selectOption.optionInput;
+                        const to = getFilterLink(
+                          filter,
+                          objectInput,
+                          params,
+                          location,
+                        );
+                        navigate(to);
+                      })}
+                    </>
+                  )),
+              );
+             
+                setFilterDrawerOpen(!filterDrawerOpen);
+             
             }}
           >
             Apply
@@ -164,17 +151,18 @@ export function FilterDrawer({
   );
 }
 
-function AppliedFilters({filters = []}) {
+
+function AppliedFilters({filters}) {
   const [params] = useSearchParams();
   const location = useLocation();
   return (
     <>
-      {filters.map((filter) => {
+      {filters?.map((filter) => {
         return (
           <Link
             to={getAppliedFilterLink(filter, params, location)}
             className="reset-act"
-            key={`${filter.label}-${filter.urlParam}`}
+            key={`${filter.id}-${filter[filter.id]}`}
           >
             reset {filter.label}
           </Link>
@@ -186,35 +174,53 @@ function AppliedFilters({filters = []}) {
 
 function getAppliedFilterLink(filter, params, location) {
   const paramsClone = new URLSearchParams(params);
-  Object.entries(filter.filter).forEach(([key, value]) => {
-    const fullKey = FILTER_URL_PREFIX + key;
-    paramsClone.delete(fullKey, JSON.stringify(value));
-  });
+  if (filter.urlParam && filter.urlParam.key === 'variantOption') {
+    const variantOptions = paramsClone.getAll('variantOption');
+    const filteredVariantOptions = variantOptions.filter(
+      (options) => !options.includes(filter.urlParam.value),
+    );
+
+    paramsClone.delete(filter.urlParam.key);
+    for (const filteredVariantOption of filteredVariantOptions) {
+      paramsClone.append(filter.urlParam.key, filteredVariantOption);
+    }
+  } else if (filter.urlParam) {
+    paramsClone.delete(filter.urlParam.key);
+  }
   return `${location.pathname}?${paramsClone.toString()}`;
 }
 
 function getFilterLink(filter, rawInput, params, location) {
   const paramsClone = new URLSearchParams(params);
   const newParams = filterInputToParams(filter.type, rawInput, paramsClone);
-  console.log('newParams', newParams);
-  return `${location.pathname}?${newParams.toString()}`;
+  console.log('newParams', newParams.toString());
+  return `${location.pathname}?${newParams.toString()}&${newParams.toString()}`;
 }
 
 function filterInputToParams(type, rawInput, params) {
   const input = typeof rawInput === 'string' ? JSON.parse(rawInput) : rawInput;
-
-  Object.entries(input).forEach(([key, value]) => {
-    if (params.has(`${FILTER_URL_PREFIX}${key}`, JSON.stringify(value))) {
-      return;
-    }
-    if (key === 'price') {
-      // For price, we want to overwrite
-      params.set(`${FILTER_URL_PREFIX}${key}`, JSON.stringify(value));
-    } else {
-      params.append(`${FILTER_URL_PREFIX}${key}`, JSON.stringify(value));
-    }
-  });
+  switch (type) {
+    case 'PRICE_RANGE':
+      if (input.price.min) params.set('minPrice', input.price.min);
+      if (input.price.max) params.set('maxPrice', input.price.max);
+      break;
+    case 'LIST':
+      Object.entries(input).forEach(([key, value]) => {
+        if (typeof value === 'string') {
+          params.set(key, value);
+        } else if (typeof value === 'boolean') {
+          params.set(key, value.toString());
+        } else {
+          const {name, value: val} = value;
+          const allVariants = params.getAll(`variantOption`);
+          const newVariant = `${name}:${val}`;
+          if (!allVariants.includes(newVariant)) {
+            params.append('variantOption', newVariant);
+          }
+        }
+      });
+      break;
+  }
 
   return params;
 }
-//newParams in only 1 selectedoption set not multiple how to proper set
